@@ -1,3 +1,287 @@
+% !TEX encoding = UTF-8
+% !TEX program = lualatex
+
+\chapter{Методика выявления атак с использованием атрибутивных метаграфов}\label{ch:ch3}
+
+\section{Общая архитектура системы обнаружения}\label{sec:ch3/sect1}
+
+Предложенная система обнаружения атак (Attack MetaGraph Detector, AMGD) состоит из пяти основных компонентов:
+\noindent
+\begin{itemize}
+    \item модуль сбора и нормализации данных;
+    \item модуль построения динамического метаграфа;
+    \item хранилище эталонных шаблонов атак;
+    \item детектор на основе сопоставления метаграфов;
+    \item модуль оценки риска и генерации алертов.
+\end{itemize}
+
+Архитектура системы представлена на рисунке~\ref{fig:amgd_arch}.
+
+\begin{figure}[ht]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=1.4cm and 1.8cm,
+    auto,
+    >=Stealth,
+    thick,
+    block/.style = {
+        rectangle, draw, fill=blue!5,
+        text width=5.5em, align=center,
+        rounded corners, minimum height=3.5em,
+        font=\small
+    },
+    data/.style = {
+        rectangle, draw, fill=green!5,
+        text width=6em, align=center,
+        minimum height=2.8em,
+        font=\small
+    },
+    storage/.style = {
+        cylinder, shape border rotate=90, draw, fill=yellow!5,
+        minimum height=2em, minimum width=1.8em,
+        align=center,
+        font=\small
+    },
+    decision/.style = {
+        diamond, aspect=1.6, draw, fill=red!5,
+        align=center, inner sep=1pt,
+        font=\small
+    }
+]
+
+% Источники данных (левый столбец)
+\node [data] (edr) {EDR};
+\node [data, below=of edr] (netlogs) {Сетевые логи};
+\node [data, below=of netlogs] (oslogs) {Операционная\\система};
+\node [data, below=of oslogs] (cloud) {Облачные\\сервисы};
+
+% Центральные блоки
+\node [block, right=2.2cm of edr] (norm) {Нормализатор};
+\node [block, right=1.8cm of norm] (builder) {Построитель\\метаграфа};
+\node [storage, right=1.8cm of builder, align=center] (store) {Хранилище\\метаграфов};
+
+% Верхний и нижний блоки
+\node [block, above=1.2cm of store] (patterns) {База шаблонов\\атак};
+\node [block, below=1.2cm of store] (risk) {Оценка риска};
+\node [block, right=2.0cm of risk] (detector) {Детектор\\сопоставления};
+
+% Решение и SOAR
+\node [decision, right=2.0cm of detector] (alert) {Алерт?};
+\node [block, right=2.0cm of alert] (soar) {SOAR\\интеграция};
+
+% Стрелки: ортогональные соединения
+\draw [->] (edr) -| (norm);
+\draw [->] (netlogs) -| (norm);
+\draw [->] (oslogs) -| (norm);
+\draw [->] (cloud) -| (norm);
+
+\draw [->] (norm) -- (builder);
+\draw [->] (builder) -- (store);
+
+\draw [->] (store) |- (detector);
+\draw [->] (patterns) -- (detector);
+\draw [->] (detector) -- (risk);
+
+\draw [->] (risk) -- (alert);
+\draw [->] (alert) -- node[above, font=\small] {Да} (soar);
+
+% Обратная связь: "Нет" → к хранилищу
+\draw [->] (alert.east) -- ++(0.8,0) |- (store.east)
+    node[pos=0.25, right, font=\small] {Нет};
+
+\end{tikzpicture}
+}
+\caption{Архитектура системы AMGD}
+\label{fig:amgd_arch}
+\end{figure}
+
+\section{Модуль сбора и нормализации данных}\label{sec:ch3/sect2}
+
+Система поддерживает данные из следующих источников:
+\noindent
+\begin{itemize}
+    \item EDR-телеметрия (CrowdStrike, SentinelOne, Sysmon);
+    \item сетевые логи (Zeek, Suricata);
+    \item аудит операционной системы (Windows Event Log, auditd);
+    \item облачные логи (AWS CloudTrail, Azure AD).
+\end{itemize}
+
+Для унификации используется схема \textit{Unified Cyber Observation Schema (UCOS)}, включающая поля:
+\noindent
+\begin{itemize}
+    \item \texttt{entity\_type} — тип сущности (\texttt{process}, \texttt{file}, \texttt{ip});
+    \item \texttt{entity\_id} — уникальный идентификатор;
+    \item \texttt{action} — действие (\texttt{create}, \texttt{connect});
+    \item \texttt{related\_entities} — связанные сущности;
+    \item \texttt{timestamp} — временная метка;
+    \item \texttt{source} — источник данных.
+\end{itemize}
+Такой подход позволяет интегрировать разнородные данные в единую модель, пригодную для построения метаграфа.
+
+\section{Алгоритм сопоставления шаблонов атак}\label{sec:ch3/sect3}
+
+Центральным элементом системы является алгоритм сопоставления эталонного шаблона атаки $G_{\text{pattern}}$ с динамическим метаграфом $G_{\text{live}}$.
+
+\subsection{Формулировка задачи}
+
+Задача заключается в поиске \textit{частичного изоморфизма} $\psi: G_{\text{pattern}} \rightarrow G_{\text{live}}$, сохраняющего:
+\noindent
+\begin{itemize}
+    \item структуру (источники $\rightarrow$ источники, цели $\rightarrow$ цели);
+    \item семантическую близость атрибутов.
+\end{itemize}   
+\subsection{Алгоритм MetaGraph-Match}
+
+Алгоритм \textbf{MetaGraph-Match} разработан для решения задачи сопоставления эталонного шаблона атаки (представленного в виде атрибутивного метаграфа) с динамическим метаграфом, построенным на основе текущих событий телеметрии. Основная цель алгоритма — выявить частичное соответствие между известной цепочкой компрометации (например, APT29) и наблюдаемым поведением в защищаемой системе, даже если некоторые этапы атаки маскируются или реализуются альтернативными способами.
+
+В отличие от классических методов сопоставления графов, которые требуют точного изоморфизма и не учитывают семантические атрибуты, MetaGraph-Match:
+\noindent
+\begin{itemize}
+    \item учитывает \textbf{семантическую близость} атрибутов (например, техники MITRE ATT\&CK могут быть родственными: T1059.001 и T1059.003);
+    \item допускает \textbf{временные сдвиги} (атака может развиваться медленнее или быстрее, чем в эталоне);
+    \item работает с \textbf{частичными совпадениями} (не требует наличия всех этапов атаки для генерации алерта).
+\end{itemize}
+Преимущества подхода:
+\noindent
+\begin{itemize}
+    \item повышенная устойчивость к тактикам \textit{living-off-the-land} и полиморфизму;
+    \item интерпретируемость: аналитик видит, какие именно этапы атаки обнаружены;
+    \item гибкость: легко адаптируется под новые шаблоны без переписывания правил.
+\end{itemize}
+Недостатки:
+\noindent
+\begin{itemize}
+    \item вычислительная сложность в худшем случае — $O(n \cdot k)$, где $n$ — число событий, $k$ — размер шаблона;
+    \item зависимость от качества атрибутизации и маппинга на MITRE ATT\&CK.
+\end{itemize}
+
+Алгоритм основан на идеях частичного изоморфизма графов~\cite{Sheyner2002}, но расширен для работы с атрибутивными метаграфами, как предложено в~\cite{Latypov2020}. Он является ключевым компонентом методики выявления атак, так как обеспечивает \textbf{семантически осмысленное сопоставление}, а не просто совпадение сигнатур.
+
+Алгоритм состоит из следующих этапов.
+
+\textbf{Шаг 1. Фильтрация по тактикам.}  
+Извлекаются только дуги $G_{\text{live}}$, соответствующие тактикам из шаблона:
+\begin{equation}
+E_{\text{filtered}} = \bigcup_{T \in \mathcal{T}_{\text{pattern}}} \tau_{\text{live}}(T).
+\label{eq:filter_tactics}
+\end{equation}
+
+\textbf{Шаг 2. Фильтрация по временному окну.}  
+Определяется временной диапазон шаблона:
+\begin{equation}
+[t_{\min}, t_{\max}] = \left[ \min_{e \in E_p} \beta(e).t,\ \max_{e \in E_p} \beta(e).t \right],
+\label{eq:time_window}
+\end{equation}
+и выбираются события из $G_{\text{live}}$ в этом окне с допуском $\delta = 5$~мин.
+
+\textbf{Шаг 3. Сопоставление вершин.}  
+Для каждой вершины $v_p \in V_p$ ищутся кандидаты $v_l \in V_l$, такие что:
+\begin{equation}
+S_{\text{vertex}}(v_p, v_l) = \frac{|\alpha(v_p) \cap \alpha(v_l)|}{|\alpha(v_p) \cup \alpha(v_l)|} \geq \theta_v,
+\label{eq:vertex_sim}
+\end{equation}
+где $\theta_v = 0.8$ — порог схожести.
+
+\textbf{Шаг 4. Сопоставление дуг.}  
+Для каждой дуги $e_p \in E_p$ проверяется:
+\begin{equation}
+S_{\text{edge}}(e_p, e_l) = \text{sim}_{\text{TTP}}(\beta(e_p).t, \beta(e_l).t) \cdot \text{sim}_{\text{time}}(\Delta t_p, \Delta t_l),
+\label{eq:edge_sim}
+\end{equation}
+где:
+\noindent
+\begin{itemize} 
+    \item $\text{sim}_{\text{TTP}} = 1$, если техники совпадают или родственные;
+    \item $\text{sim}_{\text{time}} = \exp(-|\Delta t_p - \Delta t_l| / \sigma)$.
+\end{itemize}   
+\textbf{Шаг 5. Оценка общего сходства.}
+\begin{equation}
+S(G_p, G_l) = \frac{1}{|E_p|} \sum_{e_p \in E_p} \max_{e_l \in E_l} S_{\text{edge}}(e_p, e_l).
+\label{eq:total_sim}
+\end{equation}
+
+Если $S \geq \theta_s = 0.75$, генерируется алерт.
+
+\section{Динамическое обновление метаграфов}\label{sec:ch3/sect4}
+
+При поступлении нового события $s$:
+\noindent
+\begin{enumerate}
+    \item событие нормализуется → объекты $O = \{o_1, ..., o_k\}$, действие $a$;
+    \item создаются вершины $V_s = \{v_i \mid o_i \notin V_{\text{live}}\}$;
+    \item создаётся дуга $e_s$ с $\text{src}(e_s) = V_{\text{src}}$, $\text{tgt}(e_s) = V_{\text{tgt}}$;
+    \item выполняется атрибутизация через MITRE-маппинг;
+    \item обновляется $G_{\text{live}} := G_{\text{live}} \cup \{V_s, e_s\}$;
+    \item запускается триггер детектора для всех шаблонов, содержащих тактику $\beta(e_s).T$.
+\end{enumerate}
+
+Это позволяет избежать полного пересчёта и обеспечивает задержку обработки менее 15~мс на событие.
+
+\section{Оценка рисков на основе метаграфов}\label{sec:ch3/sect5}
+
+После сопоставления вычисляется мера риска компрометации.
+
+\subsection{Вероятность реализации пути}
+
+Для каждого найденного пути $p$:
+\begin{equation}
+P(p) = \prod_{e \in p} P_{\text{conf}}(e) \cdot P_{\text{def}}(e),
+\label{eq:path_prob}
+\end{equation}
+где $P_{\text{conf}}(e)$ — достоверность события, $P_{\text{def}}(e)$ — вероятность обхода защиты.
+
+\subsection{Взвешивание путей}
+
+Каждый путь взвешивается по критичности цели:
+\begin{equation}
+\lambda(p) = \kappa(v_{\text{final}}) \cdot \left(1 + \log \left(1 + \sum_{e \in p} w(e)\right)\right),
+\label{eq:path_weight}
+\end{equation}
+где $\kappa(v)$ — функция критичности объекта.
+
+\subsection{Итоговая мера риска}
+
+\begin{equation}
+R = \sum_{p \in \mathcal{P}_{\text{matched}}} \lambda(p) \cdot P(p).
+\label{eq:risk_score}
+\end{equation}
+
+Если $R > \theta_R = 0.65$, генерируется высокоприоритетный алерт.
+
+\section{Интеграция с SIEM и SOAR-системами}\label{sec:ch3/sect6}
+
+\subsection{Интеграция с SIEM}
+
+Алерты передаются в формате CEF:
+\begin{verbatim}
+CEF:0|AMGD|AttackDetector|1.0|T1059-Macro|Suspicious PowerShell from Word|10|
+src=192.168.1.10 suser=Alice dhost=c2.malicious.com 
+cs1Label=metagraph_id cs1=MG-20250315-1234 
+cs2Label=risk_score cs2=0.87
+\end{verbatim}
+
+\subsection{Интеграция с SOAR}
+
+При $R > 0.8$ запускается playbook:
+\noindent
+\begin{itemize} 
+    \item изоляция хоста через EDR API;
+    \item блокировка IP в фаерволе;
+    \item создание инцидента в Jira/ServiceNow;
+    \item уведомление аналитика в Slack/Teams.
+\end{itemize}   
+\section{Преимущества предложенной методики}\label{sec:ch3/sect7}
+
+По сравнению с существующими подходами~\cite{Gorbachev2018,Latypov2020}, предложенная методика обеспечивает:
+\noindent
+\begin{itemize}
+    \item повышенную точность за счёт семантического сопоставления;
+    \item снижение ложных срабатываний благодаря адаптивным порогам;
+    \item интерпретируемость результатов для аналитиков SOC;
+    \item масштабируемость за счёт инкрементального обновления;
+    \item гибкость при добавлении новых тактик через обновление базы шаблонов.
+\end{itemize}   
 \chapter{Вёрстка таблиц}\label{ch:ch3}
 
 \section{Таблица обыкновенная}\label{sec:ch3/sect1}

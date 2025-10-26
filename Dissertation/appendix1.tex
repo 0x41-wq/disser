@@ -1,0 +1,145 @@
+% !TEX encoding = UTF-8
+% !TEX program = lualatex
+
+\chapter{Прототип системы выявления компьютерных атак}
+
+В данном приложении приведён исходный код прототипа системы выявления атак на основе атрибутивных метаграфов (AMGD). Реализация выполнена на языке Python 3.10 с использованием библиотек NetworkX и Neo4j.
+
+\section{Класс AttributiveMetaGraph}
+
+Основной класс, реализующий динамический атрибутивный метаграф:
+
+\begin{lstlisting}[language=Python, caption={Класс AttributiveMetaGraph}]
+from typing import Dict, List, Set
+import networkx as nx
+
+class AttributiveMetaGraph:
+    """
+    Атрибутивный метаграф для представления событий безопасности.
+    Поддерживает добавление вершин, гипердуг и сопоставление с шаблонами.
+    """
+    def __init__(self):
+        self.graph = nx.MultiDiGraph()
+        self.vertex_counter = 0
+        self.edge_counter = 0
+
+    def add_vertex(self, attrs: Dict) -> str:
+        """Добавляет вершину с атрибутами и возвращает её идентификатор."""
+        vid = f"v_{self.vertex_counter}"
+        self.graph.add_node(vid, **attrs)
+        self.vertex_counter += 1
+        return vid
+
+    def add_hyperedge(self, sources: List[str], targets: List[str], attrs: Dict) -> str:
+        """
+        Добавляет гипердугу (событие безопасности) между множествами источников и целей.
+        """
+        eid = f"e_{self.edge_counter}"
+        for src in sources:
+            for tgt in targets:
+                self.graph.add_edge(src, tgt, id=eid, **attrs)
+        self.edge_counter += 1
+        return eid
+
+    def subgraph_isomorphism(self, pattern: 'AttributiveMetaGraph', theta: float = 0.75) -> bool:
+        """
+        Упрощённая реализация сопоставления: проверка покрытия тактик MITRE ATT&CK.
+        """
+        live_tactics = {
+            self.graph.edges[e]['mitre_ttp']
+            for e in self.graph.edges
+            if 'mitre_ttp' in self.graph.edges[e]
+        }
+        pattern_tactics = {
+            pattern.graph.edges[e]['mitre_ttp']
+            for e in pattern.graph.edges
+            if 'mitre_ttp' in pattern.graph.edges[e]
+        }
+        if not pattern_tactics:
+            return False
+        overlap = len(live_tactics & pattern_tactics)
+        return (overlap / len(pattern_tactics)) >= theta
+\end{lstlisting}
+
+\section{Алгоритм сопоставления шаблонов}
+
+Функция сопоставления эталонного шаблона атаки с динамическим метаграфом:
+
+\begin{lstlisting}[language=Python, caption={Алгоритм MetaGraph-Match}]
+def match_pattern(live_graph: AttributiveMetaGraph, pattern: dict) -> float:
+    """
+    Возвращает меру схожести от 0.0 до 1.0 между динамическим метаграфом
+    и эталонным шаблоном атаки.
+    
+    Аргументы:
+        live_graph: AttributiveMetaGraph — текущее состояние системы
+        pattern: dict — шаблон атаки в формате JSON
+    
+    Возвращает:
+        float: мера схожести (0.0 — нет совпадений, 1.0 — полное совпадение)
+    """
+    score = 0.0
+    matched_edges = 0
+    
+    for p_edge in pattern['edges']:
+        tactic = p_edge['attrs']['mitre_ttp']
+        # Поиск соответствующих дуг в live_graph
+        for edge in live_graph.graph.edges(data=True):
+            if edge[2].get('mitre_ttp') == tactic:
+                score += 1.0
+                matched_edges += 1
+                break
+    
+    return score / len(pattern['edges']) if pattern['edges'] else 0.0
+\end{lstlisting}
+
+\section{Пример использования}
+
+Пример создания шаблона атаки APT29 и его сопоставления с событиями:
+
+\begin{lstlisting}[language=Python, caption={Пример использования}]
+# Шаблон атаки APT29
+apt29_pattern = {
+    "edges": [
+        {
+            "src": ["user", "file_invoice.docm"],
+            "tgt": ["process_winword"],
+            "attrs": {"mitre_ttp": "T1566", "tactic": "Initial Access"}
+        },
+        {
+            "src": ["process_winword"],
+            "tgt": ["process_powershell"],
+            "attrs": {"mitre_ttp": "T1059.001", "tactic": "Execution"}
+        },
+        {
+            "src": ["process_powershell"],
+            "tgt": ["ip_c2"],
+            "attrs": {"mitre_ttp": "T1071.001", "tactic": "Command and Control"}
+        }
+    ]
+}
+
+# Построение динамического метаграфа из событий телеметрии
+live_graph = AttributiveMetaGraph()
+
+# Событие 1: открытие фишингового письма
+user = live_graph.add_vertex({"type": "user", "name": "Alice"})
+file = live_graph.add_vertex({"type": "file", "name": "invoice.docm", "hash": "sha256:abc123"})
+winword = live_graph.add_vertex({"type": "process", "name": "winword.exe"})
+live_graph.add_hyperedge([user, file], [winword], {"mitre_ttp": "T1566", "timestamp": "2025-03-15T10:23:45Z"})
+
+# Событие 2: запуск PowerShell
+powershell = live_graph.add_vertex({"type": "process", "name": "powershell.exe"})
+live_graph.add_hyperedge([winword], [powershell], {"mitre_ttp": "T1059.001", "timestamp": "2025-03-15T10:24:12Z"})
+
+# Событие 3: C2-соединение
+c2 = live_graph.add_vertex({"type": "ip", "name": "91.218.112.42"})
+live_graph.add_hyperedge([powershell], [c2], {"mitre_ttp": "T1071.001", "timestamp": "2025-03-15T10:25:03Z"})
+
+# Сопоставление
+similarity = match_pattern(live_graph, apt29_pattern)
+if similarity >= 0.75:
+    print(f"Обнаружена атака APT29! Схожесть: {similarity:.2f}")
+\end{lstlisting}
+
+Данный прототип был использован в экспериментальном исследовании, описанном в главе~4, и показал высокую эффективность при выявлении многоэтапных атак.
