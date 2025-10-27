@@ -10,75 +10,76 @@
 
 Современные методы моделирования атак можно условно разделить на три категории, как предложено в работах Неймана~\cite{Neiman2024a,Neiman2024b,Neiman2024c} и подтверждено в обзоре Lallie et al.~\cite{Lallie2019}:
 \begin{itemize}
-\item \textbf{Методы, основанные на диаграммах сценариев использования} (UML-диаграммы, misuse cases, CORAS);
+    \item \textbf{Методы, основанные на диаграммах сценариев использования} (UML-диаграммы, misuse cases, CORAS);
     \item \textbf{Темпоральные методы} (Cyber Kill Chain, Diamond Model, Riskit, Attack Flow);
     \item \textbf{Методы, основанные на графах} (деревья атак, графы атак, онтологии, метаграфы).
 \end{itemize}
+
 Эта классификация отражает эволюцию подходов от статического описания целей к динамическому моделированию последовательности действий и, наконец, к формальному представлению сложных зависимостей между сущностями. На рисунке~\ref{fig:attack_modeling_taxonomy} представлена визуализация этой таксономии с выделением перспективного направления — атрибутивных метаграфов.
 
 \begin{figure}[h]
-\centering
-\begin{tikzpicture}[
-    node distance=0.9cm and 1.4cm,
-    >=Stealth,
-    thick,
-    category/.style = {
-        rectangle, draw, fill=gray!20,
-        text width=5.2em, align=center, font=\small, rounded corners
-    },
-    method/.style = {
-        rectangle, draw, fill=blue!10,
-        text width=4.8em, align=center, font=\small
-    },
-    future/.style = {
-        rectangle, draw=red!60, dashed, fill=red!5,
-        text width=5.5em, align=center, font=\small, thick
-    }
-]
-% === Уровень 1: Категории ===
-\node [category] (uml) {Диаграммы\\сценариев};
-\node [category, right=2.2cm of uml] (temporal) {Темпоральные\\методы};
-\node [category, right=2.2cm of temporal] (graph) {Графовые\\методы};
-
-% === Уровень 2: Методы ===
-% UML-группа
-\node [method, below=of uml] (misuse) {Misuse\\Cases};
-\node [method, below=of misuse] (coras) {CORAS};
-\node [method, below=of coras] (securityuc) {Security\\Use Cases};
-
-% Темпоральные методы
-\node [method, below=of temporal] (killchain) {Cyber\\Kill Chain};
-\node [method, below=of killchain] (diamond) {Diamond\\Model};
-\node [method, below=of diamond] (riskit) {Riskit};
-\node [method, below=of riskit] (attackflow) {Attack\\Flow};
-
-% Графовые методы
-\node [method, below=of graph] (tree) {Деревья\\атак};
-\node [method, below=of tree] (graphattack) {Графы\\атак};
-\node [method, below=of graphattack] (ontology) {Онтологии};
-\node [future, below=of ontology] (metagraph) {Атрибутивные\\метаграфы};
-
-% === Связи ===
-\draw [->] (uml) -- (misuse);
-\draw [->] (uml) -- (coras);
-\draw [->] (uml) -- (securityuc);
-
-\draw [->] (temporal) -- (killchain);
-\draw [->] (temporal) -- (diamond);
-\draw [->] (temporal) -- (riskit);
-\draw [->] (temporal) -- (attackflow);
-
-\draw [->] (graph) -- (tree);
-\draw [->] (graph) -- (graphattack);
-\draw [->] (graph) -- (ontology);
-\draw [->] (graph) -- (metagraph);
-
-% === Подпись под метаграфом ===
-\node [below=0.25cm of metagraph, font=\small, text=red!60] {Перспективное направление};
-
-\end{tikzpicture}
-\caption{Таксономия методов моделирования атак}
-\label{fig:attack_modeling_taxonomy}
+    \centering
+    \begin{tikzpicture}[
+            node distance=0.9cm and 1.4cm,
+            >=Stealth,
+            thick,
+            category/.style = {
+                    rectangle, draw, fill=gray!20,
+                    text width=5.2em, align=center, font=\small, rounded corners
+                },
+            method/.style = {
+                    rectangle, draw, fill=blue!10,
+                    text width=4.8em, align=center, font=\small
+                },
+            future/.style = {
+                    rectangle, draw=red!60, dashed, fill=red!5,
+                    text width=5.5em, align=center, font=\small, thick
+                }
+        ]
+        % === Уровень 1: Категории ===
+        \node [category] (uml) {Диаграммы\\сценариев};
+        \node [category, right=2.2cm of uml] (temporal) {Темпоральные\\методы};
+        \node [category, right=2.2cm of temporal] (graph) {Графовые\\методы};
+        
+        % === Уровень 2: Методы ===
+        % UML-группа
+        \node [method, below=of uml] (misuse) {Misuse\\Cases};
+        \node [method, below=of misuse] (coras) {CORAS};
+        \node [method, below=of coras] (securityuc) {Security\\Use Cases};
+        
+        % Темпоральные методы
+        \node [method, below=of temporal] (killchain) {Cyber\\Kill Chain};
+        \node [method, below=of killchain] (diamond) {Diamond\\Model};
+        \node [method, below=of diamond] (riskit) {Riskit};
+        \node [method, below=of riskit] (attackflow) {Attack\\Flow};
+        
+        % Графовые методы
+        \node [method, below=of graph] (tree) {Деревья\\атак};
+        \node [method, below=of tree] (graphattack) {Графы\\атак};
+        \node [method, below=of graphattack] (ontology) {Онтологии};
+        \node [future, below=of ontology] (metagraph) {Атрибутивные\\метаграфы};
+        
+        % === Связи ===
+        \draw [->] (uml) -- (misuse);
+        \draw [->] (uml) -- (coras);
+        \draw [->] (uml) -- (securityuc);
+        
+        \draw [->] (temporal) -- (killchain);
+        \draw [->] (temporal) -- (diamond);
+        \draw [->] (temporal) -- (riskit);
+        \draw [->] (temporal) -- (attackflow);
+        
+        \draw [->] (graph) -- (tree);
+        \draw [->] (graph) -- (graphattack);
+        \draw [->] (graph) -- (ontology);
+        \draw [->] (graph) -- (metagraph);
+        
+        % === Подпись под метаграфом ===
+        \node [below=0.25cm of metagraph, font=\small, text=red!60] {Перспективное направление};
+        
+    \end{tikzpicture}
+    \caption{Таксономия методов моделирования атак}
+    \label{fig:attack_modeling_taxonomy}
 \end{figure}
 
 \subsection{Методы, основанные на диаграммах сценариев использования}
@@ -91,6 +92,7 @@
     \item \textit{Сценарий неправильного использования (misuse case)} — негативное действие;
     \item \textit{Связи «угрожает» (threatens)} и «смягчает» (mitigates) — отношения между легитимными и вредоносными действиями.
 \end{itemize}
+
 Преимущества метода — простота и интуитивная понятность, что улучшает коммуникацию между экспертами и заказчиками. Однако он страдает от отсутствия конкретики в описании действий и условий их выполнения~\cite{Neiman2024a}.
 
 \textbf{CORAS} (2002) — это фреймворк для анализа рисков, также вдохновлённый UML, но с собственной системой элементов: активы, угрозы, уязвимости, сценарии и атакующие~\cite{Neiman2024a}. CORAS позволяет строить диаграммы справа налево, начиная с активов и заканчивая атакующим, что удобно для верхнеуровневого анализа рисков. Однако метод не определяет, какие связи являются обязательными, что снижает его выразительную мощность.
@@ -114,37 +116,37 @@
 Темпоральные методы хорошо подходят для описания последовательности действий, но они не всегда адекватно отражают параллельные и многообъектные действия, характерные для современных атак.
 
 \begin{figure}[h]
-\centering
-\begin{tikzpicture}[
-    node distance=0.8cm and 1.0cm,
-    >=Stealth,
-    thick,
-    phase/.style = {rectangle, draw, fill=green!10, text width=3.8em, align=center, font=\small},
-    action/.style = {rectangle, draw, fill=blue!10, text width=4.5em, align=center, font=\small}
-]
-% Фазы Kill Chain
-\node [phase] (recon) {Разведка};
-\node [phase, right=of recon] (weapon) {Вооружение};
-\node [phase, right=of weapon] (delivery) {Доставка};
-\node [phase, right=of delivery] (exploit) {Эксплуатация};
-\node [phase, right=of exploit] (install) {Установка};
-\node [phase, right=of install] (c2) {C2};
-\node [phase, right=of c2] (act) {Действия};
-
-% Действия
-\node [action, below=1.2cm of delivery] (phish) {Фишинг};
-\node [action, below=1.2cm of exploit] (macro) {Макрос};
-\node [action, below=1.2cm of install] (revshell) {Реверс-шелл};
-\node [action, below=1.2cm of c2] (mimikatz) {Mimikatz};
-
-% Связи
-\draw [->] (phish) -- (delivery);
-\draw [->] (macro) -- (exploit);
-\draw [->] (revshell) -- (install);
-\draw [->] (mimikatz) -- (c2);
-\end{tikzpicture}
-\caption{Пример атаки в терминах Cyber Kill Chain}
-\label{fig:killchain_example}
+    \centering
+    \begin{tikzpicture}[
+            node distance=0.8cm and 1.0cm,
+            >=Stealth,
+            thick,
+            phase/.style = {rectangle, draw, fill=green!10, text width=3.8em, align=center, font=\small},
+            action/.style = {rectangle, draw, fill=blue!10, text width=4.5em, align=center, font=\small}
+        ]
+        % Фазы Kill Chain
+        \node [phase] (recon) {Разведка};
+        \node [phase, right=of recon] (weapon) {Вооружение};
+        \node [phase, right=of weapon] (delivery) {Доставка};
+        \node [phase, right=of delivery] (exploit) {Эксплуатация};
+        \node [phase, right=of exploit] (install) {Установка};
+        \node [phase, right=of install] (c2) {C2};
+        \node [phase, right=of c2] (act) {Действия};
+        
+        % Действия
+        \node [action, below=1.2cm of delivery] (phish) {Фишинг};
+        \node [action, below=1.2cm of exploit] (macro) {Макрос};
+        \node [action, below=1.2cm of install] (revshell) {Реверс-шелл};
+        \node [action, below=1.2cm of c2] (mimikatz) {Mimikatz};
+        
+        % Связи
+        \draw [->] (phish) -- (delivery);
+        \draw [->] (macro) -- (exploit);
+        \draw [->] (revshell) -- (install);
+        \draw [->] (mimikatz) -- (c2);
+    \end{tikzpicture}
+    \caption{Пример атаки в терминах Cyber Kill Chain}
+    \label{fig:killchain_example}
 \end{figure}
 
 \subsection{Графовые методы моделирования}
@@ -162,32 +164,32 @@
 \textbf{Машинное обучение} применяется для аномального анализа и предсказания атак. Однако такие модели часто являются «чёрными ящиками», что затрудняет верификацию результатов и снижает доверие со стороны аналитиков~\cite{Kalinin2018,Pavlenko2018}.
 
 \begin{figure}[h]
-\centering
-\begin{tikzpicture}[
-    node distance=1.0cm and 1.2cm,
-    >=Stealth,
-    thick,
-    root/.style = {rectangle, draw, fill=red!20, text width=4.8em, align=center, font=\small},
-    and/.style = {rectangle, draw, fill=blue!10, text width=4.0em, align=center, font=\small},
-    or/.style = {rectangle, draw, fill=green!10, text width=4.0em, align=center, font=\small},
-    leaf/.style = {rectangle, draw, fill=yellow!10, text width=4.0em, align=center, font=\small}
-]
-\node [root] (open) {Открыть сейф};
-\node [or, below left=1.3cm and 0.8cm of open] (pick) {Взломать\\замок};
-\node [or, below=1.3cm of open] (learn) {Узнать код};
-\node [or, below right=1.3cm and 0.8cm of open] (cut) {Вырезать};
-
-\node [and, below=0.9cm of learn] (find) {Найти\\запись};
-\node [and, below=0.9cm of find] (bribe) {Подкупить\\владельца};
-
-\draw [->] (open) -- (pick);
-\draw [->] (open) -- (learn);
-\draw [->] (open) -- (cut);
-\draw [->] (learn) -- (find);
-\draw [->] (find) -- (bribe);
-\end{tikzpicture}
-\caption{Пример дерева атак (по Schneier~\cite{Schneier1999})}
-\label{fig:attack_tree_example}
+    \centering
+    \begin{tikzpicture}[
+            node distance=1.0cm and 1.2cm,
+            >=Stealth,
+            thick,
+            root/.style = {rectangle, draw, fill=red!20, text width=4.8em, align=center, font=\small},
+            and/.style = {rectangle, draw, fill=blue!10, text width=4.0em, align=center, font=\small},
+            or/.style = {rectangle, draw, fill=green!10, text width=4.0em, align=center, font=\small},
+            leaf/.style = {rectangle, draw, fill=yellow!10, text width=4.0em, align=center, font=\small}
+        ]
+        \node [root] (open) {Открыть сейф};
+        \node [or, below left=1.3cm and 0.8cm of open] (pick) {Взломать\\замок};
+        \node [or, below=1.3cm of open] (learn) {Узнать код};
+        \node [or, below right=1.3cm and 0.8cm of open] (cut) {Вырезать};
+        
+        \node [and, below=0.9cm of learn] (find) {Найти\\запись};
+        \node [and, below=0.9cm of find] (bribe) {Подкупить\\владельца};
+        
+        \draw [->] (open) -- (pick);
+        \draw [->] (open) -- (learn);
+        \draw [->] (open) -- (cut);
+        \draw [->] (learn) -- (find);
+        \draw [->] (find) -- (bribe);
+    \end{tikzpicture}
+    \caption{Пример дерева атак (по Schneier~\cite{Schneier1999})}
+    \label{fig:attack_tree_example}
 \end{figure}
 
 \subsection{Атрибутивные метаграфы как перспективное направление}
@@ -197,39 +199,41 @@
 В этих условиях \textbf{атрибутивные метаграфы}, как обобщение гиперграфов, предлагают компромиссное решение. Метаграфы позволяют естественным образом описывать многообъектные действия (например, «макрос в Word запускает PowerShell и пишет в реестр»), интегрировать семантические атрибуты (включая TTPs MITRE ATT\&CK) и поддерживать динамическое обновление по потоковым данным~\cite{Latypov2020}.
 
 Более того, структура атрибутивных метаграфов совместима с современными методами искусственного интеллекта:
+
 \begin{itemize}
     \item \textbf{Графовые нейронные сети (GNN)} могут использовать метаграфы в качестве входной структуры для обучения на семантически насыщенных данных;
     \item \textbf{Рекуррентные сети (LSTM)} могут предсказывать следующие шаги атакующего на основе последовательности TTP;
     \item \textbf{Языковые модели (LLM)} могут генерировать эталонные метаграфы из отчётов Mandiant и CrowdStrike.
 \end{itemize}
+
 Таким образом, атрибутивные метаграфы не являются альтернативой существующим методам, а выступают в роли \textbf{семантической «операционной системы»}, в рамках которой нейросетевые компоненты могут выполнять специализированные задачи: предсказание, классификацию, генерацию знаний. Именно поэтому в настоящей диссертации выбрана модель атрибутивных метаграфов в качестве основы для разработки новой методики выявления компьютерных атак.
 
 \begin{figure}[h]
-\centering
-\begin{tikzpicture}[
-    node distance=1.0cm and 1.2cm,
-    >=Stealth,
-    thick,
-    attack/.style = {rectangle, draw, fill=red!10, text width=4.8em, align=center, font=\small},
-    model/.style = {rectangle, draw, fill=blue!10, text width=5.2em, align=center, font=\small}
-]
-\node [model] (motiv) {Мотивация\\(APT)};
-\node [model, right=of motiv] (stage) {Этапы\\(ATT\&CK)};
-\node [model, right=of stage] (bdu) {Уязвимости\\(CVE)};
-\node [model, right=of bdu] (stride) {Цели\\(STRIDE)};
-
-\node [attack, below=1.5cm of motiv] (apt) {APT29};
-\node [attack, below=1.5cm of stage] (phish) {Фишинг → C2};
-\node [attack, below=1.5cm of bdu] (vuln) {CVE-2023-1234};
-\node [attack, below=1.5cm of stride] (tamper) {Tampering};
-
-\draw [->] (apt) -- (motiv);
-\draw [->] (phish) -- (stage);
-\draw [->] (vuln) -- (bdu);
-\draw [->] (tamper) -- (stride);
-\end{tikzpicture}
-\caption{Многоаспектная классификация компьютерных атак}
-\label{fig:attack_classification}
+    \centering
+    \begin{tikzpicture}[
+            node distance=1.0cm and 1.2cm,
+            >=Stealth,
+            thick,
+            attack/.style = {rectangle, draw, fill=red!10, text width=4.8em, align=center, font=\small},
+            model/.style = {rectangle, draw, fill=blue!10, text width=5.2em, align=center, font=\small}
+        ]
+        \node [model] (motiv) {Мотивация\\(APT)};
+        \node [model, right=of motiv] (stage) {Этапы\\(ATT\&CK)};
+        \node [model, right=of stage] (bdu) {Уязвимости\\(CVE)};
+        \node [model, right=of bdu] (stride) {Цели\\(STRIDE)};
+        
+        \node [attack, below=1.5cm of motiv] (apt) {APT29};
+        \node [attack, below=1.5cm of stage] (phish) {Фишинг → C2};
+        \node [attack, below=1.5cm of bdu] (vuln) {CVE-2023-1234};
+        \node [attack, below=1.5cm of stride] (tamper) {Tampering};
+        
+        \draw [->] (apt) -- (motiv);
+        \draw [->] (phish) -- (stage);
+        \draw [->] (vuln) -- (bdu);
+        \draw [->] (tamper) -- (stride);
+    \end{tikzpicture}
+    \caption{Многоаспектная классификация компьютерных атак}
+    \label{fig:attack_classification}
 \end{figure}
 
 \section{Методы обнаружения компьютерных атак}\label{sec:ch1/sec2}
@@ -271,58 +275,59 @@
 В таблице~\ref{tab:detection_methods} приведено сравнение основных методов по ключевым характеристикам.
 
 \begin{table}[h]
-\centering
-\caption{Сравнение методов обнаружения атак}
-\label{tab:detection_methods}
-\begin{tabular}{lcccc}
-\toprule
-Метод & Обнаружение zero-day & Уровень FPR & Интерпретируемость & Поддержка TTPs \\
-\midrule
-Сигнатурный & Нет & Низкий & Высокая & Нет \\
-Аномальный & Да & Высокий & Низкая & Косвенная \\
-Поведенческий & Частично & Средний & Средняя & Да \\
-Графовые модели & Да & Низкий & Высокая & Да \\
-Атрибутивные метаграфы & Да & Очень низкий & Очень высокая & Полная \\
-\bottomrule
-\end{tabular}
+    \centering
+    \caption{Сравнение методов обнаружения атак}
+    \label{tab:detection_methods}
+    \begin{tabular}{lcccc}
+        \toprule
+        Метод                  & Обнаружение zero-day & Уровень FPR  & Интерпретируемость & Поддержка TTPs \\
+        \midrule
+        Сигнатурный            & Нет                  & Низкий       & Высокая            & Нет            \\
+        Аномальный             & Да                   & Высокий      & Низкая             & Косвенная      \\
+        Поведенческий          & Частично             & Средний      & Средняя            & Да             \\
+        Графовые модели        & Да                   & Низкий       & Высокая            & Да             \\
+        Атрибутивные метаграфы & Да                   & Очень низкий & Очень высокая      & Полная         \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 На рисунке~\ref{fig:detection_taxonomy} представлена таксономия методов обнаружения, подчёркивающая переход от реактивных (сигнатуры) к проактивным, семантически насыщенным подходам.
 
 \begin{figure}[h]
-\centering
-\begin{tikzpicture}[
-    node distance=0.9cm and 1.2cm,
-    >=Stealth,
-    thick,
-    category/.style = {rectangle, draw, fill=gray!20, text width=5.0em, align=center, font=\small, rounded corners},
-    method/.style = {rectangle, draw, fill=blue!10, text width=4.8em, align=center, font=\small},
-    future/.style = {rectangle, draw=red!60, dashed, fill=red!5, text width=5.5em, align=center, font=\small, thick}
-]
-% Категории
-\node [category] (sig) {Сигнатурный};
-\node [category, right=1.8cm of sig] (anom) {Аномальный};
-\node [category, right=1.8cm of anom] (behav) {Поведенческий};
-\node [category, right=1.8cm of behav] (semantic) {Семантический};
-
-% Методы
-\node [method, below=of sig] (snort) {Snort};
-\node [method, below=of anom] (isolation) {Isolation\\Forest};
-\node [method, below=of behav] (siem) {SIEM-правила};
-\node [method, below=of semantic] (attackgraph) {Графы\\атак};
-\node [future, below=of attackgraph] (metagraph) {Атрибутивные\\метаграфы};
-
-% Связи
-\draw [->] (sig) -- (snort);
-\draw [->] (anom) -- (isolation);
-\draw [->] (behav) -- (siem);
-\draw [->] (semantic) -- (attackgraph);
-\draw [->] (semantic) -- (metagraph);
-
-\node [below=0.25cm of metagraph, font=\small, text=red!60] {Перспективное направление};
-\end{tikzpicture}
-\caption{Таксономия методов обнаружения компьютерных атак}
-\label{fig:detection_taxonomy}
+    \centering
+    \begin{tikzpicture}[
+            node distance=0.9cm and 1.2cm,
+            >=Stealth,
+            thick,
+            category/.style = {rectangle, draw, fill=gray!20, text width=5.0em, align=center, font=\small, rounded corners},
+            method/.style = {rectangle, draw, fill=blue!10, text width=4.8em, align=center, font=\small},
+            future/.style = {rectangle, draw=red!60, dashed, fill=red!5, text width=5.5em, align=center, font=\small, thick}
+        ]
+        
+        % Категории
+        \node [category] (sig) {Сигнатурный};
+        \node [category, right=1.8cm of sig] (anom) {Аномальный};
+        \node [category, right=1.8cm of anom] (behav) {Поведенческий};
+        \node [category, right=1.8cm of behav] (semantic) {Семантический};
+        
+        % Методы
+        \node [method, below=of sig] (snort) {Snort};
+        \node [method, below=of anom] (isolation) {Isolation\\Forest};
+        \node [method, below=of behav] (siem) {SIEM-правила};
+        \node [method, below=of semantic] (attackgraph) {Графы\\атак};
+        \node [future, below=of attackgraph] (metagraph) {Атрибутивные\\метаграфы};
+        
+        % Связи
+        \draw [->] (sig) -- (snort);
+        \draw [->] (anom) -- (isolation);
+        \draw [->] (behav) -- (siem);
+        \draw [->] (semantic) -- (attackgraph);
+        \draw [->] (semantic) -- (metagraph);
+        
+        \node [below=0.25cm of metagraph, font=\small, text=red!60] {Перспективное направление};
+    \end{tikzpicture}
+    \caption{Таксономия методов обнаружения компьютерных атак}
+    \label{fig:detection_taxonomy}
 \end{figure}
 
 \subsection{Вычислительная эффективность и практическая применимость}
@@ -330,20 +335,20 @@
 В таблице~\ref{tab:performance_comparison} представлены результаты экспериментов по эффективности различных методов на датасете CIC-IDS2017 \cite{CIC2017}.
 
 \begin{table}[h]
-\centering
-\caption{Сравнение эффективности методов обнаружения}
-\label{tab:performance_comparison}
-\begin{tabular}{lccc}
-\toprule
-Метод & Precision & Recall & FPR (\%) \\
-\midrule
-Сигнатуры (Snort) & 0.68 & 0.42 & 0.8 \\
-Аномальный анализ & 0.55 & 0.71 & 4.2 \\
-Поведенческие правила & 0.72 & 0.65 & 2.1 \\
-Графовые модели (GNN) & 0.81 & 0.78 & 1.7 \\
-\textbf{Атрибутивные метаграфы} & \textbf{0.89} & \textbf{0.84} & \textbf{1.3} \\
-\bottomrule
-\end{tabular}
+    \centering
+    \caption{Сравнение эффективности методов обнаружения}
+    \label{tab:performance_comparison}
+    \begin{tabular}{lccc}
+        \toprule
+        Метод                           & Precision     & Recall        & FPR (\%)     \\
+        \midrule
+        Сигнатуры (Snort)               & 0.68          & 0.42          & 0.8          \\
+        Аномальный анализ               & 0.55          & 0.71          & 4.2          \\
+        Поведенческие правила           & 0.72          & 0.65          & 2.1          \\
+        Графовые модели (GNN)           & 0.81          & 0.78          & 1.7          \\
+        \textbf{Атрибутивные метаграфы} & \textbf{0.89} & \textbf{0.84} & \textbf{1.3} \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 Результаты подтверждают, что семантически насыщенные модели, такие как атрибутивные метаграфы, обеспечивают наилучший баланс между точностью, полнотой и уровнем ложных срабатываний.
@@ -387,17 +392,18 @@
     \item устойчивости к неполным данным,
     \item поддержки динамического обновления.
 \end{itemize}
-    Это создаёт потребность в новой формальной модели, способной преодолеть указанные ограничения.
+Это создаёт потребность в новой формальной модели, способной преодолеть указанные ограничения.
 
 \section{Метаграфы как инструмент моделирования сложных систем}\label{sec:ch1/sec4}
 
 Метаграфы — обобщение гиперграфов, впервые строго определённое в работах Zhang и Thulasiraman \cite{Zhang2006}, — предлагают альтернативу, свободную от перечисленных недостатков. В отличие от классических графов, где дуга соединяет две вершины, в метаграфе \textbf{дуга может соединять множества вершин}, что позволяет естественным образом описывать многообъектные действия, характерные для современных атак.
 
+\begin{comment}
 \subsection{Выразительная мощность и соответствие реальности}
 
 Рассмотрим типичный сценарий атаки: макрос в документе Word запускает PowerShell, который создаёт задачу в Планировщике и устанавливает HTTPS-соединение с C2-сервером. В классическом графе это требует трёх отдельных рёбер, теряя семантическую целостность действия. В метаграфе это \textbf{одна гипердуга}:
 \[
-e = (\{ \texttt{Word}, \texttt{invoice.docm} \}, \{ \texttt{powershell.exe}, \texttt{Task}, \texttt{c2.malicious.com} \})
+    e = (\{ \texttt{Word}, \texttt{invoice.docm} \}, \{ \texttt{powershell.exe}, \texttt{Task}, \texttt{c2.malicious.com} \})
 \]
 Такая структура сохраняет \textbf{причинно-следственную связь} и позволяет точно сопоставлять с эталонными паттернами.
 
@@ -408,19 +414,19 @@ e = (\{ \texttt{Word}, \texttt{invoice.docm} \}, \{ \texttt{powershell.exe}, \te
 \subsection{Преимущества перед другими подходами}
 
 \begin{table}[h]
-\centering
-\caption{Сравнение подходов по ключевым характеристикам}
-\label{tab:model_comparison}
-\begin{tabular}{lcccc}
-\toprule
-Подход & Интерпретируемость & Масштабируемость & Поддержка динамики & Устойчивость к неполным данным \\
-\midrule
-ML/DL  & Низкая             & Высокая          & Высокая             & Низкая                        \\
-Графы атак & Высокая        & Низкая           & Низкая              & Низкая                        \\
-Онтологии & Высокая          & Средняя          & Низкая              & Средняя                       \\
-\textbf{Атрибутивные метаграфы} & \textbf{Высокая} & \textbf{Высокая} & \textbf{Высокая} & \textbf{Высокая} \\
-\bottomrule
-\end{tabular}
+    \centering
+    \caption{Сравнение подходов по ключевым характеристикам}
+    \label{tab:model_comparison}
+    \begin{tabular}{lcccc}
+        \toprule
+        Подход                          & Интерпретируемость & Масштабируемость & Поддержка динамики & Устойчивость к неполным данным \\
+        \midrule
+        ML/DL                           & Низкая             & Высокая          & Высокая            & Низкая                         \\
+        Графы атак                      & Высокая            & Низкая           & Низкая             & Низкая                         \\
+        Онтологии                       & Высокая            & Средняя          & Низкая             & Средняя                        \\
+        \textbf{Атрибутивные метаграфы} & \textbf{Высокая}   & \textbf{Высокая} & \textbf{Высокая}   & \textbf{Высокая}               \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 \subsection{Визуализация преимуществ}
@@ -428,33 +434,33 @@ ML/DL  & Низкая             & Высокая          & Высокая    
 На рисунке~\ref{fig:model_comparison} показано, как разные модели представляют один и тот же сценарий атаки. Метаграф сохраняет семантическую целостность, в то время как граф атак фрагментирует её, а ML-модель скрывает логику за весами нейронов.
 
 \begin{figure}[h]
-\centering
-\begin{tikzpicture}[
-    node distance=0.9cm and 1.4cm,
-    >=Stealth,
-    thick,
-    model/.style = {rectangle, draw, fill=gray!20, text width=4.8em, align=center, font=\small},
-    attack/.style = {rectangle, draw, fill=red!10, text width=4.2em, align=center, font=\small}
-]
-% Модели
-\node [model] (ml) {ML/DL};
-\node [model, right=of ml] (graph) {Граф атак};
-\node [model, right=of graph] (meta) {Метаграф};
-
-% Сценарии
-\node [attack, below=1.3cm of ml] (ml_s) {Вектор\\признаков};
-\node [attack, below=1.3cm of graph] (graph_s) {3 ребра};
-\node [attack, below=1.3cm of meta] (meta_s) {1 гипердуга\\с атрибутами};
-
-% Связи
-\draw [->] (ml_s) -- (ml);
-\draw [->] (graph_s) -- (graph);
-\draw [->] (meta_s) -- (meta);
-
-\node [below=0.25cm of meta_s, font=\small, text=blue!60] {Семантически целостно};
-\end{tikzpicture}
-\caption{Сравнение представления атаки в разных моделях}
-\label{fig:model_comparison}
+    \centering
+    \begin{tikzpicture}[
+            node distance=0.9cm and 1.4cm,
+            >=Stealth,
+            thick,
+            model/.style = {rectangle, draw, fill=gray!20, text width=4.8em, align=center, font=\small},
+            attack/.style = {rectangle, draw, fill=red!10, text width=4.2em, align=center, font=\small}
+        ]
+        % Модели
+        \node [model] (ml) {ML/DL};
+        \node [model, right=of ml] (graph) {Граф атак};
+        \node [model, right=of graph] (meta) {Метаграф};
+        
+        % Сценарии
+        \node [attack, below=1.3cm of ml] (ml_s) {Вектор\\признаков};
+        \node [attack, below=1.3cm of graph] (graph_s) {3 ребра};
+        \node [attack, below=1.3cm of meta] (meta_s) {1 гипердуга\\с атрибутами};
+        
+        % Связи
+        \draw [->] (ml_s) -- (ml);
+        \draw [->] (graph_s) -- (graph);
+        \draw [->] (meta_s) -- (meta);
+        
+        \node [below=0.25cm of meta_s, font=\small, text=blue!60] {Семантически целостно};
+    \end{tikzpicture}
+    \caption{Сравнение представления атаки в разных моделях}
+    \label{fig:model_comparison}
 \end{figure}
 
 \subsection{Поддержка инкрементального обновления}
@@ -469,7 +475,7 @@ ML/DL  & Низкая             & Высокая          & Высокая    
     \item LSTM может предсказывать следующую технику на основе последовательности TTP;
     \item LLM может генерировать эталонные метаграфы из отчётов.
 \end{itemize}
-    При этом все выводы остаются \textbf{интерпретируемыми}, поскольку базируются на формальной структуре.
+При этом все выводы остаются \textbf{интерпретируемыми}, поскольку базируются на формальной структуре.
 
 Таким образом, атрибутивные метаграфы устраняют ключевые недостатки существующих подходов и обеспечивают основу для создания адаптивных, точных и доверенных систем обнаружения кибератак.
 
@@ -671,13 +677,13 @@ ML/DL  & Низкая             & Высокая          & Высокая    
 небольшой отступ \verb+\,+ между основными сомножителями, ниже
 результат применения всех вариантов отступа:
 \begin{align*}
-    \backslash!             & \quad f(x) = x^2\! +3x\! +2         \\
-    \mbox{по-умолчанию}     & \quad f(x) = x^2+3x+2               \\
-    \backslash,             & \quad f(x) = x^2\, +3x\, +2         \\
-    \backslash{:}           & \quad f(x) = x^2\: +3x\: +2         \\
-    \backslash;             & \quad f(x) = x^2\; +3x\; +2         \\
-    \backslash \mbox{space} & \quad f(x) = x^2\ +3x\ +2           \\
-    \backslash \mbox{quad}  & \quad f(x) = x^2\quad +3x\quad +2   \\
+    \backslash!             & \quad f(x) = x^2\! +3x\! +2          \\
+    \mbox{по-умолчанию}     & \quad f(x) = x^2+3x+2                \\
+    \backslash,             & \quad f(x) = x^2\, +3x\, +2          \\
+    \backslash{:}           & \quad f(x) = x^2\: +3x\: +2          \\
+    \backslash;             & \quad f(x) = x^2\; +3x\; +2          \\
+    \backslash \mbox{space} & \quad f(x) = x^2\ +3x\ +2            \\
+    \backslash \mbox{quad}  & \quad f(x) = x^2\quad +3x\quad +2    \\
     \backslash \mbox{qquad} & \quad f(x) = x^2\qquad +3x\qquad +2
 \end{align*}
 
@@ -828,27 +834,27 @@ ML/DL  & Низкая             & Высокая          & Высокая    
             \toprule
             Название       & Команда               & Символ              & Название & Команда & Символ \\
             \midrule
-            Беккерель      & \verb|\becquerel|     & \si{\becquerel}     &
+            Беккерель      & \verb|\becquerel|     & \si{\becquerel}     & 
             Ньютон         & \verb|\newton|        & \si{\newton}                                      \\
-            Градус Цельсия & \verb|\degreeCelsius| & \si{\degreeCelsius} &
+            Градус Цельсия & \verb|\degreeCelsius| & \si{\degreeCelsius} & 
             Ом             & \verb|\ohm|           & \si{\ohm}                                         \\
-            Кулон          & \verb|\coulomb|       & \si{\coulomb}       &
+            Кулон          & \verb|\coulomb|       & \si{\coulomb}       & 
             Паскаль        & \verb|\pascal|        & \si{\pascal}                                      \\
-            Фарад          & \verb|\farad|         & \si{\farad}         &
+            Фарад          & \verb|\farad|         & \si{\farad}         & 
             Радиан         & \verb|\radian|        & \si{\radian}                                      \\
-            Грей           & \verb|\gray|          & \si{\gray}          &
+            Грей           & \verb|\gray|          & \si{\gray}          & 
             Сименс         & \verb|\siemens|       & \si{\siemens}                                     \\
-            Герц           & \verb|\hertz|         & \si{\hertz}         &
+            Герц           & \verb|\hertz|         & \si{\hertz}         & 
             Зиверт         & \verb|\sievert|       & \si{\sievert}                                     \\
-            Генри          & \verb|\henry|         & \si{\henry}         &
+            Генри          & \verb|\henry|         & \si{\henry}         & 
             Стерадиан      & \verb|\steradian|     & \si{\steradian}                                   \\
-            Джоуль         & \verb|\joule|         & \si{\joule}         &
+            Джоуль         & \verb|\joule|         & \si{\joule}         & 
             Тесла          & \verb|\tesla|         & \si{\tesla}                                       \\
-            Катал          & \verb|\katal|         & \si{\katal}         &
+            Катал          & \verb|\katal|         & \si{\katal}         & 
             Вольт          & \verb|\volt|          & \si{\volt}                                        \\
-            Люмен          & \verb|\lumen|         & \si{\lumen}         &
+            Люмен          & \verb|\lumen|         & \si{\lumen}         & 
             Ватт           & \verb|\watt|          & \si{\watt}                                        \\
-            Люкс           & \verb|\lux|           & \si{\lux}           &
+            Люкс           & \verb|\lux|           & \si{\lux}           & 
             Вебер          & \verb|\weber|         & \si{\weber}                                       \\
             \bottomrule
         \end{tabular}
@@ -859,7 +865,7 @@ ML/DL  & Низкая             & Высокая          & Высокая    
     \centering
     \begin{threeparttable}% выравнивание подписи по границам таблицы
         \caption{Внесистемные единицы}\label{tab:unit:accepted}
-
+        
         \begin{tabular}{llc}
             \toprule
             Название        & Команда           & Символ          \\
@@ -929,29 +935,29 @@ ML/DL  & Низкая             & Высокая          & Высокая    
         \caption{Приставки СИ}\label{tab:unit:prefix}
         \begin{tabular}{llcc|llcc}
             \toprule
-            Приставка & Команда       & Символ      & Степень      &
-            Приставка & Команда       & Символ      & Степень        \\
+            Приставка & Команда       & Символ      & Степень      & 
+            Приставка & Команда       & Символ      & Степень          \\
             \midrule
-            Иокто     & \verb|\yocto| & \si{\yocto} & \textminus24 &
-            Дека      & \verb|\deca|  & \si{\deca}  & 1              \\
-            Зепто     & \verb|\zepto| & \si{\zepto} & \textminus21 &
-            Гекто     & \verb|\hecto| & \si{\hecto} & 2              \\
-            Атто      & \verb|\atto|  & \si{\atto}  & \textminus18 &
-            Кило      & \verb|\kilo|  & \si{\kilo}  & 3              \\
-            Фемто     & \verb|\femto| & \si{\femto} & \textminus15 &
-            Мега      & \verb|\mega|  & \si{\mega}  & 6              \\
-            Пико      & \verb|\pico|  & \si{\pico}  & \textminus12 &
-            Гига      & \verb|\giga|  & \si{\giga}  & 9              \\
-            Нано      & \verb|\nano|  & \si{\nano}  & \textminus9  &
-            Терра     & \verb|\tera|  & \si{\tera}  & 12             \\
-            Микро     & \verb|\micro| & \si{\micro} & \textminus6  &
-            Пета      & \verb|\peta|  & \si{\peta}  & 15             \\
-            Милли     & \verb|\milli| & \si{\milli} & \textminus3  &
-            Екса      & \verb|\exa|   & \si{\exa}   & 18             \\
-            Санти     & \verb|\centi| & \si{\centi} & \textminus2  &
-            Зетта     & \verb|\zetta| & \si{\zetta} & 21             \\
-            Деци      & \verb|\deci|  & \si{\deci}  & \textminus1  &
-            Иотта     & \verb|\yotta| & \si{\yotta} & 24             \\
+            Иокто     & \verb|\yocto| & \si{\yocto} & \textminus24 & 
+            Дека      & \verb|\deca|  & \si{\deca}  & 1                \\
+            Зепто     & \verb|\zepto| & \si{\zepto} & \textminus21 & 
+            Гекто     & \verb|\hecto| & \si{\hecto} & 2                \\
+            Атто      & \verb|\atto|  & \si{\atto}  & \textminus18 & 
+            Кило      & \verb|\kilo|  & \si{\kilo}  & 3                \\
+            Фемто     & \verb|\femto| & \si{\femto} & \textminus15 & 
+            Мега      & \verb|\mega|  & \si{\mega}  & 6                \\
+            Пико      & \verb|\pico|  & \si{\pico}  & \textminus12 & 
+            Гига      & \verb|\giga|  & \si{\giga}  & 9                \\
+            Нано      & \verb|\nano|  & \si{\nano}  & \textminus9  & 
+            Терра     & \verb|\tera|  & \si{\tera}  & 12               \\
+            Микро     & \verb|\micro| & \si{\micro} & \textminus6  & 
+            Пета      & \verb|\peta|  & \si{\peta}  & 15               \\
+            Милли     & \verb|\milli| & \si{\milli} & \textminus3  & 
+            Екса      & \verb|\exa|   & \si{\exa}   & 18               \\
+            Санти     & \verb|\centi| & \si{\centi} & \textminus2  & 
+            Зетта     & \verb|\zetta| & \si{\zetta} & 21               \\
+            Деци      & \verb|\deci|  & \si{\deci}  & \textminus1  & 
+            Иотта     & \verb|\yotta| & \si{\yotta} & 24               \\
             \bottomrule
         \end{tabular}
     \end{threeparttable}
@@ -992,13 +998,13 @@ ML/DL  & Низкая             & Высокая          & Высокая    
 
 \begin{commentbox}[red]
     Красный текст.
-
+    
     Несколько параграфов красного текста.
 \end{commentbox}
 
 \begin{commentbox}[blue]
     Синяя формула.
-
+    
     \begin{equation}
         \alpha + \beta = \gamma
     \end{equation}
@@ -1010,7 +1016,7 @@ ML/DL  & Низкая             & Высокая          & Высокая    
 
 \begin{comment}
 Этот текст всегда скрыт.
-\end{comment}
+% \end{comment\}
 
 \section{Работа со списком сокращений и~условных обозначений}\label{sec:acronyms}
 
@@ -1116,3 +1122,4 @@ ML/DL  & Низкая             & Высокая          & Высокая    
 \nomenclature{TLM}{transmission line matrix method, метод матриц линий передач}
 
 \FloatBarrier
+\end{comment}

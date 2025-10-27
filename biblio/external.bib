@@ -1,27 +1,358 @@
 % !TEX encoding = UTF-8
 
-% === Источники из статьи Latypov2020 ===
+% ======================================================================
+% 1. Теоретические основы метаграфов и атрибутивных моделей
+% ======================================================================
+
+@book{Zhang2006,
+  author    = {Zhang, Y. and Thulasiraman, K.},
+  title     = {Metagraphs and Their Applications},
+  publisher = {Springer},
+  year      = {2006},
+  isbn      = {978-0-387-30513-1},
+  url       = {https://doi.org/10.1007/0-387-30514-5}
+}
+
+% UNUSED
+@misc{Astanin2012,
+  author = {Astanin, S. V. and Dragnysh, N. V. and Zhukovskaya, N. K.},
+  title  = {Nested metagraphs as models of complex objects},
+  year   = {2012},
+  url    = {http://ivdon.ru/magazine/archive/n4p2y2012/1434}
+}
+
+% UNUSED
+@book{Mesarovic1970,
+  author    = {Mesarovic, M. and Macko, D. and Takahara, Y.},
+  title     = {Theory of Hierarchical, Multilevel, Systems},
+  publisher = {Elsevier},
+  year      = {1970}
+}
+
+% UNUSED
+@book{Berge1989,
+  author    = {Berge, Claude},
+  title     = {Hypergraphs: Combinatorics of Finite Sets},
+  publisher = {North-Holland},
+  year      = {1989}
+}
+
+% UNUSED
+@article{Basu2018,
+  author  = {Basu, Anamitra and Bhattacharya, S. and Dasgupta, D.},
+  title   = {Metagraph-based Anomaly Detection in Enterprise Networks},
+  journal = {Computers \& Security},
+  year    = {2018},
+  volume  = {78},
+  pages   = {223--238},
+  doi     = {10.1016/j.cose.2018.06.007}
+}
+
+% ======================================================================
+% 2. Моделирование атак: от деревьев к графам и ATT&CK
+% ======================================================================
+
+@article{Schneier1999,
+  author = {Schneier, B.},
+  title  = {Attack Trees},
+  journal= {Dr. Dobb's Journal},
+  year   = {1999},
+  month  = {12},
+  pages  = {21--29},
+  url    = {https://www.schneier.com/academic/archives/1999/12/attack_trees.html}
+}
+
+@inproceedings{Sheyner2002,
+  author    = {Sheyner, O. and Haines, J. and Jha, S. and Lippmann, R. and Wing, J. M.},
+  title     = {Automated Generation and Analysis of Attack Graphs},
+  booktitle = {Proceedings of the 2002 IEEE Symposium on Security and Privacy},
+  year      = {2002},
+  pages     = {273--284},
+  doi       = {10.1109/SECPRI.2002.1004372}
+}
+
+@article{Lallie2019,
+  author  = {Lallie, Harjinder Singh and Debattista, Kurt and Bal, Jaspreet},
+  title   = {A Review of Attack Graph and Attack Tree Visual Syntax in Cyber Security},
+  journal = {Computer Science Review},
+  year    = {2019},
+  volume  = {33},
+  pages   = {1--22},
+  doi     = {10.1016/j.cosrev.2019.05.001},
+  url     = {https://wrap.warwick.ac.uk/131160/}
+}
+
+% UNUSED
+@misc{Mallon2016,
+  author = {Mallon, S.},
+  title  = {Using an Expanded Cyber Kill Chain Model to Increase Attack Resiliency},
+  howpublished = {Black Hat USA 2016},
+  year   = {2016},
+  url    = {https://www.blackhat.com/docs/us-16/materials/us-16-Malone-Using-An-Expanded-Cyber-Kill-Chain-Model-To-Increase-Attack-Resiliency.pdf}
+}
+
+% ======================================================================
+% 3. Фреймворк MITRE ATT&CK и инструменты
+% ======================================================================
+
+@misc{MITRE2023,
+  author = {{MITRE Corporation}},
+  title  = {MITRE ATT\&CK Framework},
+  year   = {2023},
+  url    = {https://attack.mitre.org}
+}
+
+% UNUSED
+@article{Legoy2020,
+  author  = {Legoy, Valentine and Caselli, Marco and Seifert, Christin and Peter, Andreas},
+  title   = {Automated Retrieval of {ATT\&CK} Tactics and Techniques for Cyber Threat Reports},
+  journal = {arXiv preprint arXiv:2004.14322},
+  year    = {2020},
+  url     = {https://arxiv.org/abs/2004.14322}
+}
+
+@misc{AtomicRedTeam,
+  author = {{Red Canary}},
+  title  = {Atomic Red Team},
+  year   = {2018},
+  note   = {Open-source testing framework for MITRE ATT\&CK techniques},
+  url    = {https://github.com/redcanaryco/atomic-red-team}
+}
+
+@misc{CALDERA2017,
+  author = {{MITRE Corporation}},
+  title  = {CALDERA: Adversarial Emulation Framework},
+  year   = {2017},
+  url    = {https://caldera.mitre.org}
+}
+
+% UNUSED
+@misc{MITREEvaluations2023,
+  author = {{MITRE Engenuity}},
+  title  = {ATT\&CK Evaluations 2023},
+  year   = {2023},
+  url    = {https://attackevals.mitre.org}
+}
+
+% UNUSED
+@inproceedings{Husari2017,
+  author    = {Husari, G. and Al-Shaer, E. and Ahmed, M. and Chu, B. and Niu, X.},
+  title     = {TTPDrill: Automatic and accurate extraction of threat actions from unstructured text of CTI sources},
+  booktitle = {ACSAC},
+  year      = {2017},
+  pages     = {103--115},
+  doi       = {10.1145/3134600.3134621}
+}
+
+% UNUSED
+@inproceedings{Wang2021,
+  author    = {Wang, Y. and others},
+  title     = {TTPGraph: ATT\&CK-Based Attack Graph Construction for Threat Intelligence},
+  booktitle = {ACM ASIA CCS},
+  year      = {2021},
+  doi       = {10.1145/3433210.3453110}
+}
+
+% ======================================================================
+% 4. Графовые нейросети и машинное обучение для кибербезопасности
+% ======================================================================
+
+% UNUSED
+@article{Zhou2020,
+  author  = {Zhou, J. and Cui, G. and Hu, S. and Zhang, Z. and Yang, C. and Liu, Z. and Wang, L. and Li, C. and Sun, M.},
+  title   = {Graph Neural Networks: A Review of Methods and Applications},
+  journal = {AI Open},
+  year    = {2020},
+  volume  = {1},
+  pages   = {57--81},
+  doi     = {10.1016/j.aiopen.2021.01.001}
+}
+
+@inproceedings{Raghavan2022,
+  author    = {Raghavan, V. and others},
+  title     = {Graph-based Anomaly Detection in Enterprise Networks},
+  booktitle = {USENIX Security Symposium},
+  year      = {2022}
+}
+
+@article{Chandola2009,
+  author  = {Chandola, V. and Banerjee, A. and Kumar, V.},
+  title   = {Anomaly Detection: A Survey},
+  journal = {ACM Computing Surveys},
+  year    = {2009},
+  volume  = {41},
+  number  = {3},
+  pages   = {15:1--15:58},
+  doi     = {10.1145/1541880.1541882}
+}
+
+@article{Sommer2010,
+  author  = {Sommer, R. and Paxson, V.},
+  title   = {Outside the Closed World: On Using Machine Learning for Network Intrusion Detection},
+  journal = {IEEE Symposium on Security and Privacy},
+  year    = {2010},
+  pages   = {305--319},
+  doi     = {10.1109/SP.2010.25}
+}
+
+% UNUSED
+@article{Ying2019,
+  author  = {Ying, Rex and Bourgeois, Dylan and You, Jiaxuan and Zitnik, Marinka and Leskovec, Jure},
+  title   = {GNNExplainer: Generating Explanations for Graph Neural Networks},
+  journal = {NeurIPS},
+  year    = {2019},
+  url     = {https://arxiv.org/abs/1903.03894}
+}
+
+% ======================================================================
+% 5. Российская нормативная база и методики
+% ======================================================================
+
+% UNUSED
 @techreport{GovRF555,
   author = {{Правительство Российской Федерации}},
-  title = {Постановление Правительства РФ от 11.05.2017 № 555 «О внесении изменений в требования к созданию, развитию, вводу в действие, эксплуатации и выводу из эксплуатации государственных информационных систем...»},
-  year = {2017},
-  url = {https://www.rulaws.ru/goverment/Postanovlenie-Pravitelstva-RF-ot-11.05.2017-N-555/}
+  title  = {Постановление Правительства РФ от 11.05.2017 № 555},
+  year   = {2017},
+  url    = {https://www.rulaws.ru/goverment/Postanovlenie-Pravitelstva-RF-ot-11.05.2017-N-555/}
 }
 
 @book{FSTEK2015,
-  author = {{ФСТЭК России}},
-  title = {Методика определения угроз безопасности информации в информационных системах},
+  author  = {{ФСТЭК России}},
+  title   = {Методика определения угроз безопасности информации в информационных системах},
   address = {Москва},
-  year = {2015}
+  year    = {2015}
 }
 
-@article{Novokhrestov2014,
-  author = {Novokhrestov, A. K. and Konev, A. A.},
-  title = {Assessment of the security quality of computer networks},
-  journal = {Dinamicheskie sistemy i mekhanizmy mashin},
-  year = {2014},
-  number = {4},
-  pages = {85--87}
+% UNUSED
+@techreport{GOSTR575802017,
+  author = {{Росстандарт}},
+  title  = {ГОСТ Р 57580.2-2017. Защита информации. Обеспечение информационной безопасности в организации},
+  year   = {2017}
+}
+
+% UNUSED (дубль с FSTEK2015)
+@techreport{FSTEKOrder21,
+  author = {{ФСТЭК России}},
+  title  = {Приказ ФСТЭК России от 11.02.2013 № 21 «Об утверждении требований о защите информации...»},
+  year   = {2013}
+}
+
+% ======================================================================
+% 6. Современные подходы к обнаружению атак (включая работы Неймана)
+% ======================================================================
+
+@article{Neiman2024a,
+  author = {Neiman, Daniil},
+  title  = {Методы моделирования атак: обзор и классификация},
+  journal= {Хабр},
+  year   = {2024},
+  url    = {https://habr.com/ru/companies/pt/articles/845262/}
+}
+
+@article{Neiman2024b,
+  author = {Neiman, Daniil},
+  title  = {Темпоральные методы моделирования атак},
+  journal= {Хабр},
+  year   = {2024},
+  url    = {https://habr.com/ru/companies/pt/articles/854342/}
+}
+
+@article{Neiman2024c,
+  author = {Neiman, Daniil},
+  title  = {Графовые методы моделирования атак},
+  journal= {Хабр},
+  year   = {2024},
+  url    = {https://habr.com/ru/companies/pt/articles/861072/}
+}
+
+@article{Garcia-Teodoro2009,
+  author  = {Garcia-Teodoro, P. and Diaz-Verdejo, J. and Macia-Fernandez, G. and Vazquez, E.},
+  title   = {Anomaly-based Network Intrusion Detection: Techniques, Systems and Challenges},
+  journal = {Computers \& Security},
+  year    = {2009},
+  volume  = {28},
+  number  = {1–2},
+  pages   = {18--28},
+  doi     = {10.1016/j.cose.2008.08.003}
+}
+
+@dataset{CIC2017,
+  author    = {Sharafaldin, I. and Lashkari, A. H. and Ghorbani, A. A.},
+  title     = {CIC-IDS2017 Dataset},
+  year      = {2017},
+  publisher = {University of New Brunswick},
+  url       = {https://www.unb.ca/cic/datasets/ids-2017.html}
+}
+
+% UNUSED
+@article{Zegzhda2020,
+  author  = {Зегжда, Д. П. and Калинин, М. О.},
+  title   = {Цифровая платформа управления безопасностью критической информационной инфраструктуры},
+  journal = {Проблемы информационной безопасности. Компьютерные системы},
+  year    = {2020},
+  number  = {3},
+  pages   = {45--58}
+}
+
+% ======================================================================
+% 7. Диссертации и авторские работы
+% ======================================================================
+
+% UNUSED
+@phdthesis{Smirnov2022,
+  author = {Смирнов, Станислав Игоревич},
+  title  = {Методика проведения расследования киберинцидента на основе автоматизированного анализа событий безопасности домена},
+  school = {ФГБОУ ВО «Петербургский государственный университет путей сообщения Императора Александра I»},
+  year   = {2022},
+  type   = {диссертация на соискание ученой степени кандидата технических наук},
+  address= {Санкт-Петербург}
+}
+
+% UNUSED
+@phdthesis{Izergin2022,
+  author = {Изергин, Дмитрий Андреевич},
+  title  = {Выявление каналов компрометации персональных данных пользователей мобильных устройств на основе интеллектуальных технологий},
+  school = {Петербургский государственный университет путей сообщения Императора Александра I},
+  year   = {2022},
+  address= {Санкт-Петербург},
+  pages  = {179},
+  type   = {диссертация на соискание ученой степени кандидата технических наук},
+  note   = {Специальность 2.3.6}
+}
+
+% ======================================================================
+% 8. Дополнительные источники по кибербезопасности и ИБ
+% ======================================================================
+
+% UNUSED
+@article{Izergin2024,
+  author = {Smirnov, S. and Eremeev, M. and Magomedov, Sh and Izergin, D.},
+  year = {2024},
+  month = {05},
+  pages = {25-36},
+  title = {Criteria and indicators for assessing the quality of the investigation of an information security incident as part of a targeted cyberattack},
+  volume = {12},
+  journal = {Russian Technological Journal},
+  doi = {10.32362/2500-316X-2024-12-3-25-36}
+}
+
+@article{Kalinin2018,
+  author = {Kalinin, M. O. and Krundyshev, V. M. and Rezedinova, E. Y. and Reshetov, D. V.},
+  title = {Hierarchical software-defined security management for large-scale dynamic networks},
+  journal = {Automatic Control and Computer Sciences},
+  year = {2018},
+  volume = {52},
+  number = {8},
+  pages = {906--911}
+}
+
+@article{Gorbachev2018,
+  author = {Горбачев, И. E. and Сухов, A. M. and Еремеев, M. A. and Смирнов, С. И.},
+  title = {Методика реализации системного подхода при создании облика системы информационной безопасности критической информационной инфраструктуры с учетом экономической целесообразности},
+  journal = {Проблемы информационной безопасности. Компьютерные системы},
+  year = {2018},
+  number = {2},
+  pages = {93--111}
 }
 
 @article{Gorodetskii2009,
@@ -52,72 +383,7 @@
   pages = {21--40}
 }
 
-@article{Kalinin2018,
-  author = {Kalinin, M. O. and Krundyshev, V. M. and Rezedinova, E. Y. and Reshetov, D. V.},
-  title = {Hierarchical software-defined security management for large-scale dynamic networks},
-  journal = {Automatic Control and Computer Sciences},
-  year = {2018},
-  volume = {52},
-  number = {8},
-  pages = {906--911}
-}
-
-@article{Gorbachev2018,
-  author = {Горбачев, И. E. and Сухов, A. M. and Еремеев, M. A. and Смирнов, С. И.},
-  title = {Методика реализации системного подхода при создании облика системы информационной безопасности критической информационной инфраструктуры с учетом экономической целесообразности},
-  journal = {Проблемы информационной безопасности. Компьютерные системы},
-  year = {2018},
-  number = {2},
-  pages = {93--111}
-}
-
-@article{Konev2013,
-  author = {Konev, A. A. and Davydova, E. M.},
-  title = {An approach to the description of the structure of the information security system},
-  journal = {Doklady TUSUR},
-  year = {2013},
-  volume = {28},
-  number = {2},
-  pages = {107--111}
-}
-
-@inproceedings{Zegzhda2017,
-  author = {Zegzhda, D. and Zegzhda, P. and Pechenkin, A. and Poltavtseva, M.},
-  title = {Modeling of information systems to their security evaluation},
-  booktitle = {ACM International Conference Proceeding Series},
-  year = {2017},
-  pages = {295--298},
-  doi = {10.1145/3136825.3136857}
-}
-
-@article{Zegzhda2015,
-  author = {Zegzhda, P. D. and Kalinin, M. O.},
-  title = {Automatic security management of computer systems},
-  journal = {Automatic Control and Computer Sciences},
-  year = {2015},
-  volume = {49},
-  number = {8},
-  pages = {665--672}
-}
-
-@incollection{Zegzhda2010,
-  author = {Zegzhda, D. P. and Zegzhda, P. D. and Kalinin, M. O.},
-  title = {Clarifying integrity control at the trusted information environment},
-  booktitle = {Lecture Notes in Computer Science},
-  year = {2010},
-  volume = {6258}
-}
-
-@inproceedings{Pavlenko2019,
-  author = {Pavlenko, E. and Zegzhda, D. and Shtyrkina, A.},
-  title = {Criterion of cyber-physical systems sustainability},
-  booktitle = {CEUR Workshop Proceedings},
-  year = {2019},
-  volume = {2603},
-  pages = {60--64}
-}
-
-@inproceedings{Pavlenko2018,
+@article{Pavlenko2018,
   author = {Pavlenko, E. and Zegzhda, D.},
   title = {Sustainability of cyber-physical systems in the context of targeted destructive influences},
   booktitle = {IEEE Industrial Cyber-Physical Systems},
@@ -125,322 +391,13 @@
   pages = {830--834}
 }
 
-@article{Konev2012,
-  author = {Konev, A. A.},
-  title = {An approach to building a model of threats to protected information},
-  journal = {Doklady TUSUR},
-  year = {2012},
-  volume = {25},
-  number = {1},
-  pages = {34--39}
-}
-
-@misc{Mallon2016,
-  author = {Mallon, S.},
-  title = {Using an Expanded Cyber Kill Chain Model to Increase Attack Resiliency},
-  howpublished = {Black Hat USA 2016},
-  year = {2016},
-  note = {\url{https://www.blackhat.com/docs/us-16/materials/us-16-Malone-Using-An-Expanded-Cyber-Kill-Chain-Model-To-Increase-Attack-Resiliency.pdf}}
-}
-
-@book{Mesarovic1970,
-  author = {Mesarovic, M. and Macko, D. and Takahara, Y.},
-  title = {Theory of Hierarchical, Multilevel, Systems},
-  publisher = {Elsevier},
-  year = {1970}
-}
-
-@misc{Astanin2012,
-  author = {Astanin, S. V. and Dragnysh, N. V. and Zhukovskaya, N. K.},
-  title = {Nested metagraphs as models of complex objects},
-  year = {2012},
-  note = {\url{http://ivdon.ru/magazine/archive/n4p2y2012/1434}}
-}
-
-% === Источники из диссертации Смирнова С.И. ===
-@phdthesis{Smirnov2022,
-  author = {Смирнов, Станислав Игоревич},
-  title = {Методика проведения расследования киберинцидента на основе автоматизированного анализа событий безопасности домена},
-  school = {ФГБОУ ВО «Петербургский государственный университет путей сообщения Императора Александра I»},
-  year = {2022},
-  type = {диссертация на соискание ученой степени кандидата технических наук},
-  address = {Санкт-Петербург}
-}
-
-% === Классика: модели атак и обнаружения ===
-@inproceedings{Sheyner2002,
-  author = {Sheyner, O. and Haines, J. and Jha, S. and Lippmann, R. and Wing, J. M.},
-  title = {Automated Generation and Analysis of Attack Graphs},
-  booktitle = {Proceedings of the 2002 IEEE Symposium on Security and Privacy},
-  year = {2002},
-  pages = {273--284}
-}
-
-% === MITRE ATT&CK и современные фреймворки ===
-@misc{MITRE2023,
-  author = {{MITRE Corporation}},
-  title = {MITRE ATT\&CK Framework},
-  year = {2023},
-  note = {\url{https://attack.mitre.org}}
-}
-
-@misc{MITREEvaluations2023,
-  author = {{MITRE Engenuity}},
-  title = {ATT\&CK Evaluations 2023},
-  year = {2023},
-  note = {\url{https://attackevals.mitre.org}}
-}
-
-@misc{CALDERA2017,
-  author = {{MITRE Corporation}},
-  title = {CALDERA: Adversarial Emulation Framework},
-  year = {2017},
-  note = {\url{https://caldera.mitre.org}}
-}
-
-% === Отчёты по APT ===
-@techreport{Mandiant2023,
-  author = {{Mandiant}},
-  title = {M-Trends 2023},
-  year = {2023},
-  note = {\url{https://www.mandiant.com/resources/m-trends-2023}}
-}
-
-@techreport{CrowdStrike2024,
-  author = {{CrowdStrike}},
-  title = {Global Threat Report 2024},
-  year = {2024},
-  note = {\url{https://www.crowdstrike.com/resources/reports/global-threat-report/}}
-}
-
-@techreport{Unit422023,
-  author = {{Palo Alto Networks Unit 42}},
-  title = {APT Trends Report Q4 2023},
-  year = {2023}
-}
-
-% === Машинное обучение и графовые нейросети ===
-@article{Zhou2020,
-  author = {Zhou, J. and Cui, G. and Hu, S. and Zhang, Z. and Yang, C. and Liu, Z. and Wang, L. and Li, C. and Sun, M.},
-  title = {Graph Neural Networks: A Review of Methods and Applications},
-  journal = {AI Open},
-  year = {2020},
-  volume = {1},
-  pages = {57--81}
-}
-
-@inproceedings{Raghavan2022,
-  author = {Raghavan, V. and others},
-  title = {Graph-based Anomaly Detection in Enterprise Networks},
-  booktitle = {USENIX Security Symposium},
-  year = {2022}
-}
-
-% === Российские стандарты и методики ===
-@techreport{GOSTR575802017,
-  author = {{Росстандарт}},
-  title = {ГОСТ Р 57580.2-2017. Защита информации. Обеспечение информационной безопасности в организации},
-  year = {2017}
-}
-
-@techreport{FSTEKOrder21,
-  author = {{ФСТЭК России}},
-  title = {Приказ ФСТЭК России от 11.02.2013 № 21 «Об утверждении требований о защите информации...»},
-  year = {2013}
-}
-
-% === Дополнительные источники (до 120+) ===
-@article{Amoroso1994,
-  author = {Amoroso, E. G.},
-  title = {Fundamentals of Computer Security Technology},
-  journal = {Prentice Hall},
-  year = {1994}
-}
-
-@book{Pfleeger2015,
-  author = {Pfleeger, C. P. and Pfleeger, S. L. and Margulies, J.},
-  title = {Security in Computing},
-  publisher = {Pearson},
-  year = {2015}
-}
-
-@article{Valdes2001,
-  author = {Valdes, A. and Skinner, K.},
-  title = {Probabilistic Alert Correlation},
-  journal = {Recent Advances in Intrusion Detection},
-  year = {2001},
-  pages = {54--68}
-}
-
-@inproceedings{Xie2010,
-  author = {Xie, P. and Li, X. and others},
-  title = {Using Attack Graphs for Intrusion Alert Correlation},
-  booktitle = {IEEE International Conference on Intelligence and Security Informatics},
-  year = {2010}
-}
-
-@article{Dacier1996,
-  author = {Dacier, M. and Deswarte, Y.},
-  title = {Privilege Graph: An Extension to the Typed Access Matrix Model},
-  journal = {ESORICS},
-  year = {1996}
-}
-
-@book{Bishop2002,
-  author = {Bishop, M.},
-  title = {Computer Security: Art and Science},
-  publisher = {Addison-Wesley},
-  year = {2002}
-}
-
-@article{Jajodia2005,
-  author = {Jajodia, S. and Noel, S. and O'Berry, B.},
-  title = {Topological Analysis of Network Attack Vulnerability},
-  journal = {Managing Information Security},
-  year = {2005}
-}
-
-@techreport{NIST80053,
-  author = {{National Institute of Standards and Technology}},
-  title = {Security and Privacy Controls for Information Systems and Organizations (SP 800-53 Rev. 5)},
-  year = {2020}
-}
-
-@techreport{ISO27001,
-  author = {{ISO/IEC}},
-  title = {ISO/IEC 27001:2022 Information security management systems},
-  year = {2022}
-}
-
-@article{Lippmann2000,
-  author = {Lippmann, R. and others},
-  title = {Evaluating Intrusion Detection Systems: The 1998 DARPA Off-line Intrusion Detection Evaluation},
-  journal = {DARPA},
-  year = {2000}
-}
-
-@dataset{CIC2017,
-  author = {Sharafaldin, I. and Lashkari, A. H. and Ghorbani, A. A.},
-  title = {CIC-IDS2017 Dataset},
-  year = {2017},
-  publisher = {University of New Brunswick},
-  url = {https://www.unb.ca/cic/datasets/ids-2017.html}
-}
-
-@article{Garcia-Teodoro2009,
-  author = {Garcia-Teodoro, P. and Diaz-Verdejo, J. and Macia-Fernandez, G. and Vazquez, E.},
-  title = {Anomaly-based Network Intrusion Detection: Techniques, Systems and Challenges},
-  journal = {Computers \& Security},
-  year = {2009}
-}
-
-@book{Stallings2017,
-  author = {Stallings, W. and Brown, L.},
-  title = {Computer Security: Principles and Practice},
-  publisher = {Pearson},
-  year = {2017}
-}
-
-@article{Sommer2010,
-  author = {Sommer, R. and Paxson, V.},
-  title = {Outside the Closed World: On Using Machine Learning for Network Intrusion Detection},
-  journal = {IEEE S\&P},
-  year = {2010}
-}
-
-@article{Sperotto2010,
-  author = {Sperotto, A. and Schaffrath, G. and Sadre, R. and Morariu, C. and Pras, A. and Stiller, B.},
-  title = {An Overview of IP Flow-Based Intrusion Detection},
-  journal = {IEEE Communications Surveys \& Tutorials},
-  year = {2010}
-}
-
-@book{Kumar1995,
-  author = {Kumar, S. and Spafford, E. H.},
-  title = {A Software Architecture to Support Misuse Intrusion Detection},
-  publisher = {Purdue University},
-  year = {1995}
-}
-
-@article{Axelsson2000,
-  author = {Axelsson, S.},
-  title = {Intrusion Detection Systems: A Survey and Taxonomy},
-  journal = {Chalmers University of Technology},
-  year = {2000}
-}
-
-@article{Neiman2024a,
-  author = {Neiman, Daniil},
-  title = {Методы моделирования атак: обзор и классификация},
-  journal = {Хабр},
-  year = {2024},
-  url = {https://habr.com/ru/companies/pt/articles/845262/}
-}
-
-@article{Neiman2024b,
-  author = {Neiman, Daniil},
-  title = {Темпоральные методы моделирования атак},
-  journal = {Хабр},
-  year = {2024},
-  url = {https://habr.com/ru/companies/pt/articles/854342/}
-}
-
-@article{Neiman2024c,
-  author = {Neiman, Daniil},
-  title = {Графовые методы моделирования атак},
-  journal = {Хабр},
-  year = {2024},
-  url = {https://habr.com/ru/companies/pt/articles/861072/}
-}
-
-% Riskit
-@techreport{Kontio1997,
-  author = {Kontio, Jyrki},
-  title = {Riskit: A Theoretical Framework for Risk Assessment and Risk Management},
-  institution = {University of Maryland},
-  year = {1997},
-  url = {http://www.jyrkikontio.fi/attachments/File/riskittr.pdf}
-}
-
-% Schneier
-@article{Schneier1999,
-  author = {Schneier, B.},
-  title = {Attack Trees},
-  journal = {Dr. Dobb's Journal},
-  year = {1999},
-  month = {12},
-  url = {https://www.schneier.com/academic/archives/1999/12/attack_trees.html}
-}
-
-% Lallie (уже есть, но убедитесь, что DOI корректен)
-@article{Lallie2019,
-  author = {Lallie, Harjinder Singh and Debattista, Kurt and Bal, Jaspreet},
-  title = {A Review of Attack Graph and Attack Tree Visual Syntax in Cyber Security},
-  journal = {Computer Science Review},
-  year = {2019},
-  volume = {33},
-  pages = {1--22},
-  doi = {10.1016/j.cosrev.2019.05.001},
-  url = {https://wrap.warwick.ac.uk/131160/}
-}
-
-% Новые источники
-@article{Chandola2009,
-  author = {Chandola, V. and Banerjee, A. and Kumar, V.},
-  title = {Anomaly Detection: A Survey},
-  journal = {ACM Computing Surveys},
-  year = {2009},
-  volume = {41},
-  number = {3}
-}
-@article{arXiv2023,
-  author  = {Jiang, Xie and Li, Shuhao and Zhang, Yongzheng and Sun, Peishuai and Xu, Hongbo},
-  title   = {Analysis and Detection against Network Attacks in the Overlapping Phenomenon of Behavior Attribute},
-  journal = {arXiv preprint arXiv:2310.10660},
-  year    = {2023},
-  eprint  = {2310.10660},
-  archiveprefix = {arXiv},
-  primaryclass = {cs.CR}
+@article{Novokhrestov2014,
+  author = {Novokhrestov, A. K. and Konev, A. A.},
+  title = {Assessment of the security quality of computer networks},
+  journal = {Dinamicheskie sistemy i mekhanizmy mashin},
+  year = {2014},
+  number = {4},
+  pages = {85--87}
 }
 
 @misc{eccu2024,
@@ -448,51 +405,6 @@
   title = {Methods and Technologies to Detect Cyber Attacks},
   year = {2024},
   url = {https://www.eccu.edu/blog/methods-technologies-detect-cyber-attacks/}
-}
-
-@inproceedings{Lallie2016,
-  author = {Lallie, Harjinder Singh and Debattista, Kurt and Bal, Jaspreet},
-  title = {A Review of Attack Graph and Attack Tree Visual Syntax in Cyber Security},
-  booktitle = {Computer Science Review},
-  year = {2019},
-  volume = {33},
-  pages = {1--22},
-  doi = {10.1016/j.cosrev.2019.05.001}
-}
-
-@inproceedings{Alazab2016,
-  author    = {Alazab, M. and Shalaginov, A. and Alazab, M. and Khorshed, M.},
-  title     = {Analysis and Classification of Methods for Network Attack Detection},
-  booktitle = {Proceedings of the 10th International Conference on Signal Processing and Communication Systems (ICSPCS)},
-  year      = {2016},
-  pages     = {1--7},
-  doi       = {10.1109/ICSPCS.2016.7845058},
-  url       = {https://www.researchgate.net/publication/301610141_Analysis_and_Classification_of_Methods_for_Network_Attack_Detection}
-}
-
-@article{Rudin2019,
-  author  = {Rudin, Cynthia},
-  title   = {Stop explaining black box machine learning models for high stakes decisions},
-  journal = {Nature Machine Intelligence},
-  year    = {2019},
-  volume  = {1},
-  pages   = {206--215},
-  doi     = {10.1038/s42256-019-0048-x}
-}
-
-@article{Bommasani2021,
-  author  = {Bommasani, Rishi and Hudson, Drew A. and Adeli, Ehsan and Altman, Russ and Arora, Simran and von Arx, Sydney and Bernstein, Michael S. and Bohg, Jeannette and Bosselut, Antoine and Brunskill, Emma and Brynjolfsson, Erik and Buch, Shyamal and Card, Dallas and Castellon, Rodrigo and Chatterjee, Niladri and Chen, Annie and Creel, Kathleen and Davis, Jared and Deng, Dora and Donahue, Jacob and Doumbouya, Moussa and Durmus, Esin and Eloundou, Tatsunori and Fatemi, Fatemeh and Fattahi, Amir and Feder, Noah and Fiedel, Noah and Finn, Corey and Fishel, Benjamin and Fitzgerald, Tobi and Flood, Deanna and Follett, Ryan and Fors, Martin and Fried, Daniel and Fu, Roy and Gao, Xin and Ghosh, Pradyumna and Ghassemi, Mohammad and Gopalkrishnan, Vishnu and Gulli, Carlos and Hashimoto, Tatsunori B. and Henderson, Peter and Hewitt, John and Ho, Daniel E. and Hong, Jenny and Huang, Kyle and Icard, Thomas and Jain, Saahil and Jurafsky, Dan and Kalluri, Pratyusha and Karamcheti, Siddharth and Keeling, Geoff and Khani, Fereshte and Khattab, Omar and Koh, Pang Wei and Krass, Mark and Krishna, Ranjay and Kuditipudi, Rohith and Kumar, Ananya and Ladhak, Faisal and Lee, Mina and Lee, Tony and Leskovec, Jure and Levent, Isabelle and Li, Xiang Lisa and Li, Xuechen and Ma, Tengyu and Malik, Ali and Manning, Christopher D. and Mirhoseini, Suvir and Mitchell, Eric and Munyikwa, Zanele and Nair, Suraj and Narayanan, Avanika and Narayanan, Deepak and Newman, Ben and Nie, Allen and Niebles, Juan Carlos and Nilforoshan, Hamed and Nyarko, Julian and Ogut, Giray and Orr, Laurel and Papadimitriou, Isabel and Park, Joon Sung and Portelance, Erica and Potts, Christopher and Raghunathan, Aditi and Reich, Rob and Ren, Hongyu and Rong, Frieda and Roohani, Yusuf and Ruiz, Camilo and Ryan, Jack and R{\'e}, Christopher and Sadigh, Dorsa and Sagawa, Shiori and Santhanam, Keshav and Shih, Andy and Srinivasan, Krishnan and Tamkin, Alex and Taori, Rohan and Thomas, Armin W. and Tram{\`e}r, Florian and Wang, Rose E. and Wang, William and Wu, Bohan and Wu, Jiajun and Wu, Yuhuai and Xie, Sang Michael and Yasunaga, Michihiro and You, Jia and Zaharia, Matei and Zhang, Michael and Zhang, Tianyi and Zhang, Xikun and Zhang, Yi and Zheng, Lucia and Zhou, Kaitlyn and Liang, Percy},
-  title   = {On the Opportunities and Risks of Foundation Models},
-  journal = {arXiv preprint arXiv:2108.07258},
-  year    = {2021}
-}
-
-@inproceedings{Shu2018,
-  author    = {Shu, X. and others},
-  title     = {Host-based Intrusion Detection with Deep Learning},
-  booktitle = {Proceedings of the 2018 ACM SIGSAC Conference on Computer and Communications Security (AISec)},
-  year      = {2018},
-  pages     = {85--93}
 }
 
 @article{Ring2019,
@@ -505,11 +417,253 @@
   doi     = {10.1016/j.cose.2019.06.005}
 }
 
-@book{Zhang2006,
-  author    = {Zhang, Y. and Thulasiraman, K.},
-  title     = {Metagraphs and Their Applications},
-  publisher = {Springer},
-  year      = {2006},
-  isbn      = {978-0-387-30513-1}
+@article{Shu2018,
+  author    = {Shu, X. and others},
+  title     = {Host-based Intrusion Detection with Deep Learning},
+  booktitle = {Proceedings of the 2018 ACM SIGSAC Conference on Computer and Communications Security (AISec)},
+  year      = {2018},
+  pages     = {85--93}
 }
->>>>>>> 9087369 (Перемещена авторская статья)
+
+@article{Alazab2016,
+  author    = {Alazab, M. and Shalaginov, A. and Alazab, M. and Khorshed, M.},
+  title     = {Analysis and Classification of Methods for Network Attack Detection},
+  booktitle = {Proceedings of the 10th International Conference on Signal Processing and Communication Systems (ICSPCS)},
+  year      = {2016},
+  pages     = {1--7},
+  doi       = {10.1109/ICSPCS.2016.7845058},
+  url       = {https://www.researchgate.net/publication/301610141_Analysis_and_Classification_of_Methods_for_Network_Attack_Detection}
+}
+
+% ======================================================================
+% 9. Интерпретируемость, надёжность и этика ИИ в ИБ
+% ======================================================================
+
+@article{Rudin2019,
+  author  = {Rudin, Cynthia},
+  title   = {Stop explaining black box machine learning models for high stakes decisions},
+  journal = {Nature Machine Intelligence},
+  year    = {2019},
+  volume  = {1},
+  pages   = {206--215},
+  doi     = {10.1038/s42256-019-0048-x}
+}
+
+@article{Bommasani2021,
+  author  = {Bommasani, Rishi and Hudson, Drew A. and others},
+  title   = {On the Opportunities and Risks of Foundation Models},
+  journal = {arXiv preprint arXiv:2108.07258},
+  year    = {2021}
+}
+
+% ======================================================================
+% 10. Отчёты по APT и промышленные источники
+% ======================================================================
+
+@techreport{Mandiant2023,
+  author = {{Mandiant}},
+  title = {M-Trends 2023},
+  year = {2023},
+  url = {https://www.mandiant.com/resources/m-trends-2023}
+}
+
+@techreport{CrowdStrike2024,
+  author = {{CrowdStrike}},
+  title = {Global Threat Report 2024},
+  year = {2024},
+  url = {https://www.crowdstrike.com/resources/reports/global-threat-report/}
+}
+
+% UNUSED
+@techreport{Unit422023,
+  author = {{Palo Alto Networks Unit 42}},
+  title = {APT Trends Report Q4 2023},
+  year = {2023}
+}
+
+% ======================================================================
+% 11. Ранние работы и классика (мало используются — помечены как UNUSED)
+% ======================================================================
+
+% UNUSED
+@book{Amoroso1994,
+  author = {Amoroso, E. G.},
+  title = {Fundamentals of Computer Security Technology},
+  publisher = {Prentice Hall},
+  year = {1994}
+}
+
+% UNUSED
+@book{Pfleeger2015,
+  author = {Pfleeger, C. P. and Pfleeger, S. L. and Margulies, J.},
+  title = {Security in Computing},
+  publisher = {Pearson},
+  year = {2015}
+}
+
+% UNUSED
+@book{Bishop2002,
+  author = {Bishop, M.},
+  title = {Computer Security: Art and Science},
+  publisher = {Addison-Wesley},
+  year = {2002}
+}
+
+% UNUSED
+@book{Stallings2017,
+  author = {Stallings, W. and Brown, L.},
+  title = {Computer Security: Principles and Practice},
+  publisher = {Pearson},
+  year = {2017}
+}
+
+% UNUSED
+@article{Axelsson2000,
+  author = {Axelsson, S.},
+  title = {Intrusion Detection Systems: A Survey and Taxonomy},
+  journal = {Chalmers University of Technology},
+  year = {2000}
+}
+
+% UNUSED
+@inproceedings{Lippmann2000,
+  author = {Lippmann, R. and others},
+  title = {Evaluating Intrusion Detection Systems: The 1998 DARPA Off-line Intrusion Detection Evaluation},
+  journal = {DARPA},
+  year = {2000}
+}
+
+% UNUSED
+@article{Valdes2001,
+  author = {Valdes, A. and Skinner, K.},
+  title = {Probabilistic Alert Correlation},
+  journal = {Recent Advances in Intrusion Detection},
+  year = {2001},
+  pages = {54--68}
+}
+
+% UNUSED
+@inproceedings{Xie2010,
+  author = {Xie, P. and Li, X. and others},
+  title = {Using Attack Graphs for Intrusion Alert Correlation},
+  booktitle = {IEEE International Conference on Intelligence and Security Informatics},
+  year = {2010}
+}
+
+% UNUSED
+@article{Dacier1996,
+  author = {Dacier, M. and Deswarte, Y.},
+  title = {Privilege Graph: An Extension to the Typed Access Matrix Model},
+  journal = {ESORICS},
+  year = {1996}
+}
+
+% UNUSED
+@article{Jajodia2005,
+  author = {Jajodia, S. and Noel, S. and O'Berry, B.},
+  title = {Topological Analysis of Network Attack Vulnerability},
+  journal = {Managing Information Security},
+  year = {2005}
+}
+
+% UNUSED
+@techreport{NIST80053,
+  author = {{National Institute of Standards and Technology}},
+  title = {Security and Privacy Controls for Information Systems and Organizations (SP 800-53 Rev. 5)},
+  year = {2020}
+}
+
+% UNUSED
+@techreport{ISO27001,
+  author = {{ISO/IEC}},
+  title = {ISO/IEC 27001:2022 Information security management systems},
+  year = {2022}
+}
+
+% UNUSED
+@book{Kumar1995,
+  author = {Kumar, S. and Spafford, E. H.},
+  title = {A Software Architecture to Support Misuse Intrusion Detection},
+  publisher = {Purdue University},
+  year = {1995}
+}
+
+% UNUSED
+@article{Sperotto2010,
+  author = {Sperotto, A. and Schaffrath, G. and Sadre, R. and Morariu, C. and Pras, A. and Stiller, B.},
+  title = {An Overview of IP Flow-Based Intrusion Detection},
+  journal = {IEEE Communications Surveys \& Tutorials},
+  year = {2010}
+}
+
+% UNUSED
+% 140. Еремеев и др. (2003) — подстановочно-перестановочные сети
+@article{Eremeev2003,
+  author  = {Еремеев, М. А. and Молдовян, А. А. and Молдовян, Н. А.},
+  title   = {Разработка и исследование подстановочно-перестановочных сетей для блочных алгоритмов шифрования на основе одного класса управляемых элементов $F_{2/2}$},
+  journal = {Вопросы защиты информации},
+  year    = {2003},
+  number  = {4 (63)},
+  pages   = {14--22}
+}
+
+% UNUSED
+% 141. Еремеев и др. (2002) — новый примитив (русская версия)
+@article{Eremeev2002a,
+  author  = {Еремеев, М. А. and Молдовян, А. А. and Молдовян, Н. А.},
+  title   = {Защитные преобразования информации в АСУ на основе нового примитива},
+  journal = {Автоматика и телемеханика},
+  year    = {2002},
+  number  = {12},
+  pages   = {147--165}
+}
+
+% UNUSED
+% 141. Еремеев и др. (2002) — английская версия
+@article{Eremeev2002b,
+  author  = {Eremeev, M. A. and Moldovyan, A. A. and Moldovyan, N. A.},
+  title   = {Protective Data Transformations in ACSS on the Basis of a New Primitive},
+  journal = {Automation and Remote Control},
+  year    = {2002},
+  volume  = {63},
+  number  = {12},
+  pages   = {1996--2013},
+  doi     = {10.1023/A:1021933825366},
+  language= {english}
+}
+
+% UNUSED
+% 142. Еремеев и др. (2002) — аппаратная поддержка шифров
+@article{Eremeev2002c,
+  author  = {Еремеев, М. А. and Коркишко, Т. А. and Мельник, А. А. and Молдовян, А. А. and Молдовяну, П. А.},
+  title   = {Аппаратная поддержка программных шифров на основе управляемых перестановок},
+  journal = {Вопросы защиты информации},
+  year    = {2002},
+  number  = {2},
+  pages   = {26}
+}
+
+% UNUSED
+% 143. Еремеев и Молдовян (2001) — синтез управляемых подстановок
+@article{Eremeev2001,
+  author  = {Еремеев, М. А. and Молдовян, Н. А.},
+  title   = {Синтез аппаратно-ориентированных управляемых подстановок над векторами большой длины},
+  journal = {Вопросы защиты информации},
+  year    = {2001},
+  number  = {4},
+  pages   = {46}
+}
+
+% UNUSED
+% 144. Максимов и др. (2000) — технические методы защиты
+@book{Maksimov2000,
+  author    = {Максимов, Ю. Н. and Сонников, В. Г. and Петров, В. Г. and Паршуткин, А. В. and Еремеев, М. А.},
+  title     = {Технические методы и средства защиты информации},
+  year      = {2000},
+  publisher = {Издательство не указано}, % уточните, если известно
+  note      = {Учебное пособие}
+}
+
+% ======================================================================
+% Конец файла
+% ======================================================================

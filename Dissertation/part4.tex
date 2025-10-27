@@ -8,15 +8,18 @@
 \subsection{Наборы данных}
 
 Для оценки эффективности предложенного подхода использованы следующие источники:
+
 \begin{itemize}
     \item \textbf{MITRE Engenuity ATT\&CK Evaluations (2020–2023)} — данные по APT29 (Cozy Bear), APT28 (Fancy Bear), Carbanak. Включают EDR-телеметрию, сетевые логи и скринкасты атак~\cite{MITRE2023}.
     \item \textbf{CIC-IDS2017 Dataset} — реалистичный трафик с атаками: DDoS, Brute Force, Web Attacks, Infiltration~\cite{CIC2017}.
     \item \textbf{Синтетические данные} — сгенерированы с помощью CALDERA (MITRE) и Atomic Red Team.
     \item \textbf{Внутренние данные SOC-партнёра} — анонимизированные логи за 6 месяцев, включая 12 подтверждённых инцидентов.
 \end{itemize}
+
 \subsection{Экспериментальная инфраструктура}
 
 Экспериментальная среда включала:
+
 \begin{itemize}
     \item атакующий узел: Kali Linux 2023.4;
     \item 10 виртуальных машин (Windows 10/11, Windows Server 2019);
@@ -25,37 +28,39 @@
     \item хранилище: Neo4j Community Edition 5.12 (Intel Xeon 8-core, 32 ГБ RAM);
     \item прототип AMGD: Python 3.10, NetworkX, Neo4j Driver.
 \end{itemize}
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}[node distance=1.6cm, >=Stealth, thick,
-    attacker/.style = {rectangle, draw, fill=red!10, text width=5em, align=center},
-    target/.style = {rectangle, draw, fill=blue!10, text width=5em, align=center},
-    sensor/.style = {rectangle, draw, fill=green!10, text width=5em, align=center},
-    amgd/.style = {rectangle, draw, fill=yellow!10, text width=6em, align=center}
-]
-\node [attacker] (attacker) {Атакующий\\(Kali Linux)};
-\node [target, right=2cm of attacker] (target1) {Цель 1\\(Win 10)};
-\node [target, below=of target1] (target2) {Цель 2\\(Win Server)};
-\node [sensor, above=of target1] (edr) {EDR};
-\node [sensor, below=of target2] (zeek) {Zeek};
-\node [amgd, right=2cm of target1] (amgd) {AMGD\\Прототип};
 
-\draw [->] (attacker) -- node[above] {Фишинг, C2} (target1);
-\draw [->] (attacker) -- node[below] {PsExec} (target2);
-\draw [->] (target1) -- (edr);
-\draw [->] (target1) -- (zeek);
-\draw [->] (target2) -- (edr);
-\draw [->] (target2) -- (zeek);
-\draw [->] (edr) -- (amgd);
-\draw [->] (zeek) -- (amgd);
-\end{tikzpicture}
-\caption{Экспериментальная инфраструктура}
-\label{fig:exp_setup}
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[node distance=1.6cm, >=Stealth, thick,
+            attacker/.style = {rectangle, draw, fill=red!10, text width=5em, align=center},
+            target/.style = {rectangle, draw, fill=blue!10, text width=5em, align=center},
+            sensor/.style = {rectangle, draw, fill=green!10, text width=5em, align=center},
+            amgd/.style = {rectangle, draw, fill=yellow!10, text width=6em, align=center}
+        ]
+        \node [attacker] (attacker) {Атакующий\\(Kali Linux)};
+        \node [target, right=2cm of attacker] (target1) {Цель 1\\(Win 10)};
+        \node [target, below=of target1] (target2) {Цель 2\\(Win Server)};
+        \node [sensor, above=of target1] (edr) {EDR};
+        \node [sensor, below=of target2] (zeek) {Zeek};
+        \node [amgd, right=2cm of target1] (amgd) {AMGD\\Прототип};
+        
+        \draw [->] (attacker) -- node[above] {Фишинг, C2} (target1);
+        \draw [->] (attacker) -- node[below] {PsExec} (target2);
+        \draw [->] (target1) -- (edr);
+        \draw [->] (target1) -- (zeek);
+        \draw [->] (target2) -- (edr);
+        \draw [->] (target2) -- (zeek);
+        \draw [->] (edr) -- (amgd);
+        \draw [->] (zeek) -- (amgd);
+    \end{tikzpicture}
+    \caption{Экспериментальная инфраструктура}
+    \label{fig:exp_setup}
 \end{figure}
 
 \subsection{База шаблонов атак}
 
 Разработано 25 эталонных метаграфов, включая:
+
 \begin{itemize}
     \item \textbf{APT29}: фишинг → макрос → PowerShell → WMI → C2 → LSASS dump → DNS exfiltration;
     \item \textbf{FIN7}: фишинг → JS-скрипт → BITSAdmin → Cobalt Strike → Lateral Movement;
@@ -64,6 +69,7 @@
 \section{Реализация прототипа системы}\label{sec:ch4/sect2}
 
 Прототип AMGD реализован на Python и состоит из модулей:
+
 \begin{itemize}
     \item \texttt{ingest.py} — сбор и нормализация;
     \item \texttt{metagraph\_builder.py} — построение динамического метаграфа;
@@ -71,24 +77,25 @@
     \item \texttt{risk\_evaluator.py} — оценка риска;
     \item \texttt{alert\_generator.py} — генерация алертов.
 \end{itemize}
+
 \subsection{Производительность}
 
 Тестирование на датасете CIC-IDS2017 (2.5 млн событий):
 
 \begin{table}[h]
-\centering
-\caption{Производительность прототипа}
-\label{tab:performance}
-\begin{tabular}{lcc}
-\toprule
-Операция & Время на событие & Память \\
-\midrule
-Нормализация & 0.8 мс & — \\
-Добавление в метаграф & 3.2 мс & +0.5 КБ/событие \\
-Сопоставление с 1 шаблоном & 8.7 мс & — \\
-Полный цикл (10 шаблонов) & 14.3 мс & 1.2 ГБ RAM \\
-\bottomrule
-\end{tabular}
+    \centering
+    \caption{Производительность прототипа}
+    \label{tab:performance}
+    \begin{tabular}{lcc}
+        \toprule
+        Операция                   & Время на событие & Память          \\
+        \midrule
+        Нормализация               & 0.8 мс           & —               \\
+        Добавление в метаграф      & 3.2 мс           & +0.5 КБ/событие \\
+        Сопоставление с 1 шаблоном & 8.7 мс           & —               \\
+        Полный цикл (10 шаблонов)  & 14.3 мс          & 1.2 ГБ RAM      \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 \section{Метрики оценки эффективности}\label{sec:ch4/sect3}
@@ -96,18 +103,18 @@
 Использованы стандартные метрики:
 
 \begin{equation}
-\text{Precision} = \frac{TP}{TP + FP}
-\label{eq:precision}
+    \text{Precision} = \frac{TP}{TP + FP}
+    \label{eq:precision}
 \end{equation}
 
 \begin{equation}
-\text{Recall} = \frac{TP}{TP + FN}
-\label{eq:recall}
+    \text{Recall} = \frac{TP}{TP + FN}
+    \label{eq:recall}
 \end{equation}
 
 \begin{equation}
-F1\text{-score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
-\label{eq:f1}
+    F1\text{-score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+    \label{eq:f1}
 \end{equation}
 
 \section{Результаты экспериментов}\label{sec:ch4/sect4}
@@ -115,6 +122,7 @@ F1\text{-score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Prec
 \subsection{Обнаружение APT29}
 
 Результаты:
+
 \begin{itemize}
     \item Recall: 84\%;
     \item Precision: 89\%;
@@ -123,41 +131,41 @@ F1\text{-score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Prec
 \subsection{Сравнение с базовыми методами}
 
 \begin{table}[h]
-\centering
-\caption{Сравнение методов обнаружения}
-\label{tab:comparison}
-\begin{tabular}{lcccc}
-\toprule
-Метод & Precision & Recall & F1 & FPR (\%) \\
-\midrule
-Сигнатуры (Snort) & 0.68 & 0.42 & 0.52 & 0.8 \\
-Anomaly Detection & 0.55 & 0.71 & 0.62 & 4.2 \\
-Поведенческие правила & 0.72 & 0.65 & 0.68 & 2.1 \\
-\textbf{AMGD (предложенный)} & \textbf{0.89} & \textbf{0.84} & \textbf{0.86} & \textbf{1.3} \\
-\bottomrule
-\end{tabular}
+    \centering
+    \caption{Сравнение методов обнаружения}
+    \label{tab:comparison}
+    \begin{tabular}{lcccc}
+        \toprule
+        Метод                        & Precision     & Recall        & F1            & FPR (\%)     \\
+        \midrule
+        Сигнатуры (Snort)            & 0.68          & 0.42          & 0.52          & 0.8          \\
+        Anomaly Detection            & 0.55          & 0.71          & 0.62          & 4.2          \\
+        Поведенческие правила        & 0.72          & 0.65          & 0.68          & 2.1          \\
+        \textbf{AMGD (предложенный)} & \textbf{0.89} & \textbf{0.84} & \textbf{0.86} & \textbf{1.3} \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 \begin{figure}[h]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    ybar,
-    bar width=20pt,
-    width=0.8\textwidth,
-    height=6cm,
-    symbolic x coords={Сигнатуры, Аномалии, Правила, AMGD},
-    xtick=data,
-    ylabel={F1-score},
-    nodes near coords,
-    nodes near coords align={vertical},
-    ymin=0, ymax=1
-]
-\addplot coordinates {(Сигнатуры,0.52) (Аномалии,0.62) (Правила,0.68) (AMGD,0.86)};
-\end{axis}
-\end{tikzpicture}
-\caption{Сравнение F1-score по методам}
-\label{fig:f1_comparison}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                ybar,
+                bar width=20pt,
+                width=0.8\textwidth,
+                height=6cm,
+                symbolic x coords={Сигнатуры, Аномалии, Правила, AMGD},
+                xtick=data,
+                ylabel={F1-score},
+                nodes near coords,
+                nodes near coords align={vertical},
+                ymin=0, ymax=1
+            ]
+            \addplot coordinates {(Сигнатуры,0.52) (Аномалии,0.62) (Правила,0.68) (AMGD,0.86)};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Сравнение F1-score по методам}
+    \label{fig:f1_comparison}
 \end{figure}
 
 \section{Кейсы применения}\label{sec:ch4/sect5}
@@ -188,6 +196,7 @@ T1021.001 (Remote Desktop) → T1567 (Exfiltration Over Web Service).
 
 Таким образом, атрибутивные метаграфы не являются альтернативой методам ИИ, а выступают в роли **семантической «операционной системы»**, в рамках которой нейросетевые компоненты могут выполнять специализированные задачи: предсказание, классификацию, генерацию знаний. Такой синтез символьного и субсимвольного ИИ открывает перспективы для создания адаптивных, интерпретируемых и высокоэффективных систем обнаружения кибератак.
 
+\begin{comment}
 \section{Ограничения и пути улучшения}\label{sec:ch4/sect7}
 
 \subsection{Текущие ограничения}
@@ -203,4 +212,5 @@ T1021.001 (Remote Desktop) → T1567 (Exfiltration Over Web Service).
     \item Интеграция с LLM для генерации шаблонов;
     \item Применение GNN для предсказания тактик;
     \item Поддержка MITRE D3FEND.
-\end{itemize}   
+\end{itemize}
+\end{comment}

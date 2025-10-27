@@ -304,3 +304,25 @@
 \renewcommand{\omega}{\upomega}
 
 \newtheorem{definition}{Определение}[chapter]
+
+% Настройка enumerate: обычный отступ, как у текста
+\usepackage{enumitem}
+\setlist[enumerate]{
+  left=0pt,          % убирает дополнительный левый отступ списка
+  labelindent=\parindent, % отступ метки = абзацному отступу
+  itemindent=0pt,    % отступ текста элемента после метки
+  listparindent=0pt, % отступ для многострочных элементов
+  parsep=0pt,        % межстрочный интервал внутри пункта
+  topsep=6pt,        % вертикальный отступ до/после списка
+  partopsep=0pt
+}
+
+\setlist[itemize]{
+  left=0pt,          % убирает дополнительный левый отступ списка
+  labelindent=\parindent, % отступ метки = абзацному отступу
+  itemindent=0pt,    % отступ текста элемента после метки
+  listparindent=0pt, % отступ для многострочных элементов
+  parsep=0pt,        % межстрочный интервал внутри пункта
+  topsep=6pt,        % вертикальный отступ до/после списка
+  partopsep=0pt
+}

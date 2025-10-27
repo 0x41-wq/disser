@@ -10,18 +10,18 @@
 Согласно~\cite{Latypov2020}, метаграф эффективно описывает многоуровневые модели компьютерных атак, где каждый уровень соответствует определённой тактике или технике. В настоящей работе используется следующее формальное определение.
 
 \begin{definition}
-Метаграфом называется упорядоченная четвёрка
-\[
-G = (V, E, \mathrm{src}, \mathrm{tgt}),
-\]
-где:
-\noindent
-\begin{itemize} 
-    \item $V$ — конечное непустое множество вершин (объектов системы);
-    \item $E$ — конечное непустое множество гипердуг (событий или действий);
-    \item $\mathrm{src}: E \rightarrow 2^V$ — функция, сопоставляющая каждой дуге множество источников;
-    \item $\mathrm{tgt}: E \rightarrow 2^V$ — функция, сопоставляющая каждой дуге множество целей.
-\end{itemize}   
+    Метаграфом называется упорядоченная четвёрка
+    \[
+        G = (V, E, \mathrm{src}, \mathrm{tgt}),
+    \]
+    где:
+    \noindent
+    \begin{itemize} 
+        \item $V$ — конечное непустое множество вершин (объектов системы);
+        \item $E$ — конечное непустое множество гипердуг (событий или действий);
+        \item $\mathrm{src}: E \rightarrow 2^V$ — функция, сопоставляющая каждой дуге множество источников;
+        \item $\mathrm{tgt}: E \rightarrow 2^V$ — функция, сопоставляющая каждой дуге множество целей.
+    \end{itemize}
     При этом для любой дуги $e \in E$ выполняется условие $\mathrm{src}(e) \cap \mathrm{tgt}(e) = \varnothing$.
 \end{definition}
 
@@ -32,11 +32,11 @@ G = (V, E, \mathrm{src}, \mathrm{tgt}),
 Для адекватного моделирования компьютерных атак необходимо расширить метаграф за счёт семантических и количественных характеристик. Следуя подходу, предложенному в~\cite{Latypov2020}, вводится понятие атрибутивного метаграфа.
 
 \begin{definition}
-Атрибутивным метаграфом называется шестёрка
-\[
-G_{\mathrm{attr}} = (V, E, \mathrm{src}, \mathrm{tgt}, A_V, A_E, \alpha, \beta),
-\]
-где:
+    Атрибутивным метаграфом называется шестёрка
+    \[
+        G_{\mathrm{attr}} = (V, E, \mathrm{src}, \mathrm{tgt}, A_V, A_E, \alpha, \beta),
+    \]
+    где:
     \item $A_V$ — множество атрибутов вершин;
     \item $A_E$ — множество атрибутов дуг;
     \item $\alpha: V \rightarrow A_V$ — функция атрибутизации вершин;
@@ -67,14 +67,14 @@ G_{\mathrm{attr}} = (V, E, \mathrm{src}, \mathrm{tgt}, A_V, A_E, \alpha, \beta),
 Каждая дуга $e$ с атрибутом $\beta(e).\texttt{mitre\_ttp} = t$ автоматически наследует тактику $T(t)$ из фреймворка MITRE ATT\&CK. Это позволяет строить тактические профили метаграфов.
 
 \begin{definition}
-Тактическим профилем метаграфа называется отображение
-\[
-\tau: \mathcal{T} \rightarrow 2^E,
-\]
-где $\mathcal{T}$ — множество тактик MITRE ATT\&CK, и
-\[
-\tau(T) = \{ e \in E \mid T(\beta(e).\texttt{mitre\_ttp}) = T \}.
-\]
+    Тактическим профилем метаграфа называется отображение
+    \[
+        \tau: \mathcal{T} \rightarrow 2^E,
+    \]
+    где $\mathcal{T}$ — множество тактик MITRE ATT\&CK, и
+    \[
+        \tau(T) = \{ e \in E \mid T(\beta(e).\texttt{mitre\_ttp}) = T \}.
+    \]
 \end{definition}
 
 Например, для APT29 (Cozy Bear) тактический профиль включает тактики \textit{Initial Access} (T1566), \textit{Execution} (T1059), \textit{Persistence} (T1547) и \textit{Lateral Movement} (T1021).
@@ -87,7 +87,7 @@ G_{\mathrm{attr}} = (V, E, \mathrm{src}, \mathrm{tgt}, A_V, A_E, \alpha, \beta),
 
 Пусть $G_1$ и $G_2$ — два атрибутивных метаграфа. Их объединение определяется как
 \[
-G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alpha, \beta),
+    G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alpha, \beta),
 \]
 где функции $\mathrm{src}$, $\mathrm{tgt}$, $\alpha$, $\beta$ определены естественным образом на объединении.
 
@@ -99,7 +99,7 @@ G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alp
 
 Проекция по тактике $T$:
 \[
-\pi_T(G) = (V', E', \mathrm{src}', \mathrm{tgt}', \alpha', \beta'),
+    \pi_T(G) = (V', E', \mathrm{src}', \mathrm{tgt}', \alpha', \beta'),
 \]
 где $E' = \tau(T)$, $V' = \bigcup_{e \in E'} (\mathrm{src}(e) \cup \mathrm{tgt}(e))$.
 
@@ -123,7 +123,7 @@ G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alp
 В работах~\cite{Novokhrestov2014,Zegzhda2016,Kotenko2013,Gorbachev2018} рассматриваются различные подходы к моделированию угроз: от многоагентных систем до многоуровневых архитектур защиты. Однако ни одна из моделей не обеспечивает одновременно:
 \noindent
 \begin{itemize} 
-\item поддержку множественных источников и целей;
+    \item поддержку множественных источников и целей;
     \item интеграцию с MITRE ATT\&CK;
     \item динамическое обновление по потоковым данным;
     \item вычислительную эффективность сопоставления.
@@ -138,8 +138,10 @@ G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alp
     \item определены операции алгебры метаграфов;
     \item показана интеграция с MITRE ATT\&CK и возможность моделирования APT-атак;
     \item обосновано преимущество предложенной модели перед альтернативами.
-\end{itemize}   
+\end{itemize}
 Полученные теоретические результаты лежат в основе методики выявления атак, описанной в главе~3.
+
+\begin{comment}
 \chapter{Длинное название главы, в которой мы смотрим на~примеры того, как будут верстаться изображения и~списки}
 
 \section{Одиночное изображение}\label{sec:ch2/sec8}
@@ -214,7 +216,7 @@ G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alp
     \centerfloat{
         \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{tikz_example_compiled}}{}% присваиваемое предкомпилированному pdf имя файла (не обязательно)
         \input{Dissertation/images/tikz_scheme.tikz}
-
+        
     }
     \legend{}
     \caption[Пример \texttt{tikz} схемы]{Пример рисунка, рассчитываемого
@@ -319,9 +321,9 @@ G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alp
                                   \item лежит ещё один маркированный список.
                               \end{itemize}
                     \end{enumerate}
-
+                    
           \end{enumerate}
-
+          
     \item Четвёртый пункт.
 \end{enumerate}
 
@@ -513,15 +515,15 @@ G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alp
 ку про чент волуптариа. Ыльит дыкоры аляквюид еюж ыт. Ку рыбюм мюндй ютенам
 дуо.
 \begin{align*}
-    2\times 2       & = 4      & 6\times 8 & = 48 \\
-    3\times 3       & = 9      & a+b       & = c  \\
+    2\times 2       & = 4      & 6\times 8 & = 48  \\
+    3\times 3       & = 9      & a+b       & = c   \\
     10 \times 65464 & = 654640 & 3/2       & =1,5
 \end{align*}
 
 \begin{equation}
     \begin{aligned}
-        2\times 2       & = 4      & 6\times 8 & = 48 \\
-        3\times 3       & = 9      & a+b       & = c  \\
+        2\times 2       & = 4      & 6\times 8 & = 48  \\
+        3\times 3       & = 9      & a+b       & = c   \\
         10 \times 65464 & = 654640 & 3/2       & =1,5
     \end{aligned}
 \end{equation}
@@ -539,8 +541,8 @@ G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alp
 %Большая фигурная скобка только справа
 \[\left. %ВАЖНО: точка после слова left делает скобку неотображаемой
     \begin{aligned}
-        2 \times x      & = 4 \\
-        3 \times y      & = 9 \\
+        2 \times x      & = 4  \\
+        3 \times y      & = 9  \\
         10 \times 65464 & = z
     \end{aligned}\right\}
 \]
@@ -570,3 +572,4 @@ G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alp
 ыам но, про ыт анёмал мныжаркхюм, эи ыюм пондэрюм майыжтатйж.
 
 \FloatBarrier
+\end{comment}
