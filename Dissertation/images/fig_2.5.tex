@@ -1,0 +1,34 @@
+% === Файл: Dissertation/images/fig_2.5.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta}
+\begin{document}
+\begin{tikzpicture}[
+    start/.style={ellipse, draw, fill=green!20, minimum width=1.6cm, minimum height=0.6cm, font=\scriptsize},
+    process/.style={rectangle, draw, fill=blue!10, minimum width=2.2cm, minimum height=0.6cm, align=center, font=\scriptsize},
+    decision/.style={diamond, draw, fill=orange!20, aspect=1.5, align=center, inner sep=1pt, font=\scriptsize},
+    arrow/.style={->, >=Stealth, thick}
+]
+
+\node[start] (Start) {Начало: $G_{\text{ref}}, G_{\text{obs}}$};
+\node[process, below=of Start] (P1) {Фильтрация по времени и тактике};
+\node[process, below=of P1] (P2) {Инициализация кандидатов $\phi_V, \phi_E$};
+\node[process, below=of P2] (P3) {Проверка условий изоморфизма};
+\node[process, below=of P3] (P4) {Вычисление $\text{sim}(t_1, t_2)$};
+\node[decision, below=of P4] (D1) {$\text{sim} \geq \theta$?};
+\node[process, right=1.8cm of D1] (P5) {Отклонить кандидата};
+\node[process, below=of D1] (P6) {Принять соответствие};
+\node[process, below=of P6] (End) {Конец};
+
+\draw[arrow] (Start) -- (P1);
+\draw[arrow] (P1) -- (P2);
+\draw[arrow] (P2) -- (P3);
+\draw[arrow] (P3) -- (P4);
+\draw[arrow] (P4) -- (D1);
+\draw[arrow] (D1) -- node[left] {Да} (P6);
+\draw[arrow] (D1.east) -- node[above] {Нет} (P5);
+\draw[arrow] (P6) -- (End);
+\end{tikzpicture}
+\end{document}

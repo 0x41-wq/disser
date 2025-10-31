@@ -1,3 +1,157 @@
+% Presentation/content.tex
+% Основной контент презентации к защите диссертации
+
+\section{Методология}
+
+\begin{frame}{Формальная модель: атрибутивный метаграф}
+  \begin{columns}[T]
+    \column{0.55\textwidth}
+    \begin{itemize}
+      \item Вершины = сущности (процессы, файлы, сетевые соединения).
+      \item Рёбра = отношения с атрибутами: время, PID, хэш, IP и др.
+      \item Подграфы = реализации тактик MITRE ATT\&CK (TA0001–TA0040).
+      \item Модель позволяет учитывать \textbf{контекст} и \textbf{последовательность} действий.
+    \end{itemize}
+    \column{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}[node distance=1.6cm and 2cm, >=Stealth, thick,
+        proc/.style={rectangle, draw=blue!70!black, fill=blue!10, rounded corners, minimum width=1.6cm, minimum height=0.7cm},
+        file/.style={ellipse, draw=green!70!black, fill=green!10, minimum width=1.5cm, minimum height=0.6cm},
+        net/.style={diamond, draw=red!70!black, fill=red!10, minimum size=0.8cm},
+        edge/.style={->}
+    ]
+    \node[proc] (p1) {explorer.exe};
+    \node[file, below left=of p1] (f1) {doc.pdf};
+    \node[proc, below right=of p1] (p2) {powershell};
+    \node[net, below=of p2] (n1) {C2};
+
+    \draw[edge] (p1) -- node[above left, font=\scriptsize] {открыл} (f1);
+    \draw[edge] (p1) -- node[above right, font=\scriptsize] {запустил} (p2);
+    \draw[edge] (p2) -- node[right, font=\scriptsize] {подкл.} (n1);
+    \end{tikzpicture}
+    \vspace{-0.2cm}
+    \tiny Пример: тактика «Execution» (TA0002)
+  \end{columns}
+\end{frame}
+
+\begin{tikzpicture}[>=Stealth, font=\scriptsize]
+  \definecolor{ta0002}{HTML}{99CC99}
+  \definecolor{ta0003}{HTML}{9999FF}
+  \definecolor{ta0005}{HTML}{FFCC66}
+  \definecolor{ta0010}{HTML}{CCCC99}
+
+  \node[fill=ta0002, circle, inner sep=3pt, label=above:{T1059}] (t2) at (0,0) {};
+  \node[fill=ta0003, circle, inner sep=3pt, label=above:{T1078}] (t3) at (2,0) {};
+  \node[fill=ta0005, circle, inner sep=3pt, label=below:{T1027}] (t4) at (1,-1.2) {};
+  \node[fill=ta0010, circle, inner sep=3pt, label=below:{T1071.001}] (t5) at (3,-1.2) {};
+
+  \draw[->, thick] (t2) -- (t3);
+  \draw[->, thick] (t2) -- (t4);
+  \draw[->, thick] (t3) -- (t5);
+
+  % Легенда без matrix
+  \node[font=\tiny, anchor=west] at (-2.5,-2) {TA0002: Execution};
+  \node[font=\tiny, anchor=west] at (-2.5,-2.3) {TA0003: Persistence};
+  \node[font=\tiny, anchor=west] at (-2.5,-2.6) {TA0005: Defense Evasion};
+  \node[font=\tiny, anchor=west] at (-2.5,-2.9) {TA0010: Exfiltration};
+
+  % Цветные квадратики
+  \fill[ta0002] (-3.2,-2) rectangle (-2.9,-1.7);
+  \fill[ta0003] (-3.2,-2.3) rectangle (-2.9,-2.0);
+  \fill[ta0005] (-3.2,-2.6) rectangle (-2.9,-2.3);
+  \fill[ta0010] (-3.2,-2.9) rectangle (-2.9,-2.6);
+\end{tikzpicture}
+
+
+\begin{comment}
+\begin{frame}{Интеграция с MITRE ATT\&CK}
+  \centering
+  \begin{tikzpicture}[>=Stealth, font=\scriptsize]
+    \definecolor{ta0002}{HTML}{99CC99}
+    \definecolor{ta0003}{HTML}{9999FF}
+    \definecolor{ta0005}{HTML}{FFCC66}
+    \definecolor{ta0010}{HTML}{CCCC99}
+
+    \node[fill=ta0002, circle, inner sep=3pt, label=above:{T1059}] (t2) at (0,0) {};
+    \node[fill=ta0003, circle, inner sep=3pt, label=above:{T1078}] (t3) at (2,0) {};
+    \node[fill=ta0005, circle, inner sep=3pt, label=below:{T1027}] (t4) at (1,-1.2) {};
+    \node[fill=ta0010, circle, inner sep=3pt, label=below:{T1071.001}] (t5) at (3,-1.2) {};
+
+    \draw[->, thick] (t2) -- (t3);
+    \draw[->, thick] (t2) -- (t4);
+    \draw[->, thick] (t3) -- (t5);
+
+    \matrix [draw, below=1.8cm of t4, column sep=0.5em, row sep=0.2em, font=\tiny] {
+      \node[fill=ta0002, circle, inner sep=2pt] {}; & \node{TA0002: Execution}; \\
+      \node[fill=ta0003, circle, inner sep=2pt] {}; & \node{TA0003: Persistence}; \\
+      \node[fill=ta0005, circle, inner sep=2pt] {}; & \node{TA0005: Defense Evasion}; \\
+      \node[fill=ta0010, circle, inner sep=2pt] {}; & \node{TA0010: Exfiltration}; \\
+    };
+  \end{tikzpicture}
+\end{frame}
+\end{comment}
+
+\section{Эксперименты}
+
+\begin{frame}{Наборы данных}
+    \begin{itemize}
+        \item \textbf{MITRE APT29 (2020)} — целевые атаки на Windows/Linux.
+        \item \textbf{Финансовые атаки} — логи от банковских партнёров (2023–2024).
+        \item \textbf{Нормальный трафик} — корпоративная сеть MIREA (анонимизирована).
+    \end{itemize}
+  \vspace{0.5cm}
+  \centering
+  \begin{tabular}{lrr}
+    \toprule
+    Источник & События & Атаки \\
+    \midrule
+    APT29 & 1.2 млн & 18 \\
+    Финансовые & 3.7 млн & 42 \\
+    Нормальный трафик & 5.1 млн & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{Сравнение методов обнаружения}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        ybar,
+        bar width=14pt,
+        width=0.9\textwidth,
+        height=5cm,
+        symbolic x coords={Snort, Isolation Forest, GNN, Предложенный},
+        xtick=data,
+        ylabel={F1-score},
+        ymin=0, ymax=1,
+        nodes near coords,
+        every node near coord/.append style={font=\scriptsize},
+        axis lines=left,
+        enlarge x limits=0.5,
+        xticklabel style={font=\scriptsize, align=center, text width=2cm}
+    ]
+    \addplot[fill=gray!50] coordinates {
+        (Snort, 0.49)
+        (Isolation Forest, 0.64)
+        (GNN, 0.75)
+        (Предложенный, 0.87)
+    };
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Производительность}
+    \begin{itemize}
+        \item Время обработки 1 млн событий: \textbf{8.2 с} (Intel i7-12700, 16 ГБ RAM).
+        \item Поддержка потоковой обработки с окном 5 минут.
+        \item Потребление памяти: \textbf{< 1.2 ГБ} даже при полной загрузке.
+    \end{itemize}
+  \vspace{0.5cm}
+  \centering
+  \footnotesize Результаты получены на реальных данных без синтетических упрощений.
+\end{frame}
+
+\begin{comment}
 \section{Списки}
 \begin{frame}[plain, noframenumbering]
     \begin{center}
@@ -302,4 +456,4 @@
     \includegraphics[width=0.35\linewidth,angle=15]{latex}
     \includegraphics[width=0.35\linewidth,angle=-15]{latex}
 \end{frame}
-
+\end{comment}

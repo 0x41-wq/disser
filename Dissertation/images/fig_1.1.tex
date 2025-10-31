@@ -1,0 +1,56 @@
+% === Файл: Dissertation/images/fig_1.1.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta}
+\begin{document}
+\begin{tikzpicture}[
+    node/.style={rectangle, draw, align=center, font=\small, minimum width=2.2cm, minimum height=0.8cm},
+    level1/.style={fill=gray!10},
+    level2/.style={fill=blue!10},
+    level3/.style={fill=green!10},
+    arrow/.style={->, >=Stealth, thick}
+]
+
+% Уровень 1
+\node[node, level1] (diag) {Диаграммы\\сценариев};
+\node[node, level1, right=1.8cm of diag] (temp) {Темпоральные\\методы};
+\node[node, level1, right=1.8cm of temp] (graph) {Графовые\\методы};
+
+% Уровень 2
+\node[node, level2, below left=1cm and 0.3cm of diag] (misuse) {Misuse\\Cases};
+\node[node, level2, below=of diag] (coras) {CORAS};
+\node[node, level2, below right=1cm and 0.3cm of diag] (secuse) {Security\\Use Cases};
+
+\node[node, level2, below left=1cm and 0.3cm of temp] (kill) {Cyber Kill\\Chain};
+\node[node, level2, below=of temp] (diamond) {Diamond\\Model};
+\node[node, level2, below right=1cm and 0.3cm of temp] (riskit) {Riskit};
+
+\node[node, level2, below left=1cm and 0.3cm of graph] (attackflow) {Attack\\Flow};
+\node[node, level2, below=of graph] (trees) {Деревья\\атак};
+\node[node, level2, below right=1cm and 0.3cm of graph] (graphs) {Графы\\атак};
+
+% Уровень 3
+\node[node, level3, below=1cm of graphs] (meta) {Атрибутивные\\метаграфы};
+
+% Стрелки
+\draw[arrow] (diag) -- (misuse);
+\draw[arrow] (diag) -- (coras);
+\draw[arrow] (diag) -- (secuse);
+
+\draw[arrow] (temp) -- (kill);
+\draw[arrow] (temp) -- (diamond);
+\draw[arrow] (temp) -- (riskit);
+
+\draw[arrow] (graph) -- (attackflow);
+\draw[arrow] (graph) -- (trees);
+\draw[arrow] (graph) -- (graphs);
+
+\draw[arrow] (graphs) -- (meta);
+
+% Подпись
+\node[below=0.2cm of meta, font=\small\bfseries] {Перспективное направление};
+
+\end{tikzpicture}
+\end{document}

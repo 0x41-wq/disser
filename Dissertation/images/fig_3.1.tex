@@ -1,0 +1,20 @@
+% === Файл: Dissertation/images/fig_3.1.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[
+    node/.style={rectangle, draw, minimum width=1.6cm, minimum height=0.6cm, align=center, font=\scriptsize},
+    edge/.style={->, thick},
+    attr/.style={font=\tiny, fill=blue!10, inner sep=1pt}
+]
+\node[node, fill=gray!10] (word) {winword.exe};
+\node[node, fill=blue!20, right=2cm of word] (ps) {powershell.exe};
+\node[node, fill=green!20, below=1cm of $(word)!0.5!(ps)$] (script) {payload.ps1};
+
+\draw[edge] (word) -- node[above, attr] {TA0002} node[below, attr] {T1059.001} (ps);
+
+\node[font=\scriptsize, below=0.8cm of script, align=center] {Дуга «TA0002 → T1059.001» связывает три сущности:\\источник (Word), цель (PowerShell) и объект (скрипт).};
+\end{tikzpicture}
+\end{document}

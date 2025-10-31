@@ -1,0 +1,23 @@
+% === Файл: Dissertation/images/fig_1.5.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+\begin{document}
+\begin{tikzpicture}[
+    method/.style={rectangle, draw, minimum width=2cm, minimum height=0.8cm, align=center, font=\small},
+    graph/.style={fill=blue!10},
+    meta/.style={fill=green!20, double, double distance=1pt}
+]
+
+\node[method] (sig) {Сигнатурный\\Snort};
+\node[method, right=0.6cm of sig] (anom) {Аномальный\\Isolation\\Forest};
+\node[method, right=0.6cm of anom] (beh) {Поведенческий\\SIEM-правила};
+\node[method, graph, right=0.6cm of beh] (graph) {Графовые\\модели};
+\node[method, meta, right=0.6cm of graph] (meta) {Атрибутивные\\метаграфы};
+
+\node[below=0.2cm of meta, font=\small\bfseries] {Перспективное направление};
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,22 @@
+% === Файл: Dissertation/images/fig_4.5.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[
+    node/.style={rectangle, draw, minimum width=1.6cm, minimum height=0.6cm, align=center, font=\scriptsize},
+    edge/.style={->, thick},
+    attr/.style={font=\tiny, fill=blue!10, inner sep=1pt}
+]
+\node[node, fill=gray!10] (user) {Пользователь};
+\node[node, fill=yellow!20, right=1.8cm of user] (exe) {statement.pdf.exe};
+\node[node, fill=blue!20, right=1.8cm of exe] (c2) {C2-сервер};
+\node[node, fill=cyan!20, below=1.2cm of exe] (lsass) {LSASS};
+
+\draw[edge] (user) -- node[above, attr] {T1566.001} (exe);
+\draw[edge] (exe) -- node[above, attr] {T1071.001} (c2);
+\draw[edge] (exe) -- node[left, attr] {T1003.001} (lsass);
+\draw[edge] (lsass) -| node[right, pos=0.3, attr] {T1071.004} (c2);
+\end{tikzpicture}
+\end{document}

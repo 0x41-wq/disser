@@ -1,0 +1,16 @@
+% === Файл: Dissertation/images/fig_2.1.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\begin{document}
+\begin{tikzpicture}
+\matrix (m) [matrix of nodes, nodes={rectangle, draw, minimum width=1.8cm, minimum height=0.8cm, align=center}, column sep=0.1cm, row sep=0.1cm] {
+Initial Access & Execution & Persistence & Privilege Escalation & Defense Evasion & Credential Access & Discovery & Lateral Movement & Collection & C2 & Exfiltration & Impact \\
+[fill=red!30] & [fill=red!30] & [fill=red!30] &  & [fill=red!30] & [fill=red!30] &  & [fill=red!30] &  & [fill=red!30] & [fill=red!30] &  \\
+};
+\node[above=0.2cm of m-1-1] {Тактики MITRE ATT\&CK};
+\node[right=0.5cm of m-2-12] {APT29 (Cozy Bear)};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,18 @@
+% === Файл: Dissertation/images/fig_2.10.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\begin{document}
+\begin{tikzpicture}[
+    level/.style={rectangle, draw, minimum width=3cm, minimum height=0.8cm, align=center, font=\small}
+]
+\node[level, fill=gray!10] (e1) at (0,0) {Eremeev (2003)\\Конечные автоматы\\(статика)};
+\node[level, fill=blue!10, below=1cm of e1] (s1) {Smirnov (2022)\\Тактические цепочки\\(описательно)};
+\node[level, fill=green!10, below=1cm of s1] (i1) {Izergin (2024)\\Графы процессов\\(аномалии)};
+\node[level, fill=red!10, below=1cm of i1] (l1) {Настоящая работа\\Атрибутивные метаграфы\\+ MITRE ATT\&CK + динамика};
+
+\node[rotate=90, font=\bfseries] at (-2, -1.5) {Уровень абстракции};
+\end{tikzpicture}
+\end{document}

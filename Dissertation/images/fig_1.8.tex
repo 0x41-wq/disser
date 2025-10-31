@@ -1,0 +1,20 @@
+% === Файл: Dissertation/images/fig_1.8.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\begin{document}
+\begin{tikzpicture}[
+    node/.style={rectangle, draw, minimum width=1.8cm, minimum height=0.8cm, align=center, font=\small}
+]
+\node[node, fill=red!10] (apt) {APT-группа};
+\node[node, fill=blue!10, right=1.5cm of apt] (corp) {Корпоративная\\сеть};
+\node[node, fill=green!10, right=1.5cm of corp] (cloud) {Облачные\\сервисы};
+\node[node, fill=yellow!10, below=1cm of corp] (api) {API};
+
+\draw[->, thick] (apt) -- node[above] {Фишинг} (corp);
+\draw[->, thick] (apt) -- node[above] {Эксплуатация\\CVE} (cloud);
+\draw[->, thick] (cloud) -- node[right] {C2 через\\легитимные} (api);
+\end{tikzpicture}
+\end{document}

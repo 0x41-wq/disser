@@ -1,0 +1,19 @@
+% === Файл: Dissertation/images/fig_1.3.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{trees, arrows.meta}
+\begin{document}
+\begin{tikzpicture}[
+    level distance=1.8cm,
+    sibling distance=3.5cm,
+    edge from parent/.style={draw, -{Stealth}}]
+\node {Открыть\\сейф}
+    child { node {Взломать\\замок} }
+    child { node {Узнать код}
+        child { node {Найти\\запись} }
+        child { node {Подкупить\\владельца} }
+    };
+\end{tikzpicture}
+\end{document}

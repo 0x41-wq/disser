@@ -72,11 +72,11 @@ def match_pattern(live_graph: AttributiveMetaGraph, pattern: dict) -> float:
     и эталонным шаблоном атаки.
     
     Аргументы:
-        live_graph: AttributiveMetaGraph — текущее состояние системы
-        pattern: dict — шаблон атаки в формате JSON
+        live_graph: AttributiveMetaGraph - текущее состояние системы
+        pattern: dict - шаблон атаки в формате JSON
     
     Возвращает:
-        float: мера схожести (0.0 — нет совпадений, 1.0 — полное совпадение)
+        float: мера схожести (0.0 - нет совпадений, 1.0 - полное совпадение)
     """
     score = 0.0
     matched_edges = 0

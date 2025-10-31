@@ -1,0 +1,42 @@
+% === Файл: Dissertation/images/fig_2.9.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\begin{document}
+\begin{tikzpicture}[
+    node/.style={circle, draw, minimum size=0.5cm, font=\scriptsize},
+    label/.style={font=\scriptsize}
+]
+% Graph
+\node[node] (d1) at (0,1) {doc};
+\node[node, right=0.6cm of d1] (p1) {ps};
+\node[node, below=0.5cm of p1] (t1) {task};
+\node[node, right=0.6cm of p1] (c1) {c2};
+\draw[->] (d1) -- (p1);
+\draw[->] (p1) -- (t1);
+\draw[->] (p1) -- (c1);
+\node[label, below=0.2cm of t1] {Граф};
+
+% Hypergraph
+\node[node] (d2) at (3,1) {doc};
+\node[node, right=0.6cm of d2] (p2) {ps};
+\node[node, below=0.5cm of p2] (t2) {task};
+\node[node, right=0.6cm of p2] (c2) {c2};
+\draw (d2) -- (p2) -- (t2);
+\draw (p2) -- (c2);
+\node[label, below=0.2cm of t2] {Гиперграф};
+
+% Metagraph
+\node[node] (d3) at (6,1) {doc};
+\node[node, right=0.6cm of d3] (p3) {ps};
+\node[node, below=0.5cm of p3] (t3) {task};
+\node[node, right=0.6cm of p3] (c3) {c2};
+\draw[->] (d3) -- node[above, fill=blue!10, font=\tiny] {T1566} (p3);
+\draw[->] (p3) -- node[left, fill=green!10, font=\tiny] {T1053} (t3);
+\draw[->] (p3) -- node[above, fill=red!10, font=\tiny] {T1071} (c3);
+\node[label, below=0.2cm of t3] {Метаграф};
+
+\end{tikzpicture}
+\end{document}

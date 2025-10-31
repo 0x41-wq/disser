@@ -1,0 +1,36 @@
+% === Файл: Dissertation/images/fig_1.2.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+\begin{document}
+\begin{tikzpicture}[
+    phase/.style={rectangle, draw, fill=blue!10, minimum width=1.8cm, minimum height=0.7cm, align=center, font=\small},
+    action/.style={rectangle, draw, fill=green!10, minimum width=1.8cm, minimum height=0.7cm, align=center, font=\small},
+    arrow/.style={->, >=Stealth, thick}
+]
+
+% Фазы Kill Chain
+\node[phase] (recon) {Разведка};
+\node[phase, right=0.4cm of recon] (weapon) {Вооружение};
+\node[phase, right=0.4cm of weapon] (delivery) {Доставка};
+\node[phase, right=0.4cm of delivery] (exploit) {Эксплуатация};
+\node[phase, right=0.4cm of exploit] (install) {Установка};
+\node[phase, right=0.4cm of install] (c2) {C2};
+\node[phase, right=0.4cm of c2] (act) {Действия по цели};
+
+% Действия
+\node[action, below=0.8cm of delivery] (phish) {Фишинг};
+\node[action, below=0.8cm of exploit] (macro) {Макрос};
+\node[action, below=0.8cm of install] (revshell) {Реверс-шелл};
+\node[action, below=0.8cm of act] (mimikatz) {Mimikatz};
+
+% Стрелки
+\draw[arrow] (phish) -- (delivery);
+\draw[arrow] (macro) -- (exploit);
+\draw[arrow] (revshell) -- (install);
+\draw[arrow] (mimikatz) -- (act);
+
+\end{tikzpicture}
+\end{document}

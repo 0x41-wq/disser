@@ -1,0 +1,24 @@
+% === Файл: Dissertation/images/fig_1.6.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+\begin{document}
+\begin{tikzpicture}[
+    comp/.style={rectangle, draw, minimum width=2cm, minimum height=1cm, align=center, font=\small}
+]
+
+\node[comp] (S) {Субъекты\\$S$};
+\node[comp, right=1.5cm of S] (O) {Объекты\\$O$};
+\node[comp, right=1.5cm of O] (A) {Действия\\$A$};
+\node[comp, right=1.5cm of A] (V) {Уязвимости\\$V$};
+\node[comp, right=1.5cm of V] (C) {Нарушения\\$C$};
+
+\draw[->, thick] (S) -- (O);
+\draw[->, thick] (O) -- (A);
+\draw[->, thick] (A) -- (V);
+\draw[->, thick] (V) -- (C);
+
+\end{tikzpicture}
+\end{document}

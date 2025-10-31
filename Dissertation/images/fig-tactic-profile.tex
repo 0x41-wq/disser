@@ -1,0 +1,23 @@
+% fig-tactic-profile.tex
+\documentclass[tikz, border=2mm]{standalone}
+\input{tikz-preamble.tex} % Подключаем общий преамбл
+
+\begin{document}
+\begin{tikzpicture}
+% СОДЕРЖИМОЕ ФАЙЛА fig-tactic-profile.tikz ВСТАВИТЬ СЮДА
+\def\tactics{{"Initial Access","Execution","Persistence","Privilege Escalation","Defense Evasion","Credential Access","Discovery","Lateral Movement","Collection","Command and Control","Exfiltration","Impact"}}
+\def\coverage{{1,1,1,0,1,1,1,1,0,1,0,0}}
+
+\foreach \i in {0,...,11} {
+    \pgfmathsetmacro{\tname}{\tactics[\i]}
+    \pgfmathsetmacro{\cov}{\coverage[\i]}
+    \ifnum\cov=1
+        \node[tactic, fill=red!30, draw=red!70!black] at (0,-\i*0.7) {\tname};
+    \else
+        \node[tactic, fill=gray!10, draw=gray!50] at (0,-\i*0.7) {\tname};
+    \fi
+}
+\node[rotate=90, anchor=center] at (-2.5,-3.85) {Тактики MITRE ATT\&CK};
+\node[anchor=west] at (2.5,-3.85) {APT29 (Cozy Bear)};
+\end{tikzpicture}
+\end{document}
