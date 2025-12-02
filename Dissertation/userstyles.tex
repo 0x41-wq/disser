@@ -175,6 +175,9 @@
     {Ґ}{{\selectfont\char128}}1
 }
 
+% Ensure the newfloat package is loaded so \newfloat is available
+\usepackage{newfloat}
+
 % Ширина текста минус ширина надписи 999
 \newlength{\twless}
 \newlength{\lmarg}
@@ -224,7 +227,8 @@
 {Verb}{Verbatim}
 {fontsize=\fontsize{12pt}{14pt}\selectfont}
 
-\newfloat[chapter]{ListingEnv}{lol}{Листинг}
+% \newfloat[chapter]{ListingEnv}{lol}{Листинг}
+\newfloat{ListingEnv}{lol}{Листинг}[chapter]
 
 \renewcommand{\lstlistingname}{Листинг}
 
@@ -326,3 +330,9 @@
   topsep=6pt,        % вертикальный отступ до/после списка
   partopsep=0pt
 }
+
+% Теорематические окружения
+\newtheorem{theorem}{Теорема}[chapter]
+\newtheorem{lemma}[theorem]{Лемма}
+\newtheorem{corollary}[theorem]{Следствие}
+\newtheorem{proposition}[theorem]{Утверждение}

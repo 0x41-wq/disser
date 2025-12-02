@@ -1,0 +1,69 @@
+% === Файл: Dissertation/images/fig_2.2.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\begin{document}
+\begin{tikzpicture}[
+    node/.style={circle, draw, minimum size=0.6cm},
+    label/.style={font=\scriptsize}
+]
+% G1
+\node[node] (A1) at (0,1) {A};
+\node[node, below=of A1] (B1) {B};
+\node[node, right=of A1] (C1) {C};
+\draw[->] (A1) -- (C1);
+\node[label, below=0.2cm of B1] {(a) $G_1$};
+
+% G2
+\node[node] (B2) at (3,1) {B};
+\node[node, right=of B2] (D2) {D};
+\draw[->] (B2) -- (D2);
+\node[label, below=0.2cm of B2] {(b) $G_2$};
+
+% G1 ∪ G2
+\node[node] (A3) at (6,1.2) {A};
+\node[node, below=of A3] (B3) {B};
+\node[node, right=of A3] (C3) {C};
+\node[node, right=of B3] (D3) {D};
+\draw[->] (A3) -- (C3);
+\draw[->] (B3) -- (D3);
+\node[label, below=0.2cm of B3] {(c) $G_1 \cup G_2$};
+
+% G1
+\node[node] (X1) at (0,-2) {X};
+\node[node, right=of X1] (Y1) {Y};
+\draw[->] (X1) -- (Y1);
+\node[label, below=0.2cm of X1] {(d) $G_1$};
+
+% G2
+\node[node] (Y2) at (3,-2) {Y};
+\node[node, right=of Y2] (Z2) {Z};
+\draw[->] (Y2) -- (Z2);
+\node[label, below=0.2cm of Y2] {(e) $G_2$};
+
+% G1 ◦ G2
+\node[node] (X3) at (6,-2.2) {X};
+\node[node, right=of X3] (Y3) {Y};
+\node[node, right=of Y3] (Z3) {Z};
+\draw[->] (X3) -- (Y3);
+\draw[->] (Y3) -- (Z3);
+\node[label, below=0.2cm of X3] {(f) $G_1 \circ G_2$};
+
+% G
+\node[node] (P1) at (0,-4) {P};
+\node[node, right=of P1] (Q1) {Q};
+\node[node, below=of Q1] (R1) {R};
+\draw[->] (P1) -- node[above] {T1059} (Q1);
+\draw[->] (Q1) -- node[right] {T1021} (R1);
+\node[label, below=0.2cm of R1] {(g) $G$};
+
+% π_Execution(G)
+\node[node] (P2) at (3,-4) {P};
+\node[node, right=of P2] (Q2) {Q};
+\draw[->] (P2) -- node[above] {T1059} (Q2);
+\node[label, below=0.2cm of Q2] {(h) $\pi_{\text{Execution}}(G)$};
+
+\end{tikzpicture}
+\end{document}

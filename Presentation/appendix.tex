@@ -1,3 +1,56 @@
+% Запасные (дополнительные) слайды
+
+\section{Приложение}
+
+\begin{frame}{Архитектура системы обнаружения}
+  \centering
+  \begin{tikzpicture}[node distance=1.4cm and 2cm, >=Stealth, thick,
+      block/.style={rectangle, draw=black, fill=gray!10, rounded corners, minimum width=2.2cm, minimum height=0.8cm, align=center}
+  ]
+  \node[block] (input) {Сырые логи\\(Sysmon, Zeek, EDR)};
+  \node[block, right=of input] (parser) {Парсер и\\нормализация};
+  \node[block, right=of parser] (graph) {Построение\\атрибутивного\\метаграфа};
+  \node[block, right=of graph] (detect) {Сопоставление с\\тактиками ATT\&CK};
+  \node[block, right=of detect] (alert) {Генерация\\инцидента};
+
+  \draw[->] (input) -- (parser);
+  \draw[->] (parser) -- (graph);
+  \draw[->] (graph) -- (detect);
+  \draw[->] (detect) -- (alert);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Сравнение по времени обработки}
+  \centering
+  \begin{tabular}{lcc}
+    \toprule
+    Метод & Время (1 млн событий) & Память \\
+    \midrule
+    Snort & 3.1 с & 0.4 ГБ \\
+    Isolation Forest & 12.7 с & 2.1 ГБ \\
+    GNN & 24.5 с & 4.8 ГБ \\
+    Предложенный & \textbf{8.2 с} & \textbf{1.1 ГБ} \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.5cm}
+  \footnotesize Тестирование: Intel i7-12700, 32 ГБ RAM, Ubuntu 22.04
+\end{frame}
+
+\begin{frame}{Поддерживаемые тактики MITRE ATT\&CK}
+    \begin{itemize}
+    \item TA0001 — Initial Access
+    \item TA0002 — Execution
+    \item TA0003 — Persistence
+    \item TA0004 — Privilege Escalation
+    \item TA0005 — Defense Evasion
+    \item TA0007 — Discovery
+    \item TA0008 — Lateral Movement
+    \item TA0010 — Exfiltration
+    \item TA0011 — Command and Control
+    \end{itemize}
+\end{frame}
+
+\begin{comment}
 \begin{frame}
     \frametitle{Ответы на замечания ведущей организации НИИ~<<Рога~и~копыта>>}
     \begin{itemize}
@@ -30,3 +83,4 @@
         \item Замечание -- ответ
     \end{itemize}
 \end{frame}
+\end{comment}

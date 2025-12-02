@@ -1,0 +1,18 @@
+% === Файл: Dissertation/images/fig_2.8.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\begin{document}
+\begin{tikzpicture}[
+    block/.style={rectangle, draw, fill=blue!10, minimum width=2cm, minimum height=0.8cm, align=center, font=\small}
+]
+\node[block] (report) {Отчёт об угрозе};
+\node[block, right=1.5cm of report] (llm) {LLM\\(Mistral-7B)};
+\node[block, right=1.5cm of llm] (graph) {Эталонный\\метаграф};
+
+\draw[->, thick] (report) -- (llm);
+\draw[->, thick] (llm) -- (graph);
+\end{tikzpicture}
+\end{document}

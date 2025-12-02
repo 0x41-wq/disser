@@ -1,0 +1,24 @@
+% === Файл: Dissertation/images/fig_4.4.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=20pt,
+    width=0.8\textwidth,
+    height=6cm,
+    symbolic x coords={Сигнатуры, Аномалии, Правила, AMGD},
+    xtick=data,
+    ylabel={F1-score},
+    nodes near coords,
+    nodes near coords align={vertical},
+    ymin=0, ymax=1
+]
+\addplot coordinates {(Сигнатуры,0.52) (Аномалии,0.62) (Правила,0.68) (AMGD,0.86)};
+\end{axis}
+\end{tikzpicture}
+\end{document}

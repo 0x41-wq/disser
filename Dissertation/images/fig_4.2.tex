@@ -1,0 +1,30 @@
+% === Файл: Dissertation/images/fig_4.2.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+\begin{document}
+\begin{tikzpicture}[
+    attacker/.style = {rectangle, draw, fill=red!10, text width=5em, align=center},
+    target/.style = {rectangle, draw, fill=blue!10, text width=5em, align=center},
+    sensor/.style = {rectangle, draw, fill=green!10, text width=5em, align=center},
+    amgd/.style = {rectangle, draw, fill=yellow!10, text width=6em, align=center}
+]
+\node [attacker] (attacker) {Атакующий\\(Kali Linux)};
+\node [target, right=2cm of attacker] (target1) {Цель 1\\(Win 10)};
+\node [target, below=of target1] (target2) {Цель 2\\(Win Server)};
+\node [sensor, above=of target1] (edr) {EDR};
+\node [sensor, below=of target2] (zeek) {Zeek};
+\node [amgd, right=2cm of target1] (amgd) {AMGD\\Прототип};
+
+\draw [->] (attacker) -- node[above] {Фишинг, C2} (target1);
+\draw [->] (attacker) -- node[below] {PsExec} (target2);
+\draw [->] (target1) -- (edr);
+\draw [->] (target1) -- (zeek);
+\draw [->] (target2) -- (edr);
+\draw [->] (target2) -- (zeek);
+\draw [->] (edr) -- (amgd);
+\draw [->] (zeek) -- (amgd);
+\end{tikzpicture}
+\end{document}

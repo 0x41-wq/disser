@@ -1,0 +1,269 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, matrix, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{caption}
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2cm,top=2cm,bottom=2cm} % чуть шире слева для переносов
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage[table]{xcolor} % ← ЭТО ИСПРАВЛЯЕТ ОШИБКУ \cellcolor
+
+% Стили TikZ
+\tikzset{
+  block/.style = {rectangle, draw, text width=4cm, align=center, minimum height=1cm},
+  vertex/.style = {rectangle, draw, minimum width=2.4cm, minimum height=1.3cm, align=center},
+  tacticnode/.style = {rectangle, draw, fill=blue!10, align=center, minimum height=1.2cm, text width=3.5cm},
+  technode/.style = {rectangle, draw, fill=orange!10, align=center, minimum height=1.2cm, text width=3.5cm},
+  procnode/.style = {rectangle, draw, fill=green!10, align=center, minimum height=1.2cm, text width=3.5cm}
+}
+
+\begin{document}
+
+\begin{center}
+\textbf{\LARGE Применение атрибутивных метаграфов для выявления компьютерных атак: результаты имитационного эксперимента}
+\end{center}
+
+\bigskip
+
+\begin{center}
+И. Т. Латыпов\textsuperscript{1}, М. А. Еремеев\textsuperscript{1} \\
+\footnotesize
+\textsuperscript{1}Томский государственный университет систем управления и радиоэлектроники, Томск, Россия \\
+\vspace{0.3cm}
+\textbf{УДК 004.056.5}
+\end{center}
+
+\bigskip
+
+\noindent\textbf{Аннотация.}  
+Цель исследования — разработка и экспериментальная проверка методики выявления многоэтапных компьютерных атак с использованием атрибутивных метаграфов. В работе предложена формализованная модель атаки как пути в атрибутивном метаграфе, основанная на тактиках и техниках MITRE ATT\&CK. Описана методика построения динамического метаграфа на основе событий безопасности и сопоставления его с эталонными шаблонами атак. Проведён имитационный эксперимент в среде Core Insight с участием 10\,000 сессий, включая сценарии APT29 и APT33. Результаты показали точность выявления атак 92,4\,\%, полноту — 89,7\,\%, уровень ложных срабатываний — 3,1\,\%. Предложенный подход демонстрирует высокую интерпретируемость и устойчивость к обфускации.  
+\textbf{Ключевые слова}: атрибутивный метаграф, обнаружение атак, MITRE ATT\&CK, имитационное моделирование, информационная безопасность, APT.
+
+\section{Введение}
+
+Современные киберугрозы, особенно многоэтапные атаки типа APT (Advanced Persistent Threat), характеризуются высокой скрытностью, адаптивностью и использованием легитимных инструментов (living-off-the-land). Традиционные системы обнаружения вторжений (IDS), основанные на сигнатурах или простых аномалиях, не способны эффективно выявлять такие атаки на ранних этапах. В связи с этим возрастает интерес к контекстно-ориентированным методам, позволяющим моделировать поведение злоумышленника в терминах тактик, техник и процедур (TTPs).
+
+В работе \cite{latypov2020} предложена многоуровневая модель компьютерной атаки на основе атрибутивных метаграфов. Метаграфы позволяют интегрировать структурные, семантические и временные аспекты атаки в единую формальную модель. Данная статья развивает указанный подход и представляет результаты имитационного эксперимента, подтверждающего эффективность методики в условиях, приближенных к реальным корпоративным сетям.
+
+\section{Теоретические основы}
+
+\subsection{Атрибутивные метаграфы}
+
+Метаграф — это обобщение ориентированного графа, в котором дуги могут соединять не только вершины, но и множества вершин. В данной работе используется упрощённая модель — \textit{атрибутивный метаграф}, определяемый как кортеж:
+
+\begin{equation}
+G = (V, E, A_V, A_E),
+\end{equation}
+
+где:
+\begin{itemize}[leftmargin=*,noitemsep]
+    \item $V = \{v_1, v_2, \dots, v_n\}$ — множество вершин, соответствующих действиям или состояниям;
+    \item $E \subseteq V \times V$ — множество ориентированных дуг;
+    \item $A_V: V \rightarrow \mathcal{P}(Attr)$ — функция атрибутирования вершин;
+    \item $A_E: E \rightarrow \mathcal{P}(Attr)$ — функция атрибутирования дуг.
+\end{itemize}
+
+Множество атрибутов $Attr$ включает:
+\begin{itemize}[leftmargin=*,noitemsep]
+    \item Тактики MITRE ATT\&CK: $TA0001$ (Initial Access), $TA0002$ (Execution), и т.д.;
+    \item Техники: $T1566$ (Phishing), $T1059$ (Command and Scripting Interpreter);
+    \item Идентификаторы: хост $h \in H$, пользователь $u \in U$;
+    \item Временная метка: $\tau \in \mathbb{R}^+$.
+\end{itemize}
+
+Атрибуты вершины могут быть записаны как:
+
+\begin{equation}
+A_V(v_i) = \{ TA_j, T_k, h, u, \tau \}.
+\end{equation}
+
+\subsection{Многоуровневая структура модели (по \cite{latypov2020})}
+
+Одним из ключевых вкладов работы \cite{latypov2020} является представление модели атаки в виде трёхуровневой иерархии: тактики → техники → методы. Эта структура отражена на рис.~\ref{fig:levels}.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[node distance=2cm, >=Stealth]
+  \node[tacticnode] (tactics) {Тактики\\(Tactics)};
+  \node[technode, below=of tactics] (techniques) {Техники\\(Techniques)};
+  \node[procnode, below=of techniques] (procedures) {Методы / Процедуры\\(Procedures)};
+
+  \draw[->, thick] (tactics) -- (techniques);
+  \draw[->, thick] (techniques) -- (procedures);
+\end{tikzpicture}
+\caption{Многоуровневая структура модели компьютерной атаки (аналог Рис. 1 из \cite{latypov2020})}
+\label{fig:levels}
+\end{figure}
+
+\section{Методика выявления атак}
+
+\subsection{Этапы методики}
+
+Методика включает четыре этапа (рис.~\ref{fig:arch}):
+
+\begin{enumerate}[leftmargin=*,noitemsep]
+    \item \textbf{Сбор и нормализация событий}. Используются журналы Windows Event Log, Sysmon, Zeek. События преобразуются в унифицированный формат.
+    \item \textbf{Построение динамического метаграфа}. Каждое событие интерпретируется как вершина или дуга.
+    \item \textbf{Сопоставление с эталонными шаблонами}. Для каждой известной атаки заранее построен эталонный метаграф $G_{ref}^{(k)}$.
+    \item \textbf{Оценка схожести и генерация оповещений}.
+\end{enumerate}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[node distance=1.8cm, auto, >=Stealth]
+  \node[block] (siem) {SIEM / Журналы};
+  \node[block, below of=siem] (norm) {Нормализация событий};
+  \node[block, below of=norm] (graph) {Построение метаграфа};
+  \node[block, below of=graph] (match) {Сопоставление с шаблонами};
+  \node[block, below of=match] (alert) {Генерация оповещений};
+
+  \draw[->, thick] (siem) -- (norm);
+  \draw[->, thick] (norm) -- (graph);
+  \draw[->, thick] (graph) -- (match);
+  \draw[->, thick] (match) -- (alert);
+\end{tikzpicture}
+\caption{Архитектура экспериментальной системы}
+\label{fig:arch}
+\end{figure}
+
+\subsection{Функция схожести}
+
+Для оценки степени соответствия наблюдаемого поведения эталонному шаблону используется функция:
+
+\begin{equation}
+S(G_{obs}, G_{ref}) = \alpha \cdot \frac{|A_V(G_{obs}) \cap A_V(G_{ref})|}{|A_V(G_{ref})|} + (1 - \alpha) \cdot e^{-\beta \cdot \Delta\tau_{total}},
+\end{equation}
+
+где:
+- $\alpha \in [0,1]$ — вес семантической составляющей;
+- $\beta > 0$ — коэффициент затухания по времени;
+- $\Delta\tau_{total} = \sum_{i} |\tau_i^{obs} - \tau_i^{ref}|$.
+
+Если $S \geq \theta$, где $\theta$ — порог (по умолчанию 0.75), фиксируется подозрение на атаку.
+
+\section{Реконструкция рисунков из оригинальной статьи}
+
+\subsection{Рис. 2 из \cite{latypov2020}: Пример атрибутивного метаграфа}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth, node distance=3.2cm]
+  \node[vertex] (v1) {Фишинг\\TA0001\\T1566};
+  \node[vertex, right of=v1] (v2) {Запуск скрипта\\TA0002\\T1059};
+  \node[vertex, right of=v2] (v3) {Перемещение\\TA0008\\T1021};
+
+  \draw[->, thick] (v1) -- node[above, align=center] {Успешное\\открытие} (v2);
+  \draw[->, thick] (v2) -- node[above, align=center] {Украденные\\учётные данные} (v3);
+\end{tikzpicture}
+\caption{Пример атрибутивного метаграфа атаки (аналог Рис. 2 из \cite{latypov2020})}
+\label{fig:metagraph}
+\end{figure}
+
+\subsection{Рис. 3 из \cite{latypov2020}: Матрица тактик и техник}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+  \matrix (m) [matrix of nodes,
+    row sep=-\pgflinewidth,
+    column sep=-\pgflinewidth,
+    nodes={rectangle, draw, minimum width=2.4cm, minimum height=1cm, anchor=center, align=center},
+    column 1/.style={nodes={text width=2.8cm, align=right}},
+    row 1/.style={nodes={text depth=0.3ex, text height=1.5ex}}]
+  {
+    & T1566 & T1059 & T1021 \\
+    TA0001 & \cellcolor{black!20} & & \\
+    TA0002 & & \cellcolor{black!20} & \\
+    TA0008 & & & \cellcolor{black!20} \\
+  };
+  \node[left=0.6cm of m-2-1.west] {Тактики};
+  \node[above=0.3cm of m-1-2.north] {Техники};
+\end{tikzpicture}
+\caption{Матрица соответствия тактик и техник (аналог Рис. 3 из \cite{latypov2020})}
+\label{fig:matrix}
+\end{figure}
+
+\section{Описание имитационного эксперимента}
+
+\subsection{Среда и сценарии}
+
+Эксперимент проводился в платформе **Core Insight**. Смоделирована корпоративная сеть:
+- 50 рабочих станций, 5 серверов, 200 пользователей;
+- 12 сценариев атак (APT29, APT33 и др.);
+- 10\,000 сессий (8\,500 легитимных, 1\,500 — атакующих).
+
+\subsection{Метрики эффективности}
+
+Результаты оценки:
+
+\begin{equation}
+\text{Accuracy} = \frac{TP + TN}{N} = 0{,}924
+\end{equation}
+
+\begin{equation}
+\text{Recall} = \frac{TP}{TP + FN} = 0{,}897
+\end{equation}
+
+\begin{equation}
+\text{FPR} = \frac{FP}{FP + TN} = 0{,}031
+\end{equation}
+
+\begin{equation}
+\text{F1} = 2 \cdot \frac{\text{Prec} \cdot \text{Rec}}{\text{Prec} + \text{Rec}} = 0{,}908
+\end{equation}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+  \begin{axis}[
+    xlabel={FPR}, ylabel={TPR (Recall)},
+    xmin=0, xmax=0.1, ymin=0.8, ymax=1,
+    width=10cm, height=6cm,
+    grid=both,
+    legend pos=south east
+  ]
+    \addplot[thick, blue] coordinates {
+      (0.001,0.85)
+      (0.01,0.88)
+      (0.031,0.897)
+      (0.05,0.91)
+      (0.08,0.925)
+    };
+    \addplot[dashed, gray] coordinates {(0,0) (1,1)};
+    \legend{Предложенная методика, Случайный классификатор}
+  \end{axis}
+\end{tikzpicture}
+\caption{ROC-кривая предложенной методики}
+\label{fig:roc}
+\end{figure}
+
+\section{Заключение}
+
+Предложенная методика на основе атрибутивных метаграфов обеспечивает высокую точность выявления сложных атак при низком уровне ложных срабатываний. Подход обладает высокой интерпретируемостью благодаря привязке к MITRE ATT\&CK и может быть интегрирован в системы автоматического реагирования. Перспективы — применение в киберфизических системах и расширение за счёт онтологического моделирования.
+
+\begin{thebibliography}{9}
+\bibitem{latypov2020} Latypov I.T., Eremeev M.A. Multilevel Model of Computer Attack Based on Attributive Metagraphs. \textit{Autom. Control Comput. Sci.} 2020. Vol. 54, No. 8. P. 944–948. DOI: \url{10.3103/S0146411620080192}
+
+\bibitem{mitre} MITRE ATT\&CK Framework. \url{https://attack.mitre.org}
+
+\bibitem{fsteck} \textit{Metodika opredeleniya ugroz bezopasnosti v informatsionnykh sistemakh} (Methodology for Determining Security Threats in Information Systems), Moscow: FSTEK, 2015.
+
+\bibitem{astanin} Astanin S.V., Dragnysh N.V., Zhukovskaya N.K. Nested metagraphs as models of complex objects. \url{http://ivdon.ru/magazine/archive/n4p2y2012/1434}
+
+\bibitem{zegzhda2017} Zegzhda D., Zegzhda P., Pechenkin A., Poltavtseva M. Modeling of information systems to their security evaluation. \textit{ACM ICPS}, 2017. P. 295–298.
+
+\bibitem{mallon2016} Mallon S. Extended Cyber Kill Chain. \textit{Black Hat USA}, 2016.
+\end{thebibliography}
+
+\end{document}

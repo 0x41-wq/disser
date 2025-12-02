@@ -1,0 +1,18 @@
+% === Файл: Dissertation/images/fig_2.7.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\begin{document}
+\begin{tikzpicture}[
+    block/.style={rectangle, draw, fill=blue!10, minimum width=2cm, minimum height=0.8cm, align=center, font=\small}
+]
+\node[block] (parse) {Парсинг и\\нормализация};
+\node[block, right=1.5cm of parse] (conv) {Преобразование в\\вершины/дуги};
+\node[block, right=1.5cm of conv] (inc) {Инкрементальное\\обновление};
+
+\draw[->, thick] (parse) -- (conv);
+\draw[->, thick] (conv) -- (inc);
+\end{tikzpicture}
+\end{document}

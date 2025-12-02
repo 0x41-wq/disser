@@ -1,0 +1,21 @@
+% === Файл: Dissertation/images/fig_2.4.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[
+    node/.style={rectangle, draw, minimum width=1.6cm, minimum height=0.6cm, align=center, font=\scriptsize},
+    edge/.style={->, thick},
+    attr/.style={font=\tiny, fill=blue!10, inner sep=1pt}
+]
+\node[node, fill=gray!10] (cmd) {cmd.exe};
+\node[node, fill=blue!20, right=2cm of cmd] (cert) {certutil.exe};
+\node[node, fill=green!20, below=1cm of cert] (task) {schtasks.exe};
+\node[node, fill=red!10, right=2cm of cert] (evil) {evil.com};
+
+\draw[edge] (cmd) -- node[above, attr] {T1105} (cert);
+\draw[edge] (cmd) -- node[left, attr] {T1053.005} (task);
+\draw[edge] (cert) -- node[above, attr] {T1071.001} (evil);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,23 @@
+% === Файл: Dissertation/images/fig_2.11.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[
+    node/.style={rectangle, draw, minimum width=1.4cm, minimum height=0.5cm, align=center, font=\scriptsize},
+    edge/.style={->, thick}
+]
+\node[node, fill=gray!10] (win) {winword};
+\node[node, fill=blue!20, right=1.8cm of win] (ps) {powershell};
+\node[node, fill=green!20, below=1cm of ps] (reg) {reg};
+\node[node, fill=red!10, right=1.8cm of ps] (c2) {c2.apt28.net};
+
+\draw[edge] (win) -- (ps);
+\draw[edge] (ps) -- (reg);
+\draw[edge] (ps) -- (c2);
+
+\node[font=\scriptsize, above=0.2cm of win] {Анализ атаки: APT28};
+\node[font=\scriptsize, below=0.5cm of reg, align=center] {Фильтры:\\Тактика: Execution\\Время: 10:23–10:25\\Confidence > 0.9};
+\end{tikzpicture}
+\end{document}

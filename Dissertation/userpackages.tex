@@ -1,4 +1,5 @@
 \usepackage{fr-longtable}    %ради \endlasthead
+\usepackage{float}
 
 % Листинги с исходным кодом программ
 \usepackage{fancyvrb}
@@ -52,7 +53,12 @@
 \usepackage[footnote]{acronym}
 
 % TikZ libraries for diagrams
-\usetikzlibrary{positioning, shapes.geometric, arrows.meta}
-
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta, shapes.misc}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+%\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{booktabs} % для \toprule, \midrule в таблицах
+\usepackage{verbatim} % для блоков кода

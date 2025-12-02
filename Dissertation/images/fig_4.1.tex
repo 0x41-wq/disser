@@ -1,0 +1,30 @@
+% === Файл: Dissertation/images/fig_4.1.tex ===
+\documentclass[tikz, border=2pt]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\begin{document}
+\begin{tikzpicture}[
+    service/.style={rectangle, draw, fill=blue!10, rounded corners, minimum width=2.2cm, minimum height=1cm, align=center, font=\small},
+    db/.style={cylinder, shape border rotate=90, draw, fill=yellow!10, minimum height=1.2cm, minimum width=0.8cm, align=center, font=\small},
+    arrow/.style={->, thick}
+]
+
+\node[service] (ingest) {ingest.py\\(Kafka)};
+\node[service, right=of ingest] (builder) {metagraph\_builder.py};
+\node[service, right=of builder] (matcher) {matcher.py};
+\node[service, below=of matcher] (risk) {risk\_evaluator.py};
+\node[service, right=of matcher] (alert) {alert\_generator.py};
+
+\node[db, above=of builder] (neo4j) {Neo4j};
+
+\draw[arrow] (ingest) -- (builder);
+\draw[arrow] (builder) -- (matcher);
+\draw[arrow] (matcher) -- (risk);
+\draw[arrow] (risk) -- (alert);
+\draw[arrow] (builder) -- (neo4j);
+\draw[arrow] (matcher) |- (neo4j);
+
+\end{tikzpicture}
+\end{document}

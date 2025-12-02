@@ -15,50 +15,80 @@
         G = (V, E, \mathrm{src}, \mathrm{tgt}),
     \]
     где:
-    \noindent
-    \begin{itemize} 
+    \begin{itemize}
         \item $V$ — конечное непустое множество вершин (объектов системы);
         \item $E$ — конечное непустое множество гипердуг (событий или действий);
         \item $\mathrm{src}: E \rightarrow 2^V$ — функция, сопоставляющая каждой дуге множество источников;
         \item $\mathrm{tgt}: E \rightarrow 2^V$ — функция, сопоставляющая каждой дуге множество целей.
     \end{itemize}
-    При этом для любой дуги $e \in E$ выполняется условие $\mathrm{src}(e) \cap \mathrm{tgt}(e) = \varnothing$.
+        При этом для любой дуги $e \in E$ выполняется условие $\mathrm{src}(e) \cap \mathrm{tgt}(e) = \varnothing$.
 \end{definition}
 
 В контексте кибербезопасности вершины могут представлять процессы, файлы, пользователей, сетевые соединения, а гипердуги — события безопасности, такие как «процесс~A создал файл~B и установил соединение с хостом~C».
+
+\begin{lemma}
+    Любой ориентированный граф является частным случаем метаграфа, в котором для всех $e \in E$ выполняется $|\mathrm{src}(e)| = 1$ и $|\mathrm{tgt}(e)| = 1$.
+\end{lemma}
+
+\begin{lemma}
+    Любой гиперграф является частным случаем метаграфа при условии, что либо все дуги имеют один источник, либо одну цель.
+\end{lemma}
+
+Таким образом, метаграф обобщает обе модели и обеспечивает большую выразительную мощность.
 
 \section{Атрибутивные метаграфы}\label{sec:ch2/sec2}
 
 Для адекватного моделирования компьютерных атак необходимо расширить метаграф за счёт семантических и количественных характеристик. Следуя подходу, предложенному в~\cite{Latypov2020}, вводится понятие атрибутивного метаграфа.
 
 \begin{definition}
-    Атрибутивным метаграфом называется шестёрка
+    Атрибутивным метаграфом называется восьмёрка
     \[
         G_{\mathrm{attr}} = (V, E, \mathrm{src}, \mathrm{tgt}, A_V, A_E, \alpha, \beta),
     \]
     где:
-    \item $A_V$ — множество атрибутов вершин;
-    \item $A_E$ — множество атрибутов дуг;
-    \item $\alpha: V \rightarrow A_V$ — функция атрибутизации вершин;
-    \item $\beta: E \rightarrow A_E$ — функция атрибутизации дуг.
+    \begin{itemize}
+        \item $A_V$ — множество атрибутов вершин;
+        \item $A_E$ — множество атрибутов дуг;
+        \item $\alpha: V \rightarrow A_V$ — функция атрибутизации вершин;
+        \item $\beta: E \rightarrow A_E$ — функция атрибутизации дуг.
+    \end{itemize}
 \end{definition}
 
 Типичные атрибуты вершин включают:
-\noindent
 \begin{itemize}
     \item \texttt{type} $\in \{\texttt{process}, \texttt{file}, \texttt{user}, \texttt{ip}, \texttt{registry\_key}\}$;
     \item \texttt{name} — идентификатор объекта;
     \item \texttt{hash} — криптографический хеш (для файлов);
     \item \texttt{integrity\_level} — уровень целостности (Low, Medium, High, System).
 \end{itemize}
+
 Атрибуты дуг включают:
-\noindent
 \begin{itemize}
     \item \texttt{mitre\_ttp} — идентификатор техники MITRE ATT\&CK (например, \texttt{T1059.001});
     \item \texttt{timestamp} — временная метка события;
     \item \texttt{confidence} — достоверность события (0.0–1.0);
     \item \texttt{source} — источник данных (EDR, Zeek, Windows Event Log).
 \end{itemize}
+
+
+
+\begin{table}[h]
+    \centering
+    \caption{Типовые атрибуты вершин и дуг в системах мониторинга}
+    \label{tab:attributes}
+    \begin{tabular}{lll}
+        \toprule
+        Тип & Атрибут & Пример значения \\
+        \midrule
+        Вершина & \texttt{type} & \texttt{process} \\
+                & \texttt{name} & \texttt{powershell.exe} \\
+                & \texttt{hash} & \texttt{a1b2c3...} \\
+        Дуга    & \texttt{mitre\_ttp} & \texttt{T1059.001} \\
+                & \texttt{timestamp} & \texttt{2025-10-04T10:23:15Z} \\
+                & \texttt{confidence} & 0.95 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 Такой подход позволяет интегрировать модель с фреймворком MITRE ATT\&CK, что обеспечивает интерпретируемость и совместимость с открытыми источниками угроз, включая описания APT-группировок из США, Великобритании и Израиля (например, Lazarus, APT28, Charming Kitten), при условии использования публичных отчётов~\cite{Mandiant2023,CrowdStrike2024}.
 
@@ -79,6 +109,15 @@
 
 Например, для APT29 (Cozy Bear) тактический профиль включает тактики \textit{Initial Access} (T1566), \textit{Execution} (T1059), \textit{Persistence} (T1547) и \textit{Lateral Movement} (T1021).
 
+\begin{figure}[H]
+    \centerfloat{
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{tactic_profile}}{}
+        \input{Dissertation/images/fig-tactic-profile.tikz}
+    }
+    \caption{Тактический профиль APT29 в виде тепловой карты}
+    \label{fig:tactic-profile}
+\end{figure}
+
 \section{Алгебра метаграфов}\label{sec:ch2/sec4}
 
 Для манипуляции метаграфами вводятся базовые операции, адаптированные из~\cite{Zhang2006} и расширенные в~\cite{Latypov2020}.
@@ -89,11 +128,21 @@
 \[
     G = G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2, \mathrm{src}, \mathrm{tgt}, \alpha, \beta),
 \]
-где функции $\mathrm{src}$, $\mathrm{tgt}$, $\alpha$, $\beta$ определены естественным образом на объединении.
+где функции $\mathrm{src}$, $\mathrm{tgt}$, $\alpha$, $\beta$ определены естественным образом на объединении. При конфликте атрибутов применяется стратегия максимальной достоверности: $\beta(e) = \arg\max_{b \in B} b.\texttt{confidence}$.
+
+\begin{theorem}[Ассоциативность объединения]
+    Для любых трёх метаграфов $G_1, G_2, G_3$ выполняется:
+    \[
+        (G_1 \cup G_2) \cup G_3 = G_1 \cup (G_2 \cup G_3).
+    \]
+\end{theorem}
 
 \subsection{Композиция}
 
-Композиция $G = G_1 \circ G_2$ моделирует последовательное выполнение двух этапов атаки и определена, если множества целей $G_1$ и источников $G_2$ пересекаются.
+Композиция $G = G_1 \circ G_2$ моделирует последовательное выполнение двух этапов атаки и определена, если множества целей $G_1$ и источников $G_2$ пересекаются:
+\[
+    \bigcup_{e \in E_1} \mathrm{tgt}(e) \cap \bigcup_{e \in E_2} \mathrm{src}(e) \neq \varnothing.
+\]
 
 \subsection{Проекция}
 
@@ -105,10 +154,18 @@
 
 Аналогично определяется проекция по временному интервалу $[t_1, t_2]$.
 
+\begin{figure}[H]
+    \centerfloat{
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{algebra_ops}}{}
+        \input{Dissertation/images/fig-algebra-ops.tikz}
+    }
+    \label{fig:algebra-ops}
+    \caption{Операции алгебры метаграфов: объединение, композиция, проекция}
+\end{figure}
+
 \section{Формализация атак с помощью метаграфов}\label{sec:ch2/sec5}
 
 Рассмотрим формализацию типичной фишинговой атаки, характерной для APT-группировок~\cite{Latypov2020}. Этапы:
-\noindent
 \begin{enumerate}
     \item Доставка: файл \texttt{invoice.docm} (T1566);
     \item Выполнение: запуск макроса → \texttt{powershell.exe} (T1059.001);
@@ -116,30 +173,358 @@
     \item C2: HTTPS-соединение с сервером (T1071.001).
 \end{enumerate}
 
-Соответствующий метаграф $G_{\mathrm{phish}}$ строится по определению~2.2. Такая формализация позволяет использовать метаграф как шаблон для последующего сопоставления.
+Соответствующий метаграф $G_{\mathrm{phish}}$ строится по определению~\ref{sec:ch2/sec2}. Такая формализация позволяет использовать метаграф как шаблон для последующего сопоставления.
+
+        \begin{comment}
+        \begin{tikzpicture}[
+            node distance=1.2cm and 1.5cm,
+            >=Stealth,
+            thick,
+            vertex/.style={circle, draw=black, fill=gray!20, minimum size=0.8cm},
+            edge/.style={->, thick}
+        ]
+        \node[vertex] (doc) {\texttt{invoice.docm}};
+        \node[vertex, right=of doc] (ps) {\texttt{powershell.exe}};
+        \node[vertex, below=of ps] (task) {\texttt{Task}};
+        \node[vertex, right=of ps] (c2) {\texttt{c2.malicious.com}};
+        
+        \draw[edge] (doc) -- node[above] {\texttt{T1566}} (ps);
+        \draw[edge] (ps) -- node[left] {\texttt{T1053.005}} (task);
+        \draw[edge] (ps) -- node[above] {\texttt{T1071.001}} (c2);
+        \end{tikzpicture}
+        \end{comment}
+
+
+\begin{figure}[h]
+    \centerfloat{
+        \includegraphics{images/fig_2.3}
+    }
+    \caption{Метаграф фишинговой атаки с привязкой к MITRE ATT\&CK}
+    \label{fig:phish-metagraph}
+\end{figure}
+
+        \begin{comment}
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{lolbin_attack}}{}
+        \input{Dissertation/images/fig-lolbin-attack.tikz}
+        \end{comment}
+
+
+\begin{figure}[h]
+    \centerfloat{
+        \includegraphics{Dissertation/images/fig_2.4}
+    }
+    \label{fig:lolbin-attack}
+    \caption{Метаграф атаки с использованием LOLBin (\texttt{certutil.exe})}
+\end{figure}
 
 \section{Сравнение с альтернативными моделями}\label{sec:ch2/sec6}
 
 В работах~\cite{Novokhrestov2014,Zegzhda2016,Kotenko2013,Gorbachev2018} рассматриваются различные подходы к моделированию угроз: от многоагентных систем до многоуровневых архитектур защиты. Однако ни одна из моделей не обеспечивает одновременно:
-\noindent
-\begin{itemize} 
+\begin{itemize}    
     \item поддержку множественных источников и целей;
     \item интеграцию с MITRE ATT\&CK;
     \item динамическое обновление по потоковым данным;
     \item вычислительную эффективность сопоставления.
 \end{itemize}
+
 Атрибутивный метаграф, как показано в~\cite{Latypov2020}, обеспечивает оптимальный баланс между выразительной мощностью и практической применимостью, что подтверждается экспериментами в главе~4.
 
-\section{Выводы по главе}\label{sec:ch2/sec7}
+\begin{table}[h]
+    \centering
+    \caption{Сравнение моделей по ключевым характеристикам}
+    \label{tab:model_comparison}
+    \begin{tabular}{lcccc}
+        \toprule
+        Модель & Интерпретируемость & Масштабируемость & Поддержка динамики & MITRE ATT\&CK \\
+        \midrule
+        Деревья атак~\cite{Schneier1999} & Высокая & Низкая & Нет & Нет \\
+        Графы атак~\cite{Sheyner2002} & Высокая & Низкая & Нет & Частично \\
+        Онтологии~\cite{Jajodia2005} & Высокая & Средняя & Низкая & Да \\
+        ML/DL~\cite{Ying2019,Wang2021} & Низкая & Высокая & Высокая & Нет \\
+        Гиперграфы~\cite{Berge1989} & Средняя & Средняя & Средняя & Нет \\
+        Атрибутивные метаграфы & \textbf{Высокая} & \textbf{Высокая} & \textbf{Высокая} & \textbf{Да} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Теоретические основы частичного изоморфизма метаграфов}\label{sec:ch2/sec7}
+
+Для сопоставления эталонных и наблюдаемых метаграфов используется обобщённый алгоритм частичного изоморфизма, учитывающий семантическое сходство атрибутов. Пусть $G_{\mathrm{ref}}$ и $G_{\mathrm{obs}}$ — два атрибутивных метаграфа. Тогда частичный изоморфизм $\phi: G_{\mathrm{ref}} \hookrightarrow G_{\mathrm{obs}}$ определяется как пара отображений:
+\[
+    \phi_V: V_{\mathrm{ref}} \rightarrow V_{\mathrm{obs}}, \quad \phi_E: E_{\mathrm{ref}} \rightarrow E_{\mathrm{obs}},
+\]
+удовлетворяющих условиям:
+\begin{align}
+    \phi_V(\mathrm{src}_{\mathrm{ref}}(e)) &= \mathrm{src}_{\mathrm{obs}}(\phi_E(e)), \\
+    \phi_V(\mathrm{tgt}_{\mathrm{ref}}(e)) &= \mathrm{tgt}_{\mathrm{obs}}(\phi_E(e)), \\
+    \mathrm{sim}(\beta_{\mathrm{ref}}(e), \beta_{\mathrm{obs}}(\phi_E(e))) &\geq \theta,
+\end{align}
+где $\mathrm{sim}(\cdot,\cdot)$ — функция семантического сходства, а $\theta$ — порог (обычно $\theta = 0.8$).
+
+Функция $\mathrm{sim}$ может быть реализована через онтологию MITRE ATT\&CK:
+\[
+    \mathrm{sim}(t_1, t_2) =
+    \begin{cases}
+        1, & t_1 = t_2, \\
+        0.7, & T(t_1) = T(t_2), \\
+        0, & \text{иначе}.
+    \end{cases}
+\]
+
+        \begin{comment}
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{isomorphism_algo}}{}
+        \input{Dissertation/images/fig-isomorphism-algo.tikz}
+        \end{comment}
+
+
+\begin{figure}[h]
+    \centerfloat{
+        \includegraphics{Dissertation/images/fig_2.5}
+    }
+    \caption{Блок-схема алгоритма частичного изоморфизма}
+    \label{fig:isomorphism-algo}
+\end{figure}
+
+\section{Интеграция с таксономией MITRE ATT\&CK}\label{sec:ch2/sec8}
+
+MITRE ATT\&CK предоставляет структурированную таксономию тактик и техник, которая идеально подходит для атрибутивного слоя метаграфа. В работе используется официальная база~\cite{MITREEvaluations2023}, включая данные о поведении APT-группировок.
+
+        \begin{comment}
+        \begin{tikzpicture}[
+            node distance=1.0cm and 1.2cm,
+            >=Stealth,
+            thick,
+            tactic/.style={rectangle, draw=blue!60, fill=blue!10, text width=4em, align=center, font=\small},
+            technique/.style={rectangle, draw=red!60, fill=red!10, text width=4.5em, align=center, font=\small}
+        ]
+        \node[tactic] (ia) {TA0001\\Initial Access};
+        \node[tactic, right=of ia] (ex) {TA0002\\Execution};
+        \node[tactic, right=of ex] (pe) {TA0003\\Persistence};
+        
+        \node[technique, below=1.2cm of ia] (t1566) {T1566\\Phishing};
+        \node[technique, below=1.2cm of ex] (t1059) {T1059\\Command\\Scripting};
+        \node[technique, below=1.2cm of pe] (t1053) {T1053\\Scheduled\\Task};
+        
+        \draw[->] (t1566) -- (ia);
+        \draw[->] (t1059) -- (ex);
+        \draw[->] (t1053) -- (pe);
+        \end{tikzpicture}
+    }
+    \end{comment}
+
+
+\begin{figure}[h]
+    \centerfoat{
+    \includegraphics{Dissertation/images/fig_2.6}
+    }   
+    \caption{Интеграция метаграфа с MITRE ATT\&CK}
+    \label{fig:mitre-integration}
+\end{figure}
+
+\section{Динамическое построение метаграфа по телеметрии}\label{sec:ch2/sec9}
+
+Метаграф обновляется инкрементально при поступлении событий из EDR, сетевых IDS и логов ОС. Каждое событие преобразуется в вершину/дугу с атрибутами:
+\begin{verbatim}
+{
+  "src": ["user1", "word.exe"],
+  "tgt": ["powershell.exe", "HKCU\\Run"],
+  "action": "create_process",
+  "timestamp": "2025-10-04T10:23:15Z",
+  "attributes": {
+    "mitre_ttp": "T1059.001",
+    "confidence": 0.95
+  }
+}
+\end{verbatim}
+
+Это позволяет поддерживать актуальное состояние системы с задержкой менее 15 мс на событие~\cite{Latypov2020}.
+
+        \begin{comment}
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{telemetry_pipeline}}{}
+        \input{Dissertation/images/fig-telemetry-pipeline.tikz}
+        \end{comment}
+
+
+\begin{figure}[h]
+    \centerfloat{
+        \includegraphics{Dissertation/images/fig_2.7}
+    }
+    \caption{Архитектура динамического построения метаграфа}
+    \label{fig:telemetry-pipeline}
+\end{figure}
+
+\section{Поддержка живых атак (living-off-the-land)}\label{sec:ch2/sec10}
+
+Метаграфы эффективно моделируют атаки, использующие легитимные инструменты (LOLBins). Например, использование \texttt{certutil.exe} для загрузки полезной нагрузки (T1105) и \texttt{schtasks.exe} для устойчивости (T1053.005) может быть представлено одной гипердугой:
+\[
+e = (\{\texttt{cmd.exe}\}, \{\texttt{certutil.exe}, \texttt{schtasks.exe}\}).
+\]
+
+\section{Совместимость с методами ИИ}\label{sec:ch2/sec11}
+
+Атрибутивные метаграфы совместимы с современными методами ИИ:
+\begin{itemize}
+    \item \textbf{GNN}: классификация подграфов~\cite{Zhou2020};
+    \item \textbf{LSTM}: предсказание следующей техники по последовательности TTP~\cite{Husari2017};
+    \item \textbf{LLM}: генерация эталонных метаграфов из отчётов~\cite{Unit422023}.
+\end{itemize}
+
+        \begin{comment}
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{ai_pipeline}}{}
+        \input{Dissertation/images/fig-ai-pipeline.tikz}
+        \end{comment}
+
+\begin{figure}[h]
+    \centerfloat{
+        \includegraphics{Dissertation/images/fig_2.8}
+    }
+    \caption{Pipeline: отчёт об угрозе → LLM → эталонный метаграф}
+    \label{fig:ai-pipeline}
+\end{figure}
+
+\section{Обзор связанных работ}\label{sec:ch2/sec12}
+
+Исследования в области моделирования компьютерных атак прошли несколько этапов эволюции: от логико-вероятностных моделей~\cite{Amoroso1994,Kumar1995} до современных графовых и онтологических подходов. В ранних работах основное внимание уделялось формальному описанию уязвимостей и путей эксплуатации, однако такие модели не учитывали динамику реальных атак и поведенческие аспекты злоумышленников.
+
+Графовые модели, такие как деревья атак~\cite{Schneier1999} и графы атак~\cite{Sheyner2002}, позволили визуализировать последовательности действий, но ограничены бинарными связями (один источник → одна цель), что не отражает сложных сценариев, характерных для APT. Онтологический подход~\cite{Jajodia2005,Dacier1996} обеспечил семантическую выразительность, однако страдает от высокой вычислительной сложности и низкой масштабируемости при обработке потоковых данных.
+
+Применение гиперграфов~\cite{Berge1989,Mallon2016} стало важным шагом вперёд, поскольку позволило моделировать события с множественными источниками и целями. Однако гиперграфы не поддерживают атрибутивное описание вершин и дуг, что критично для интеграции с таксономиями угроз, такими как MITRE ATT\&CK.
+
+Метаграфы впервые были применены в кибербезопасности в работе~\cite{Latypov2020}, где предложена базовая модель для описания многоуровневых атак. Дальнейшее развитие получили в~\cite{Legoy2020,Basu2018}, однако без формальной алгебры и поддержки динамического обновления.
+
+В российской научной школе также ведутся активные исследования в данной области. Так, в работе~\cite{Eremeev2003} предложена модель угроз информационной безопасности на основе многоуровневых конечных автоматов, где каждый уровень соответствует компоненту системы (пользователь, ПО, сеть). Однако данная модель не поддерживает представление сложных событий с множественными объектами и не интегрирована с международными фреймворками тактик.
+
+В~\cite{Smirnov2022} развивается концепция многоуровневых моделей атак, основанная на декомпозиции инфраструктуры на логические домены (endpoint, network, cloud). Авторы вводят понятие «тактической цепочки», но формализация остаётся на уровне диаграмм без строгого математического аппарата. В частности, отсутствует определение операций над моделями, что затрудняет автоматизацию анализа.
+
+Недавняя работа~\cite{Izergin2024} посвящена применению ориентированных графов для обнаружения аномалий в поведении процессов. Хотя авторы демонстрируют высокую точность на синтетических данных, их подход не учитывает семантику действий (например, привязку к MITRE ATT\&CK) и не позволяет моделировать события, затрагивающие более двух сущностей (например, процесс, создавший файл и установивший сетевое соединение).
+
+Для количественного сравнения рассмотрим ключевые характеристики указанных подходов.
+
+\begin{table}[h]
+    \centering
+    \caption{Сравнение российских и зарубежных моделей с предложенной}
+    \label{tab:russian_comparison}
+    \begin{tabular}{lcccc}
+        \toprule
+        Работа & Множественные источники/цели & Атрибуты & MITRE ATT\&CK & Динамическое обновление \\
+        \midrule
+        Eremeev~\cite{Eremeev2003} & Нет & Ограниченные & Нет & Нет \\
+        Smirnov~\cite{Smirnov2022} & Частично & Тактики (описательно) & Частично & Нет \\
+        Izergin~\cite{Izergin2024} & Нет & Простые (PID, имя) & Нет & Да \\
+        Latypov~\cite{Latypov2020} & Да & Да & Да & Нет \\
+        \textbf{Настоящая работа} & \textbf{Да} & \textbf{Полные} & \textbf{Да} & \textbf{Да} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+На основе проведённого анализа можно сформулировать следующие теоретические утверждения.
+
+\begin{theorem}[О выразительной мощности]
+    Атрибутивный метаграф строго выразительнее любой модели, основанной на обычных графах или гиперграфах без атрибутивного слоя, поскольку допускает:
+    \begin{enumerate}
+        \item произвольные множества источников и целей для одного события;
+        \item семантическое аннотирование вершин и дуг;
+        \item интеграцию с внешними таксономиями (MITRE ATT\&CK).
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Об интерпретируемости]
+    При наличии привязки атрибутов дуг к техникам MITRE ATT\&CK, любой путь в метаграфе допускает однозначную интерпретацию в терминах тактик и техник, используемых злоумышленником, что невозможно в моделях, основанных на анонимных вершинах и дугах (например, в~\cite{Izergin2024,Ying2019}).
+\end{theorem}
+
+Визуальное сравнение подходов представлено на рисунке~\ref{fig:comparison-models}. Видно, что только атрибутивный метаграф позволяет компактно представить сложное событие (например, запуск PowerShell с последующим созданием задачи и C2-соединением) одной гипердугой.
+
+        \begin{comment}
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{comparison_models}}{}
+        \input{Dissertation/images/fig-comparison-models.tikz}
+        \end{comment}
+
+\begin{figure}[h]
+    \centerfloat{
+        \includegraphics{Dissertation/images/fig_2.9}
+    }
+    \caption{Сравнение выразительной мощности моделей на примере фишинговой атаки}
+    \label{fig:comparison-models}
+\end{figure}
+
+Российские подходы, несмотря на методологическую близость к задачам защиты критической инфраструктуры, уступают в формальной строгости и практической применимости. На рисунке~\ref{fig:russian-approaches} схематично показаны различия в уровне абстракции.
+
+\begin{comment}
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{russian_approaches}}{}
+        \input{Dissertation/images/fig-russian-approaches.tikz}
+        \end{comment}
+
+\begin{figure}[h]
+    \centerfloat{
+        \includegraphics{Dissertation/images/fig_2.10}
+    }
+    \caption{Уровни абстракции в российских моделях и предложенном подходе}
+        \label{fig:russian-approaches}
+\end{figure}
+
+Таким образом, существующие работы, включая отечественные, либо ограничены в выразительности, либо не обеспечивают необходимого баланса между формальной строгостью и возможностью практической реализации. Предложенная в настоящей диссертации модель атрибутивного метаграфа устраняет указанные недостатки и обеспечивает основу для построения интерпретируемых, масштабируемых и динамически обновляемых систем обнаружения сложных атак.
+
+\section{Математические свойства метаграфов}\label{sec:ch2/sec13}
+
+Метаграфы обладают следующими свойствами:
+\begin{enumerate}
+    \item Наличие частичного порядка на дугах (по времени);
+    \item Возможность декомпозиции на тактические подграфы;
+    \item Сохранение причинно-следственных связей;
+    \item Поддержка операций алгебры (объединение, композиция).
+\end{enumerate}
+
+\begin{lemma}[О декомпозиции]
+    Любой атрибутивный метаграф $G$ может быть представлен как объединение тактических подграфов:
+    \[
+        G = \bigcup_{T \in \mathcal{T}} \pi_T(G).
+    \]
+\end{lemma}
+
+\section{Визуализация и интерпретация}\label{sec:ch2/sec14}
+
+Визуализация метаграфов реализована через Neo4j и D3.js. Пример интерфейса аналитика показан на рисунке~\ref{fig:ui-metagraph}.
+
+        \begin{comment}
+        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{metagraph_ui}}{}
+        \input{Dissertation/images/fig-ui-metagraph.tikz}
+        \end{comment}
+
+
+\begin{figure}[h]
+    \centerfloat{
+        \includegraphics{Dissertation/images/fig_2.11}
+    }
+    \caption{Интерфейс визуализации метаграфа атаки}
+    \label{fig:ui-metagraph}
+\end{figure}
+
+\section{Выводы по главе}\label{sec:ch2/sec15}
 
 В настоящей главе:
-\noindent
 \begin{itemize}
-    \item определены операции алгебры метаграфов;
+    \item даны формальные определения метаграфа и атрибутивного метаграфа;
+    \item описаны операции алгебры метаграфов;
     \item показана интеграция с MITRE ATT\&CK и возможность моделирования APT-атак;
-    \item обосновано преимущество предложенной модели перед альтернативами.
+    \item обосновано преимущество предложенной модели перед альтернативами;
+    \item рассмотрены математические и практические аспекты применения.
 \end{itemize}
-Полученные теоретические результаты лежат в основе методики выявления атак, описанной в главе~3.
+
+    Полученные теоретические результаты лежат в основе методики выявления атак, описанной в главе~3.
+
+% ==============================
+% СОДЕРЖИМОЕ TIKZ-ФАЙЛОВ (сохранить в Dissertation/images/)
+% ==============================
+
+% fig-tactic-profile.tikz
+% fig-algebra-ops.tikz
+% fig-lolbin-attack.tikz
+% fig-isomorphism-algo.tikz
+% fig-telemetry-pipeline.tikz
+% fig-ai-pipeline.tikz
+% fig-comparison-models.tikz
+% fig-russian-approaches.tikz
+% fig-ui-metagraph.tikz
 
 \begin{comment}
 \chapter{Длинное название главы, в которой мы смотрим на~примеры того, как будут верстаться изображения и~списки}

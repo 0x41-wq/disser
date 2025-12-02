@@ -1,0 +1,191 @@
+\documentclass[12pt,a4paper]{article}
+
+% Кодировка и шрифты
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage{mathptmx} % Times New Roman
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{url}
+\usepackage{setspace}
+\usepackage{indentfirst}
+
+% Поля (2 см со всех сторон)
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+% Полуторный интервал
+\onehalfspacing
+
+% Запрет висячих строк и улучшение переносов
+\emergencystretch=1em
+\tolerance=1000
+\hyphenpenalty=500
+\exhyphenpenalty=500
+
+% Подписи рисунков и таблиц — точка после номера
+\captionsetup{labelsep=period}
+
+% Команда для УДК/ББК
+\newcommand{\UDK}[1]{\noindent\textbf{УДК}~#1}
+\newcommand{\BBK}[1]{\noindent\textbf{ББК}~#1}
+
+\begin{document}
+
+\begin{center}
+\textbf{\large Применение атрибутивных метаграфов для моделирования и выявления компьютерных атак}
+\end{center}
+
+\begin{center}
+И.Т. Латыпов, М.А. Еремеев \\
+Санкт-Петербургский государственный электротехнический университет «ЛЭТИ» им. В.И. Ульянова (Ленина)
+\end{center}
+
+\UDK{004.056.5}
+
+\BBK{32.973.26-018.2}
+
+\begin{abstract}
+Рассматривается подход к моделированию многоэтапных компьютерных атак с использованием атрибутивных метаграфов. Предложена формализованная трёхуровневая модель атаки — тактический, технический и методологический уровни, — позволяющая интегрировать экспертные знания о поведении злоумышленников, данные мониторинга информационных систем и требования нормативных документов. На основе методики ФСТЭК по определению угроз и фреймворка MITRE ATT\&CK разработаны матрицы тактик, техник и методов, представленные в виде атрибутивных метаграфов. Приведена схема модели, описаны алгоритмы построения и анализа метаграфов, показана их применимость для оценки защищённости и автоматизированного обнаружения инцидентов в КИИ. Подчёркивается соответствие предложенного подхода требованиям Постановления Правительства РФ №555 и ГОСТ Р 57580.
+\end{abstract}
+
+\noindent\textbf{Ключевые слова}: атрибутивный метаграф, многоуровневая модель атаки, обнаружение инцидентов, методика ФСТЭК, MITRE ATT\&CK, информационная безопасность, КИИ, графовые модели.
+
+\selectlanguage{english}
+\begin{abstract}
+An approach to modeling multi-stage cyberattacks using attributive metagraphs is considered. A formalized three-level attack model—tactical, technical, and methodological—is proposed, enabling the integration of expert knowledge about attacker behavior, monitoring data from information systems, and regulatory requirements. Based on the FSTEK methodology for threat identification and the MITRE ATT\&CK framework, matrices of tactics, techniques, and methods are developed and represented as attributive metagraphs. The model architecture is illustrated, algorithms for metagraph construction and analysis are described, and their applicability for security assessment and automated incident detection in critical information infrastructures (CII) is demonstrated. The alignment of the proposed approach with the requirements of the Russian Government Decree No. 555 and GOST R 57580 is emphasized.
+\end{abstract}
+
+\noindent\textbf{Keywords}: attributive metagraph, multi-level attack model, incident detection, FSTEK methodology, MITRE ATT\&CK, information security, critical information infrastructure (CII), graph-based models.
+
+\selectlanguage{russian}
+
+\section*{Введение}
+
+Современные информационные системы, особенно критически важные (КИИ), всё чаще становятся мишенью для целенаправленных, многоэтапных кибератак, реализуемых по сценариям, таким как APT (Advanced Persistent Threat). Такие атаки характеризуются высокой скрытностью, использованием легитимных инструментов (так называемый «living-off-the-land»), а также последовательным продвижением по цепочке киберубийства: от разведки и первоначального доступа до перемещения по сети, повышения привилегий и, наконец, экфильтрации данных. Традиционные средства защиты — сигнатурные IDS, антивирусы, системы анализа логов — часто не справляются с выявлением подобных угроз, поскольку они ориентированы на обнаружение отдельных событий, а не на анализ логики и последовательности действий злоумышленника.
+
+В этой связи возрастает интерес к интеллектуальным методам моделирования угроз, способным учитывать не только факт совершения действия, но и его \textbf{контекст}, \textbf{цель} и \textbf{место в общей стратегии атаки}. Одним из перспективных направлений является применение \textbf{графовых моделей}, в частности — \textbf{метаграфов}. В отличие от классических графов, где рёбра соединяют только отдельные вершины, метаграфы позволяют моделировать сложные зависимости вида «если выполнены условия A, B и C, то возможно действие D». Это делает их особенно подходящими для описания логики реализации кибератак, где каждое действие зависит от предыдущих этапов и текущего состояния системы.
+
+В работе~\cite{latypov2020} предложена \textbf{многоуровневая модель компьютерной атаки}, основанная на \textbf{атрибутивных метаграфах}, и введены \textbf{матрицы тактик, техник и методов} для её формализации. Настоящая статья развивает эту идею, адаптируя её к требованиям отечественной нормативной базы и расширяя теоретическую и прикладную составляющие. Особое внимание уделено связи с методикой ФСТЭК~\cite{fsteck2015}, Постановлением Правительства РФ №555~\cite{post555} и ГОСТ Р 57580~\cite{gost57580}, что делает подход пригодным для практического применения в государственных и критически важных информационных системах.
+
+Целью исследования является разработка \textbf{формализованной модели атаки}, пригодной как для \textbf{оценки защищённости информационных систем}, так и для \textbf{автоматизированного обнаружения злонамеренного поведения} в сетях КИИ.
+
+\section*{1. Теоретические основы атрибутивных метаграфов}
+
+\subsection*{1.1. Формальное определение}
+
+Метаграф — это обобщение ориентированного гиперграфа, введённое в работах Basu и Blanning~\cite{basu1994}. Он позволяет моделировать не только простые связи, но и сложные логические зависимости, что особенно важно при анализе поведения злоумышленника. Атрибутивный метаграф определяется как упорядоченная пятёрка:
+
+\begin{equation}
+\mathcal{M} = (V, E, \Sigma_V, \Sigma_E, \alpha),
+\end{equation}
+
+где:  
+[leftmargin=*,noitemsep]
+\begin{itemize}
+    \item $V$ — конечное множество вершин, представляющих сущности информационной системы (пользователи, хосты, процессы, файлы, сетевые соединения),
+    \item $E \subseteq \mathcal{P}(V) \times \mathcal{P}(V)$ — множество метарёбер,
+    \item $\Sigma_V$ и $\Sigma_E$ — алфавиты допустимых атрибутов,
+    \item $\alpha: (V \cup E) \to (\Sigma_V \cup \Sigma_E)$ — функция атрибуции.
+\end{itemize}
+
+Каждое метаребро $e \in E$ задаётся парой непересекающихся подмножеств:
+
+\begin{equation}
+e = (X, Y), \quad X, Y \subseteq V, \quad X \cap Y = \varnothing,
+\end{equation}
+
+где $X$ — входное множество (in-set), $Y$ — выходное (out-set).
+
+\subsection*{1.2. Атрибутивное расширение}
+
+Функция атрибуции позволяет кодировать семантические характеристики:
+
+\begin{equation}
+\alpha(v) = \{ (k_1, a_1), \dots, (k_n, a_n) \}, \quad k_i \in \Sigma_V.
+\end{equation}
+
+Например: \texttt{tactic = "TA0010"}, \texttt{ip = "192.168.1.10"}.
+
+\section*{2. Трёхуровневая модель компьютерной атаки}
+
+%\begin{figure}[h]
+%\centering
+%\includegraphics[width=0.9\textwidth]{https://media.springernature.com/m312/springer-static/image/art%3A10.3103%2FS0146411620080192/MediaObjects/11950_2021_7316_Fig1_HTML.gif}
+%\caption{Схема трёхуровневой модели компьютерной атаки}
+%\end{figure}
+
+Модель включает:
+\begin{itemize}
+    \item \textbf{Тактический уровень} — цели (Initial Access, Execution и др.),
+    \item \textbf{Технический уровень} — техники (Phishing, PowerShell и др.),
+    \item \textbf{Методологический уровень} — конкретные реализации (макросы, скрипты).
+\end{itemize}
+
+\section*{3. Матрицы тактик, техник и методов}
+
+На основе~\cite{latypov2020} и MITRE ATT\&CK разработаны матрицы, формализованные в виде метаграфов. Каждая ячейка содержит:
+\begin{itemize}
+    \item идентификатор (TA0001, T1566 и др.),
+    \item описание,
+    \item связь с требованиями ФСТЭК,
+    \item примеры IoC.
+\end{itemize}
+
+\section*{4. Алгоритмы построения и анализа}
+
+\subsection*{4.1. Построение метаграфа}
+Исходные данные: логи, NetFlow, события SIEM. Этапы:
+\begin{enumerate}
+    \item Нормализация,
+    \item Извлечение сущностей → $V$,
+    \item Извлечение зависимостей → $E$,
+    \item Назначение атрибутов → $\alpha$.
+\end{enumerate}
+
+\subsection*{4.2. Обнаружение атак}
+
+Пусть $\mathcal{M}_{\text{obs}}$ — текущий метаграф, $\mathcal{M}_{\text{pat}}$ — шаблон. Атака обнаружена, если существует $\phi: V_{\text{pat}} \to V_{\text{obs}}$, такое что:
+
+\begin{equation}
+\forall v \in V_{\text{pat}}: \alpha_{\text{pat}}(v) \subseteq \alpha_{\text{obs}}(\phi(v)) \quad \text{и} \quad \forall e = (X,Y) \in E_{\text{pat}}: (\phi(X), \phi(Y)) \in E_{\text{obs}}.
+\end{equation}
+
+\section*{5. Соответствие нормативным требованиям}
+
+Подход соответствует:
+\begin{itemize}
+    \item Постановлению №555~\cite{post555} — анализ угроз,
+    \item Методике ФСТЭК~\cite{fsteck2015} — формализация угроз,
+    \item ГОСТ Р 57580~\cite{gost57580} — требования к обнаружению инцидентов.
+\end{itemize}
+
+\section*{6. Сравнение с другими подходами}
+
+Подход развивает идеи Зегжды Д.П.~\cite{zegzhda2016,zegzhda2017} и дополняет методы Новохрестова и Конева~\cite{novokhrestov2014}, обеспечивая интерпретируемость и соответствие нормативам.
+
+\section*{Заключение}
+
+Атрибутивные метаграфы позволяют создавать интерпретируемые, нормативно-ориентированные модели атак, пригодные для защиты КИИ. Перспективы — интеграция с GNN, онтологиями угроз и системами управления инцидентами.
+
+\section*{Список литературы}
+
+\begin{enumerate}
+    \item Latypov I.T., Eremeev M.A. Multilevel Model of Computer Attack Based on Attributive Metagraphs. \textit{Automatic Control and Computer Sciences}, 2020, vol. 54, no. 8, pp. 944–948. DOI:10.3103/S0146411620080192 \label{latypov2020}
+    \item \textit{Методика определения угроз безопасности в информационных системах}. — М.: ФСТЭК России, 2015. \label{fsteck2015}
+    \item Постановление Правительства РФ от 11.05.2017 №555. \label{post555}
+    \item ГОСТ Р 57580-2017. «Защита информации. Инциденты информационной безопасности. Термины и определения». \label{gost57580}
+    \item Basu A., Blanning R.W. Metagraphs in information modeling and analysis. \textit{IEEE Transactions on Systems, Man, and Cybernetics}, 1994, vol. 24, no. 10, pp. 1463–1475. \label{basu1994}
+    \item MITRE ATT\&CK\textsuperscript{\textregistered} Framework. \url{https://attack.mitre.org/}
+    \item Mallon S. Extended Cyber Kill Chain. Black Hat USA 2016.
+    \item Zegzhda D.P., Stepanova T.V., Suprun A.F. Multiagent system controllability evaluation using the multilevel structure of the graph of agent. \textit{Autom. Control Comput. Sci.}, 2016, vol. 50, no. 8, pp. 809–812. \label{zegzhda2016}
+    \item Zegzhda D., Zegzhda P., Pechenkin A., Poltavtseva M. Modeling of information systems to their security evaluation. \textit{ACM ICPS}, 2017, pp. 295–298. \label{zegzhda2017}
+    \item Novokhrestov A.K., Konev A.A. Assessment of the security quality of computer networks. \textit{Din. Sist. Mekh. Mash.}, 2014, no. 4, pp. 85–87. \label{novokhrestov2014}
+    \item Astanin S.V., Dragnysh N.V., Zhukovskaya N.K. Nested metagraphs as models of complex objects. 2012.
+    \item Gorbachev I.E. et al. Methodology for implementing a systematic approach in creating the image of the information security system of critical information infrastructure. \textit{Problems of Information Security. Computer Systems}, 2018, no. 2, pp. 93–111.
+\end{enumerate}
+
+\end{document}
