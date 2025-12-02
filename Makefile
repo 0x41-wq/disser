@@ -136,6 +136,32 @@ presentation-handout: TARGET=presentation_handout
 presentation-handout:
 	$(compile)
 
+# === СТАТЬИ (ТЕЗИСЫ) ===
+
+# Определяем список статей (директории в articles/)
+ARTICLE_DIRS := $(wildcard articles/*/)
+ARTICLES := $(filter-out . ..,$(patsubst articles/%/,%,$(wildcard articles/*/)))
+##! компиляция всех статей из articles/
+articles: $(ARTICLES)
+
+##! компиляция конкретной статьи: make miraem_2025
+$(ARTICLES):
+	@echo ">>> Сборка статьи: $@"
+	$(MAKE) -f Makefile.article ARTICLE_NAME=$@ ARTICLE_DIR=articles/$@
+
+##! очистка временных файлов для всех статей
+clean-articles:
+	@for art in $(ARTICLES); do \
+		echo ">>> Очистка: $$art"; \
+		$(MAKE) -f Makefile.article ARTICLE_NAME=$$art ARTICLE_DIR=articles/$$art clean-article; \
+	done
+
+##! полная очистка (включая PDF)
+distclean-articles: clean-articles
+	@for art in $(ARTICLES); do \
+		rm -f "articles/$$art/$$art.pdf"; \
+	done
+
 ##! компиляция tikz графики
 tikz: SOURCE=tikz
 tikz: BACKEND=-pdflua # некоторые библиотеки работают только с lualatex
@@ -177,4 +203,5 @@ include examples.mk
 
 .PHONY: all dissertation synopsis presentation dissertation-draft \
 synopsis-draft pdflatex draft synopsis-booklet presentation-booklet\
-tikz release clean-target distclean-target clean distclean
+tikz release clean-target distclean-target clean distclean \
+articles $(ARTICLES) clean-articles distclean-articles

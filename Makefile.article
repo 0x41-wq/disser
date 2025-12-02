@@ -1,0 +1,28 @@
+# Makefile.article — сборка одной статьи
+
+# Исходный файл
+SOURCE = main
+# Целевой PDF
+TARGET = $(ARTICLE_NAME)
+
+# Используем тот же latexmkrc, но из корня
+#MKRC ?= latexmkrc
+
+# Компиляция статьи
+.PHONY: all
+all:
+	cd $(ARTICLE_DIR) && \
+	latexmk -pdf -jobname=$(TARGET) "$(SOURCE).tex"
+	
+
+# Очистка временных файлов (без удаления PDF)
+.PHONY: clean-article
+clean-article:
+	cd $(ARTICLE_DIR) && \
+	latexmk -c -jobname=$(TARGET) "$(SOURCE).tex"
+
+# Полная очистка (включая PDF)
+.PHONY: distclean-article
+distclean-articles:
+	cd $(ARTICLE_DIR) && \
+	latexmk -C -jobname=$(TARGET) "$(SOURCE).tex"

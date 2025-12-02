@@ -1,0 +1,103 @@
+\documentclass[a4paper,14pt]{extarticle}
+\usepackage[utf8]{inputenc} % можно удалить в XeLaTeX, но оставим для совместимости
+\usepackage[russian]{babel}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+
+% Настройки страницы
+\usepackage[margin=2cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{indentfirst}
+\setlength{\parindent}{1cm}
+\usepackage{seqsplit}     % для разбивки длинных слов
+\usepackage[hyphens]{url} % разрешить переносы в URL
+
+% Графика и подписи
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{font={it,small}, justification=centering}
+
+% Математика
+\usepackage{amsmath}
+
+% TikZ
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes, fit, backgrounds}
+
+% Списки
+\usepackage{enumitem}
+
+% URL
+\usepackage{url}
+\urlstyle{same}
+
+% ✅ biblatex — подключаем с настройками для русского языка
+\usepackage[backend=biber, style=gost-numeric, babel=other, sorting=none]{biblatex}
+\addbibresource{references.bib}
+
+% Поля
+\geometry{top=2cm, bottom=2cm, left=2cm, right=2cm}
+
+% Межстрочный интервал
+\onehalfspacing % эквивалентно множителю 1.2
+
+% Абзацный отступ
+\setlength{\parindent}{1cm}
+
+% Подписи рисунков и таблиц — курсив, 13pt
+\captionsetup{font={it,small}, justification=centering}
+
+% Кастомный стиль кавычек «ёлочки»
+\usepackage{csquotes}
+% \MakeOuterQuote{«}
+% \MakeInnerQuote{„}
+
+% Размер шрифта ссылок — 12pt
+\AtBeginEnvironment{thebibliography}{\small}
+
+\begin{document}
+\pagestyle{empty}
+% УДК
+\noindent УДК 004.056
+
+% Автор
+\noindent\hfill
+\begin{minipage}{0.75\textwidth}
+\raggedleft
+\textbf{Латыпов Ильдар Танисович},\\
+\textit{старший преподаватель КБ-3 «Разработка программных решений и системное программирование»\\}
+\textit{ИКБ РТУ МИРЭА}\\
+\textit{latypov@mirea.ru}
+\textit{ }\\
+\textit{ }\\
+\textit{ }\\
+\end{minipage}
+
+% \clearpage
+
+% Название тезисов — строчные, 15pt
+
+\begin{center}
+{\fontsize{15}{18}\selectfont\bfseries
+ПОДХОДЫ К ВЫЯВЛЕНИЮ ВРЕДОНОСНОЙ АКТИВНОСТИ\\
+В КОМПЬЮТЕРНЫХ СЕТЯХ С ИСПОЛЬЗОВАНИЕМ АТРИБУТИВНЫХ МЕТАГРАФОВ}
+\end{center}
+
+\vspace{1em}
+
+\input{metagraphs-abstract.tex}
+
+\input{metagraphs-intro.tex}
+\input{metagraphs-method.tex}
+\input{metagraphs-results.tex}
+\input{metagraphs-conclusion.tex}
+
+% Список литературы
+\printbibliography[title={Список источников и литературы}]
+
+% Авторское право
+\noindent\raggedleft © Латыпов И.Т., 2025
+
+\end{document}

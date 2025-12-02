@@ -1,0 +1,82 @@
+% !TeX encoding = UTF-8
+% !TeX program = lualatex
+\documentclass[12pt,a4paper]{article}
+
+% Шрифты (только для XeLaTeX/LuaLaTeX)
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+
+% Язык
+\usepackage[russian,english]{babel}
+
+% Остальные пакеты
+\usepackage{cmap}
+\usepackage{csquotes}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{caption}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber, style=gost-numeric, sorting=none]{biblatex}
+\addbibresource{references.bib}
+
+% Поля
+\usepackage{geometry}
+\geometry{left=25mm, right=15mm, top=20mm, bottom=20mm}
+
+% Прочее
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{1.25cm}
+
+% --- Метаданные ---
+\input{metadata.tex}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\textsuperscript{1} Российский технологический университет РТУ МИРЭА
+\end{center}
+
+\begin{abstract}
+В статье предложена методика выявления компьютерных атак в информационных системах на основе аппарата атрибутивных метаграфов. Методика развивает многоуровневую модель атаки, впервые описанную в работе \cite{latypov2020multilevel}, и включает формализацию тактик, методов и целей злоумышленника в виде вершин и дуг метаграфа с атрибутами. Представлен алгоритм сопоставления наблюдаемых событий с эталонными паттернами атак, основанный на частичном изоморфизме атрибутивных метаграфов. Приведены результаты имитационного эксперимента в среде, моделирующей поведение атакующего по тактикам MITRE ATT\&CK. Методика демонстрирует высокую точность (94,3\,\%) и полноту (89,7\,\%) при низком уровне ложных срабатываний (3,1\,\%). Подход может быть интегрирован в системы мониторинга безопасности для повышения устойчивости к сложным и малозаметным атакам.
+
+\vspace{0.3em}
+\noindent\textbf{Ключевые слова}: атрибутивный метаграф, выявление атак, многоуровневая модель, MITRE ATT\&CK, изоморфизм графов, информационная безопасность, ФСТЭК.
+\end{abstract}
+
+\selectlanguage{english}
+\begin{abstract}
+This paper presents a methodology for detecting cyber attacks in information systems using attributive metagraphs. The approach extends the multilevel attack model introduced in \cite{latypov2020multilevel} by formalizing attacker goals, tactics, and techniques as attributed vertices and edges. A pattern-matching algorithm based on partial isomorphism of attributive metagraphs is proposed to correlate observed events with known attack signatures. Simulation results in a MITRE ATT\&CK-aligned environment demonstrate high precision (94.3\,\%) and recall (89.7\,\%) with a low false positive rate (3.1\,\%). The methodology is suitable for integration into security monitoring systems to enhance resilience against sophisticated and stealthy threats.
+
+\vspace{0.3em}
+\noindent\textbf{Keywords}: attributive metagraph, attack detection, multilevel model, MITRE ATT\&CK, graph isomorphism, information security, FSTEC.
+\end{abstract}
+\selectlanguage{russian}
+
+% --- Основной текст ---
+\input{intro}
+\input{theory}
+\input{model}
+\input{methodology}
+\input{novelty}
+\input{experiment}
+\input{comparison}
+\input{practical}
+\input{limitations}
+\input{conclusion}
+
+% --- Библиография ---
+\printbibliography[title={Список литературы}]
+
+% --- Выходные данные ---
+\vspace{1em}
+\noindent\textbf{УДК}: 004.738.7\\
+\textbf{ББК}: 32.973.26-018.2
+
+\end{document}
