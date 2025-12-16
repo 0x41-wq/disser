@@ -71,12 +71,13 @@ G = (V, E, A_V, A_E, \alpha, \beta, \gamma),
 %
 % \end{tikzpicture}
 
-\begin{figure}[ht]
-\centering
-\includegraphics{Dissertation/images/fig_3.1}
-\caption{Пример атрибутивного метаграфа для события запуска скрипта}
-\label{fig:metagraph-formal}
-\end{figure}
+    \begin{figure}[ht]
+        \centering
+            %\tikzsetnextfilename{fig_3_1}
+            \input{Dissertation/images/fig_3.1.tikz}
+            \caption{Пример атрибутивного метаграфа для события запуска скрипта}
+            \label{fig:metagraph-formal}
+    \end{figure}
 
 \section{Общая архитектура системы обнаружения}\label{sec:ch3/sect1}
 
@@ -170,7 +171,7 @@ G = (V, E, A_V, A_E, \alpha, \beta, \gamma),
 
 \begin{figure}[ht]
     \centering
-        \includegraphics{Dissertation/images/fig_3.2}
+        \input{Dissertation/images/fig_3.2.tikz}
     \caption{Архитектура системы AMGD}
     \label{fig:amgd_arch}
 \end{figure}

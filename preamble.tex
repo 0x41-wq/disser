@@ -1,0 +1,68 @@
+% !TEX encoding = UTF-8
+% Общий преамбул для статей и глав диссертации (LuaLaTeX)
+
+% Поддержка русского языка
+\usepackage[english,russian]{babel}
+\usepackage[autostyle=true,english=american,russian]{csquotes}
+
+% Шрифты (Times New Roman по ГОСТ)
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\defaultfontfeatures{Ligatures=TeX}
+
+% Класс документа НЕ указывается здесь — только в main.tex
+
+% Поля по ГОСТ Р 7.0.11–2011
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  top=20mm,
+  bottom=20mm,
+  left=30mm,
+  right=15mm,
+  nohead
+}
+
+% Рисунки, подписи, плавающие объекты
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+\captionsetup{
+  labelsep=endash,
+  justification=justified,
+  singlelinecheck=false
+}
+
+% Списки
+\usepackage{enumitem}
+\setlist[itemize]{left=0pt}
+\setlist[enumerate]{left=0pt}
+
+% Математика
+\usepackage{amsmath, amssymb}
+
+% Библиография (BibLaTeX + Biber)
+\usepackage[
+  backend=biber,
+  style=gost-numeric,
+  sorting=none,
+  doi=false,
+  isbn=false,
+  url=false
+]{biblatex}
+\addbibresource{../references.bib} % относительно articles/xxx/
+
+% Гиперссылки без цвета (по ГОСТ)
+\usepackage[hidelinks]{hyperref}
+
+% Форматирование заголовков (без точки в конце)
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{1em}{}
+
+% Укажем, где искать рисунки — относительно main.tex
+\graphicspath{{./}{images/}}
+
+% Типографика
+\tolerance=1000
+\emergencystretch=10pt

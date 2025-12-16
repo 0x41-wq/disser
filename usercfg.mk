@@ -11,6 +11,7 @@
 ## -xelatex=xelatex without dvi
 ## -pdflua=lualatex with dvi  (faster than -lualatex)
 ## -lualatex=lualatex without dvi
+BACKEND = -xelatex
 
 # DRAFTON ?= # 1=on;0=off
 # SHOWMARKUP ?= # 1=on;0=off

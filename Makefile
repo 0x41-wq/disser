@@ -147,8 +147,8 @@ articles: $(ARTICLES)
 ##! компиляция конкретной статьи: make miraem_2025
 $(ARTICLES):
 	@echo ">>> Сборка статьи: $@"
-	$(MAKE) -f Makefile.article ARTICLE_NAME=$@ ARTICLE_DIR=articles/$@
-
+	$(MAKE) -f Makefile.article ARTICLE_NAME=$@ ARTICLE_DIR=articles/$@ BACKEND=-xelatex
+	
 ##! очистка временных файлов для всех статей
 clean-articles:
 	@for art in $(ARTICLES); do \

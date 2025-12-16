@@ -282,3 +282,6 @@ PSCyr/*
 
 # Изображения и статьи в pdf
 *.pdf
+*.docx
+articles/*/*.pdf
+articles/*/*.docx
