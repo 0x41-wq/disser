@@ -1,0 +1,19 @@
+\begin{tikzpicture}[
+  node distance=1.8cm,
+  metanode/.style={rectangle, draw=blue!70, fill=blue!5, rounded corners, minimum width=1.8cm, minimum height=0.7cm, font=\small},
+  attr/.style={font=\scriptsize, color=gray},
+  edge/.style={->, thick, >=Stealth}
+]
+
+\node[metanode] (U) {User};
+\node[metanode, below right=of U] (P) {Process};
+\node[metanode, below left=of P] (N) {Network};
+
+\draw[edge] (U) -- (P) node[midway, right, attr] {executes};
+\draw[edge] (P) -- (N) node[midway, below, attr] {connects};
+
+\node[attr, above=0.1cm of U] {uid=admin};
+\node[attr, right=0.1cm of P] {name=powershell.exe};
+\node[attr, below=0.1cm of N] {dst\_ip=192.168.10.55};
+
+\end{tikzpicture}

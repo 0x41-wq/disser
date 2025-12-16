@@ -1,0 +1,22 @@
+\begin{tikzpicture}[
+  node distance=1.5cm,
+  tactic/.style={ellipse, draw=green!60, fill=green!10, minimum width=2cm, font=\small},
+  technique/.style={rectangle, draw=purple!60, fill=purple!5, minimum width=1.8cm, font=\scriptsize}
+]
+
+\node[tactic] (exec) {Execution};
+\node[tactic, below=2cm of exec] (disc) {Discovery};
+\node[tactic, right=3cm of exec] (lat) {Lateral Movement};
+
+\node[technique, above=0.7cm of exec] (t1059) {T1059};
+\node[technique, below=0.7cm of disc] (t1087) {T1087};
+\node[technique, right=0.7cm of lat] (t1021) {T1021};
+
+\draw[->, dashed] (exec) -- (t1059);
+\draw[->, dashed] (disc) -- (t1087);
+\draw[->, dashed] (lat) -- (t1021);
+
+% соединения
+\draw[gray, thick] (t1059) -- (t1087) -- (t1021);
+
+\end{tikzpicture}

@@ -1,0 +1,21 @@
+\begin{tikzpicture}[
+  node distance=1.2cm,
+  phase/.style={rectangle, draw=red!60, fill=red!5, rounded corners, minimum width=2cm, font=\small}
+]
+
+\node[phase] (recon) {Reconnaissance};
+\node[phase, right=of recon] (weapon) {Weaponization};
+\node[phase, right=of weapon] (delivery) {Delivery};
+\node[phase, right=of delivery] (exploit) {Exploitation};
+\node[phase, right=of exploit] (install) {Installation};
+\node[phase, right=of install] (c2) {C2};
+\node[phase, right=of c2] (act) {Actions};
+
+\draw[->, thick] (recon) -- (weapon);
+\draw[->, thick] (weapon) -- (delivery);
+\draw[->, thick] (delivery) -- (exploit);
+\draw[->, thick] (exploit) -- (install);
+\draw[->, thick] (install) -- (c2);
+\draw[->, thick] (c2) -- (act);
+\end{tikzpicture}
+
