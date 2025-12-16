@@ -17,71 +17,9 @@
 
 Эта классификация отражает эволюцию подходов от статического описания целей к динамическому моделированию последовательности действий и, наконец, к формальному представлению сложных зависимостей между сущностями. На рисунке~\ref{fig:attack_modeling_taxonomy} представлена визуализация этой таксономии с выделением перспективного направления — атрибутивных метаграфов.
 
-    \begin{comment}
-    \begin{tikzpicture}[
-            node distance=0.9cm and 1.4cm,
-            >=Stealth,
-            thick,
-            category/.style = {
-                    rectangle, draw, fill=gray!20,
-                    text width=5.2em, align=center, font=\small, rounded corners
-                },
-            method/.style = {
-                    rectangle, draw, fill=blue!10,
-                    text width=4.8em, align=center, font=\small
-                },
-            future/.style = {
-                    rectangle, draw=red!60, dashed, fill=red!5,
-                    text width=5.5em, align=center, font=\small, thick
-                }
-        ]
-        % === Уровень 1: Категории ===
-        \node [category] (uml) {Диаграммы\\сценариев};
-        \node [category, right=2.2cm of uml] (temporal) {Темпоральные\\методы};
-        \node [category, right=2.2cm of temporal] (graph) {Графовые\\методы};
-        
-        % === Уровень 2: Методы ===
-        % UML-группа
-        \node [method, below=of uml] (misuse) {Misuse\\Cases};
-        \node [method, below=of misuse] (coras) {CORAS};
-        \node [method, below=of coras] (securityuc) {Security\\Use Cases};
-        
-        % Темпоральные методы
-        \node [method, below=of temporal] (killchain) {Cyber\\Kill Chain};
-        \node [method, below=of killchain] (diamond) {Diamond\\Model};
-        \node [method, below=of diamond] (riskit) {Riskit};
-        \node [method, below=of riskit] (attackflow) {Attack\\Flow};
-        
-        % Графовые методы
-        \node [method, below=of graph] (tree) {Деревья\\атак};
-        \node [method, below=of tree] (graphattack) {Графы\\атак};
-        \node [method, below=of graphattack] (ontology) {Онтологии};
-        \node [future, below=of ontology] (metagraph) {Атрибутивные\\метаграфы};
-        
-        % === Связи ===
-        \draw [->] (uml) -- (misuse);
-        \draw [->] (uml) -- (coras);
-        \draw [->] (uml) -- (securityuc);
-        
-        \draw [->] (temporal) -- (killchain);
-        \draw [->] (temporal) -- (diamond);
-        \draw [->] (temporal) -- (riskit);
-        \draw [->] (temporal) -- (attackflow);
-        
-        \draw [->] (graph) -- (tree);
-        \draw [->] (graph) -- (graphattack);
-        \draw [->] (graph) -- (ontology);
-        \draw [->] (graph) -- (metagraph);
-        
-        % === Подпись под метаграфом ===
-        \node [below=0.25cm of metagraph, font=\small, text=red!60] {Перспективное направление};
-    \end{tikzpicture}
-    \end{comment}
-
-
 \begin{figure}[h]
     \centering
-    \includegraphics{Dissertation/images/fig_1.1}
+    \includegraphics{Dissertation/images/fig_1.1.pdf}
     \caption{Таксономия методов моделирования атак}
     \label{fig:attack_modeling_taxonomy}
 \end{figure}
@@ -121,41 +59,9 @@
 
 Темпоральные методы хорошо подходят для описания последовательности действий, но они не всегда адекватно отражают параллельные и многообъектные действия, характерные для современных атак. Например, при атаке APT29 злоумышленник может одновременно проводить разведку, использовать несколько векторов доставки и маскировать C2-трафик под легитимный, что не укладывается в линейную модель Kill Chain.
 
-    \begin{comment}
-    \begin{tikzpicture}[
-            node distance=0.8cm and 1.0cm,
-            >=Stealth,
-            thick,
-            phase/.style = {rectangle, draw, fill=green!10, text width=3.8em, align=center, font=\small},
-            action/.style = {rectangle, draw, fill=blue!10, text width=4.5em, align=center, font=\small}
-        ]
-        % Фазы Kill Chain
-        \node [phase] (recon) {Разведка};
-        \node [phase, right=of recon] (weapon) {Вооружение};
-        \node [phase, right=of weapon] (delivery) {Доставка};
-        \node [phase, right=of delivery] (exploit) {Эксплуатация};
-        \node [phase, right=of exploit] (install) {Установка};
-        \node [phase, right=of install] (c2) {C2};
-        \node [phase, right=of c2] (act) {Действия};
-        
-        % Действия
-        \node [action, below=1.2cm of delivery] (phish) {Фишинг};
-        \node [action, below=1.2cm of exploit] (macro) {Макрос};
-        \node [action, below=1.2cm of install] (revshell) {Реверс-шелл};
-        \node [action, below=1.2cm of c2] (mimikatz) {Mimikatz};
-        
-        % Связи
-        \draw [->] (phish) -- (delivery);
-        \draw [->] (macro) -- (exploit);
-        \draw [->] (revshell) -- (install);
-        \draw [->] (mimikatz) -- (c2);
-    \end{tikzpicture}
-    \end{comment}
-
-
 \begin{figure}[h]
     \centering
-    \includegraphics{Dissertation/images/fig_1.2.tex}
+    \includegraphics{Dissertation/images/fig_1.2.pdf}
     \caption{Пример атаки в терминах Cyber Kill Chain}
     \label{fig:killchain_example}
 \end{figure}
@@ -176,35 +82,9 @@
 
 Важно подчеркнуть, что графовые методы особенно актуальны в контексте современных EDR/XDR-систем, которые собирают телеметрию в виде графов процессов, файлов и сетевых соединений. Это создаёт предпосылки для прямого применения формальных моделей к реальным данным без потери семантики.
 
-    \begin{comment}
-    \begin{tikzpicture}[
-            node distance=1.0cm and 1.2cm,
-            >=Stealth,
-            thick,
-            root/.style = {rectangle, draw, fill=red!20, text width=4.8em, align=center, font=\small},
-            and/.style = {rectangle, draw, fill=blue!10, text width=4.0em, align=center, font=\small},
-            or/.style = {rectangle, draw, fill=green!10, text width=4.0em, align=center, font=\small},
-            leaf/.style = {rectangle, draw, fill=yellow!10, text width=4.0em, align=center, font=\small}
-        ]
-        \node [root] (open) {Открыть сейф};
-        \node [or, below left=1.3cm and 0.8cm of open] (pick) {Взломать\\замок};
-        \node [or, below=1.3cm of open] (learn) {Узнать код};
-        \node [or, below right=1.3cm and 0.8cm of open] (cut) {Вырезать};
-        
-        \node [and, below=0.9cm of learn] (find) {Найти\\запись};
-        \node [and, below=0.9cm of find] (bribe) {Подкупить\\владельца};
-        
-        \draw [->] (open) -- (pick);
-        \draw [->] (open) -- (learn);
-        \draw [->] (open) -- (cut);
-        \draw [->] (learn) -- (find);
-        \draw [->] (find) -- (bribe);
-    \end{tikzpicture}
-    \end{comment}
-
 \begin{figure}[H]
     \centering
-    \includegraphics{Dissertation/images/fig_1.3.tex}
+    \includegraphics{Dissertation/images/fig_1.3.pdf}
     \caption{Пример дерева атак (по Schneier~\cite{Schneier1999})}
     \label{fig:attack_tree_example}
 \end{figure}
@@ -225,34 +105,9 @@
 
 Таким образом, атрибутивные метаграфы не являются альтернативой существующим методам, а выступают в роли \textbf{семантической «операционной системы»}, в рамках которой нейросетевые компоненты могут выполнять специализированные задачи: предсказание, классификацию, генерацию знаний. Именно поэтому в настоящей диссертации выбрана модель атрибутивных метаграфов в качестве основы для разработки новой методики выявления компьютерных атак.
 
-    \begin{comment}
-    \begin{tikzpicture}[
-            node distance=1.0cm and 1.2cm,
-            >=Stealth,
-            thick,
-            attack/.style = {rectangle, draw, fill=red!10, text width=4.8em, align=center, font=\small},
-            model/.style = {rectangle, draw, fill=blue!10, text width=5.2em, align=center, font=\small}
-        ]
-        \node [model] (motiv) {Мотивация\\(APT)};
-        \node [model, right=of motiv] (stage) {Этапы\\(ATT\&CK)};
-        \node [model, right=of stage] (bdu) {Уязвимости\\(CVE)};
-        \node [model, right=of bdu] (stride) {Цели\\(STRIDE)};
-        
-        \node [attack, below=1.5cm of motiv] (apt) {APT29};
-        \node [attack, below=1.5cm of stage] (phish) {Фишинг → C2};
-        \node [attack, below=1.5cm of bdu] (vuln) {CVE-2023-1234};
-        \node [attack, below=1.5cm of stride] (tamper) {Tampering};
-        
-        \draw [->] (apt) -- (motiv);
-        \draw [->] (phish) -- (stage);
-        \draw [->] (vuln) -- (bdu);
-        \draw [->] (tamper) -- (stride);
-    \end{tikzpicture}
-    \end{comment}
-
 \begin{figure}[h]
     \centering
-    \includegraphics{Dissertation/images/fig_1.4}
+    \includegraphics{Dissertation/images/fig_1.4.pdf}
     \caption{Многоаспектная классификация компьютерных атак}
     \label{fig:attack_classification}
 \end{figure}
@@ -314,43 +169,9 @@
 
 На рисунке~\ref{fig:detection_taxonomy} представлена таксономия методов обнаружения, подчёркивающая переход от реактивных (сигнатуры) к проактивным, семантически насыщенным подходам.
 
-\begin{comment}
-    \begin{tikzpicture}[
-            node distance=0.9cm and 1.2cm,
-            >=Stealth,
-            thick,
-            category/.style = {rectangle, draw, fill=gray!20, text width=5.0em, align=center, font=\small, rounded corners},
-            method/.style = {rectangle, draw, fill=blue!10, text width=4.8em, align=center, font=\small},
-            future/.style = {rectangle, draw=red!60, dashed, fill=red!5, text width=5.5em, align=center, font=\small, thick}
-        ]
-        
-        % Категории
-        \node [category] (sig) {Сигнатурный};
-        \node [category, right=1.8cm of sig] (anom) {Аномальный};
-        \node [category, right=1.8cm of anom] (behav) {Поведенческий};
-        \node [category, right=1.8cm of behav] (semantic) {Семантический};
-        
-        % Методы
-        \node [method, below=of sig] (snort) {Snort};
-        \node [method, below=of anom] (isolation) {Isolation\\Forest};
-        \node [method, below=of behav] (siem) {SIEM-правила};
-        \node [method, below=of semantic] (attackgraph) {Графы\\атак};
-        \node [future, below=of attackgraph] (metagraph) {Атрибутивные\\метаграфы};
-        
-        % Связи
-        \draw [->] (sig) -- (snort);
-        \draw [->] (anom) -- (isolation);
-        \draw [->] (behav) -- (siem);
-        \draw [->] (semantic) -- (attackgraph);
-        \draw [->] (semantic) -- (metagraph);
-        
-        \node [below=0.25cm of metagraph, font=\small, text=red!60] {Перспективное направление};
-    \end{tikzpicture}
-    \end{comment}
-
 \begin{figure}[H]
     \centering
-    \includegraphics{Dissertation/images/fig_1.5}
+    \includegraphics{Dissertation/images/fig_1.5.pdf}
     \caption{Таксономия методов обнаружения компьютерных атак}
     \label{fig:detection_taxonomy}
 \end{figure}
@@ -477,29 +298,9 @@
 
 Такая модель позволяет формализовать атаку как последовательность переходов между состояниями системы, где каждое действие нарушает одно или несколько свойств из $C$.
 
-\begin{comment}
-    \begin{tikzpicture}[
-            node distance=1.2cm and 1.5cm,
-            >=Stealth,
-            thick,
-            elem/.style = {rectangle, draw, fill=blue!10, text width=4.0em, align=center, font=\small}
-        ]
-        \node [elem] (subj) {Субъекты\\$S$};
-        \node [elem, right=of subj] (obj) {Объекты\\$O$};
-        \node [elem, below=of subj] (act) {Действия\\$A$};
-        \node [elem, below=of obj] (vuln) {Уязвимости\\$V$};
-        \node [elem, below=1.5cm of act] (conf) {Нарушения\\$C$};
-        
-        \draw [->] (subj) -- (act);
-        \draw [->] (obj) -- (act);
-        \draw [->] (vuln) -- (act);
-        \draw [->] (act) -- (conf);
-    \end{tikzpicture}
-    \end{comment}
-
 \begin{figure}[h]
     \centering
-    \includegraphics{Dissertation/images/fig_1.6}
+    \includegraphics{Dissertation/images/fig_1.6.pdf}
     \caption{Структура модели угрозы}
     \label{fig:threat_model_structure}
 \end{figure}
@@ -519,75 +320,23 @@
     \end{tabular}
 \end{table}
 
-    \begin{comment}
-    \begin{tikzpicture}[
-            node distance=1.0cm,
-            thick,
-            level/.style = {rectangle, draw, fill=green!10, text width=5em, align=center, font=\small}
-        ]
-        \node [level] (c) {Конфиденциальность};
-        \node [level, below left=1.2cm and 0.8cm of c] (i) {Целостность};
-        \node [level, below right=1.2cm and 0.8cm of c] (a) {Доступность};
-        \draw (c) -- (i);
-        \draw (c) -- (a);
-        \draw (i) -- (a);
-        \node [above=0.2cm of c, font=\small\bfseries] {Модель CIA};
-    \end{tikzpicture}
-    \end{comment}
-
 \begin{figure}[h]
     \centering
-    \includegraphics{Dissertation/images/fig_1.7}
+    \includegraphics{Dissertation/images/fig_1.7.pdf}
     \label{fig:ciamodel}
     \caption{Модель CIA}
 \end{figure}
 
-    \begin{comment}
-    \begin{tikzpicture}[
-            node distance=1.0cm and 1.2cm,
-            >=Stealth,
-            thick,
-            src/.style = {rectangle, draw, fill=red!10, text width=4.5em, align=center, font=\small},
-            dst/.style = {rectangle, draw, fill=blue!10, text width=4.5em, align=center, font=\small}
-        ]
-        \node [src] (apt) {APT-группа};
-        \node [dst, right=of apt] (corp) {Корпоративная сеть};
-        \node [dst, below=of corp] (cloud) {Облачные сервисы};
-        
-        \draw [->] (apt) -- node[above, font=\small] {Фишинг} (corp);
-        \draw [->] (corp) -- node[right, font=\small] {Эксплуатация CVE} (cloud);
-        \draw [->, bend right] (apt) to node[below, font=\small] {C2 через легитимные API} (cloud);
-    \end{tikzpicture}
-    \end{comment}
-
 \begin{figure}[h]
     \centering
-    \includegraphics{Dissertation/images/fig_1.8}
+    \includegraphics{Dissertation/images/fig_1.8.pdf}
     \caption{Современный вектор атаки}
     \label{fig:modern_attack_vector}
 \end{figure}
 
-    \begin{comment}
-    \begin{tikzpicture}[
-            node distance=1.0cm and 1.0cm,
-            >=Stealth,
-            thick,
-            doc/.style = {rectangle, draw, fill=yellow!10, text width=5em, align=center, font=\small}
-        ]
-        \node [doc] (gost) {ГОСТ Р\\57580.2-2017};
-        \node [doc, right=of gost] (fsteck) {Приказ\\ФСТЭК №21};
-        \node [doc, below=of gost] (nist) {NIST\\SP 800-53};
-        \node [doc, right=of nist] (iso) {ISO/IEC\\27001};
-        
-        \draw [->] (gost) -- (fsteck);
-        \draw [->] (nist) -- (iso);
-        \node [above=0.3cm of gost, font=\small\bfseries] {Нормативная база};
-    \end{tikzpicture}
-    \end{comment}
-
 \begin{figure}[h]
     \centering
-    \includegraphics{Dissertation/images/fig_1.9.tex}
+    \includegraphics{Dissertation/images/fig_1.9.pdf}
     \caption{Ключевые нормативные документы}
     \label{fig:normative_docs}
 \end{figure}

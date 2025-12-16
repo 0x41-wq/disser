@@ -51,26 +51,6 @@ G = (V, E, A_V, A_E, \alpha, \beta, \gamma),
 
 На рисунке~\ref{fig:metagraph-formal} представлен пример метаграфа, построенного по событию запуска PowerShell-скрипта из вложения Word. Обратите внимание, как одна дуга связывает три вершины: процесс Word, процесс PowerShell и файл скрипта.
 
-% \begin{tikzpicture}[
-%     vertex/.style={rectangle, draw, minimum width=1.8cm, minimum height=0.7cm, align=center, font=\scriptsize},
-%     edge/.style={->, thick},
-%     attr/.style={font=\tiny, fill=gray!10, inner sep=1pt}
-% ]
-%
-% \node[vertex, fill=yellow!20] (word) {winword.exe};
-% \node[vertex, fill=blue!20, right=2.5cm of word] (ps) {powershell.exe};
-% \node[vertex, fill=green!20, below=1.2cm of $(word)!0.5!(ps)$] (script) {payload.ps1};
-%
-% \draw[edge] (word) -- node[above, attr] {TA0002} node[below, attr] {T1059.001} (ps);
-% \draw[edge] (script) -- (ps);
-%
-% \node[font=\scriptsize, below=0.8cm of script] {%
-%     Дуга «TA0002 → T1059.001» связывает три сущности:
-%     \par источник (Word), цель (PowerShell) и объект (скрипт).
-% };
-%
-% \end{tikzpicture}
-
     \begin{figure}[ht]
         \centering
             %\tikzsetnextfilename{fig_3_1}
@@ -93,81 +73,6 @@ G = (V, E, A_V, A_E, \alpha, \beta, \gamma),
 \end{itemize}
 
 Архитектура системы представлена на рисунке~\ref{fig:amgd_arch}.
-
-    \begin{comment}
-            
-    \begin{tikzpicture}[
-                node distance=1.4cm and 1.8cm,
-                auto,
-                >=Stealth,
-                thick,
-                block/.style = {
-                        rectangle, draw, fill=blue!5,
-                        text width=5.5em, align=center,
-                        rounded corners, minimum height=3.5em,
-                        font=\small
-                    },
-                data/.style = {
-                        rectangle, draw, fill=green!5,
-                        text width=6em, align=center,
-                        minimum height=2.8em,
-                        font=\small
-                    },
-                storage/.style = {
-                        cylinder, shape border rotate=90, draw, fill=yellow!5,
-                        minimum height=2em, minimum width=1.8em,
-                        align=center,
-                        font=\small
-                    },
-                decision/.style = {
-                        diamond, aspect=1.6, draw, fill=red!5,
-                        align=center, inner sep=1pt,
-                        font=\small
-                    }
-            ]
-            
-            % Источники данных (левый столбец)
-            \node [data] (edr) {EDR};
-            \node [data, below=of edr] (netlogs) {Сетевые логи};
-            \node [data, below=of netlogs] (oslogs) {Операционная\\система};
-            \node [data, below=of oslogs] (cloud) {Облачные\\сервисы};
-            
-            % Центральные блоки
-            \node [block, right=2.2cm of edr] (norm) {Нормализатор};
-            \node [block, right=1.8cm of norm] (builder) {Построитель\\метаграфа};
-            \node [storage, right=1.8cm of builder, align=center] (store) {Хранилище\\метаграфов};
-            
-            % Верхний и нижний блоки
-            \node [block, above=1.2cm of store] (patterns) {База шаблонов\\атак};
-            \node [block, below=1.2cm of store] (risk) {Оценка риска};
-            \node [block, right=2.0cm of risk] (detector) {Детектор\\сопоставления};
-            
-            % Решение и SOAR
-            \node [decision, right=2.0cm of detector] (alert) {Алерт?};
-            \node [block, right=2.0cm of alert] (soar) {SOAR\\интеграция};
-            
-            % Стрелки: ортогональные соединения
-            \draw [->] (edr) -| (norm);
-            \draw [->] (netlogs) -| (norm);
-            \draw [->] (oslogs) -| (norm);
-            \draw [->] (cloud) -| (norm);
-            
-            \draw [->] (norm) -- (builder);
-            \draw [->] (builder) -- (store);
-            
-            \draw [->] (store) |- (detector);
-            \draw [->] (patterns) -- (detector);
-            \draw [->] (detector) -- (risk);
-            
-            \draw [->] (risk) -- (alert);
-            \draw [->] (alert) -- node[above, font=\small] {Да} (soar);
-            
-            % Обратная связь: "Нет" → к хранилищу
-            \draw [->] (alert.east) -- ++(0.8,0) |- (store.east)
-            node[pos=0.25, right, font=\small] {Нет};
-            
-        \end{tikzpicture}
-        \end{comment}
 
 \begin{figure}[ht]
     \centering
@@ -305,63 +210,36 @@ G = (V, E, A_V, A_E, \alpha, \beta, \gamma),
 
 \begin{algorithm}[H]
 \caption{MetaGraph-Match($G_{\text{pattern}}, G_{\text{live}}, \theta_v, \theta_s$)}\label{alg:match}
-\SetAlgoLined
-\KwIn{Эталонный метаграф $G_{\text{pattern}}$, динамический метаграф $G_{\text{live}}$, пороги $\theta_v$, $\theta_s$}
-\KwOut{Булево значение: найдено ли совпадение}
-
-$E_{\text{filtered}} \gets \emptyset$\;
-\ForEach{тактика $T \in \mathcal{T}_{\text{pattern}}$}{
-    $E_{\text{filtered}} \gets E_{\text{filtered}} \cup \{ e \in E_{\text{live}} \mid \beta(e).\texttt{tactic} = T \}$\;
-}
-
-$[t_{\min}, t_{\max}] \gets \text{временной диапазон}(G_{\text{pattern}})$\;
-$E_{\text{time}} \gets \{ e \in E_{\text{filtered}} \mid \gamma(e) \in [t_{\min} - \delta,\, t_{\max} + \delta] \}$\;
-$S_{\text{total}} \gets 0$\;
-
-\ForEach{дуга $e_p \in E_{\text{pattern}}$}{
-    $s_{\max} \gets 0$\;
-    \ForEach{дуга $e_l \in E_{\text{time}}$}{
-        $s_v \gets \text{vertex\_similarity}(\text{src}(e_p), \text{src}(e_l))$\;
-        \If{$s_v < \theta_v$}{
-            \textbf{continue}\;
-        }
-        $s_e \gets \text{edge\_similarity}(e_p, e_l)$\;
-        $s_{\max} \gets \max(s_{\max}, s_e)$\;
-    }
-    $S_{\text{total}} \gets S_{\text{total}} + s_{\max}$\;
-}
-
-$S \gets S_{\text{total}} / |E_{\text{pattern}}|$\;
-\Return{$S \geq \theta_s$}\;
-\end{algorithm}
-
-\begin{comment}
-\begin{algorithm}[H]
-\caption{MetaGraph-Match($G_{\text{pattern}}, G_{\text{live}}, \theta_v, \theta_s$)}\label{alg:match}
 \begin{algorithmic}[1]
+\Require{Эталонный метаграф $G_{\text{pattern}}$, динамический метаграф $G_{\text{live}}$, пороги $\theta_v$, $\theta_s$}
+\Ensure{Булево значение: найдено ли совпадение}
+
 \State $E_{\text{filtered}} \gets \emptyset$
-\For{каждая тактика $T \in \mathcal{T}_{\text{pattern}}$}
+\For{каждой тактики $T \in \mathcal{T}_{\text{pattern}}$}
     \State $E_{\text{filtered}} \gets E_{\text{filtered}} \cup \{ e \in E_{\text{live}} \mid \beta(e).\texttt{tactic} = T \}$
 \EndFor
+
 \State $[t_{\min}, t_{\max}] \gets \text{временной диапазон}(G_{\text{pattern}})$
-\State $E_{\text{time}} \gets \{ e \in E_{\text{filtered}} \mid \gamma(e) \in [t_{\min} - \delta, t_{\max} + \delta] \}$
-\State $G_{\text{cand}} \gets (V_{\text{live}}, E_{\text{time}})$
+\State $E_{\text{time}} \gets \{ e \in E_{\text{filtered}} \mid \gamma(e) \in [t_{\min} - \delta,\, t_{\max} + \delta] \}$
 \State $S_{\text{total}} \gets 0$
-\For{каждая дуга $e_p \in E_{\text{pattern}}$}
+
+\For{каждой дуги $e_p \in E_{\text{pattern}}$}
     \State $s_{\max} \gets 0$
-    \For{каждая дуга $e_l \in E_{\text{time}}$}
-        \State $s_v \gets \text{vertex\_similarity}(\text{src}(e_p), \text{src}(e_l))$
-        \If{$s_v < \theta_v$} \textbf{continue} \EndIf
+    \For{каждой дуги $e_l \in E_{\text{time}}$}
+        \State $s_v \gets \text{vertex\_similarity}(\mathrm{src}(e_p), \mathrm{src}(e_l))$
+        \If{$s_v < \theta_v$}
+            \State \textbf{continue}
+        \EndIf
         \State $s_e \gets \text{edge\_similarity}(e_p, e_l)$
         \State $s_{\max} \gets \max(s_{\max}, s_e)$
     \EndFor
     \State $S_{\text{total}} \gets S_{\text{total}} + s_{\max}$
 \EndFor
+
 \State $S \gets S_{\text{total}} / |E_{\text{pattern}}|$
-\State \Return $S \geq \theta_s$
+\State \Return{$S \geq \theta_s$}
 \end{algorithmic}
 \end{algorithm}
-\end{comment}
 
 \subsection{Пример сопоставления: сценарий APT29}
 

@@ -4,11 +4,21 @@
 \usepackage[russian]{babel}
 \usepackage{tikz}
 \usetikzlibrary{matrix, arrows.meta}
+
+% Устанавливаем шрифт с поддержкой кириллицы
+\setmainfont{Liberation Serif}
+
 \begin{document}
 \begin{tikzpicture}
-\matrix (m) [matrix of nodes, nodes={rectangle, draw, minimum width=2.2cm, minimum height=1cm, align=center}, column sep=0.6cm, row sep=0.6cm] {
-Мотивация\\(APT) & Этапы\\(ATT\&CK) & Уязвимости\\(CVE) & Цели\\(STRIDE) \\
-APT29 & Фишинг\\→ C2 & CVE-\\2023-1234 & Tampering \\
+\matrix (m) [
+    matrix of nodes,
+    nodes={rectangle, draw, minimum width=2.2cm, minimum height=1cm, align=center},
+    column sep=0.6cm,
+    row sep=0.6cm,
+    ampersand replacement=\&
+] {
+Мотивация\\(APT) \& Этапы\\(ATT\&CK) \& Уязвимости\\(CVE) \& Цели\\(STRIDE) \\
+APT29 \& Фишинг\\→ C2 \& CVE-\\2023-1234 \& Tampering \\
 };
 \draw[->, thick] (m-1-1) -- (m-2-1);
 \draw[->, thick] (m-1-2) -- (m-2-2);

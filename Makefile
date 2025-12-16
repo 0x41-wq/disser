@@ -11,7 +11,7 @@ endif
 ifeq ($(OS),Windows_NT)
 	include windows.mk
 else
-	include unix.mk
+	include unix.latexmkrc
 endif
 
 # Ghostscript-based pdf postprocessing

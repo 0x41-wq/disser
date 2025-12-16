@@ -112,7 +112,7 @@
 \begin{figure}[H]
     \centerfloat{
         \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{tactic_profile}}{}
-        %\input{Dissertation/images/fig-tactic-profile.tikz}
+        \includegraphics{Dissertation/images/fig-tactic-profile.pdf}
     }
     \caption{Тактический профиль APT29 в виде тепловой карты}
     \label{fig:tactic-profile}
@@ -175,43 +175,17 @@
 
 Соответствующий метаграф $G_{\mathrm{phish}}$ строится по определению~\ref{sec:ch2/sec2}. Такая формализация позволяет использовать метаграф как шаблон для последующего сопоставления.
 
-        \begin{comment}
-        \begin{tikzpicture}[
-            node distance=1.2cm and 1.5cm,
-            >=Stealth,
-            thick,
-            vertex/.style={circle, draw=black, fill=gray!20, minimum size=0.8cm},
-            edge/.style={->, thick}
-        ]
-        \node[vertex] (doc) {\texttt{invoice.docm}};
-        \node[vertex, right=of doc] (ps) {\texttt{powershell.exe}};
-        \node[vertex, below=of ps] (task) {\texttt{Task}};
-        \node[vertex, right=of ps] (c2) {\texttt{c2.malicious.com}};
-        
-        \draw[edge] (doc) -- node[above] {\texttt{T1566}} (ps);
-        \draw[edge] (ps) -- node[left] {\texttt{T1053.005}} (task);
-        \draw[edge] (ps) -- node[above] {\texttt{T1071.001}} (c2);
-        \end{tikzpicture}
-        \end{comment}
-
-
 \begin{figure}[h]
     \centerfloat{
-        \includegraphics{images/fig_2.3}
+        \includegraphics{Dissertation/images/fig_2.3.pdf}
     }
     \caption{Метаграф фишинговой атаки с привязкой к MITRE ATT\&CK}
     \label{fig:phish-metagraph}
 \end{figure}
 
-        \begin{comment}
-        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{lolbin_attack}}{}
-        \input{Dissertation/images/fig-lolbin-attack.tikz}
-        \end{comment}
-
-
 \begin{figure}[h]
     \centerfloat{
-        \includegraphics{Dissertation/images/fig_2.4}
+        \includegraphics{Dissertation/images/fig_2.4.pdf}
     }
     \label{fig:lolbin-attack}
     \caption{Метаграф атаки с использованием LOLBin (\texttt{certutil.exe})}
@@ -271,15 +245,10 @@
     \end{cases}
 \]
 
-        \begin{comment}
-        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{isomorphism_algo}}{}
-        \input{Dissertation/images/fig-isomorphism-algo.tikz}
-        \end{comment}
-
 
 \begin{figure}[h]
     \centerfloat{
-        \includegraphics{Dissertation/images/fig_2.5}
+        \includegraphics{Dissertation/images/fig_2.5.pdf}
     }
     \caption{Блок-схема алгоритма частичного изоморфизма}
     \label{fig:isomorphism-algo}
@@ -289,33 +258,9 @@
 
 MITRE ATT\&CK предоставляет структурированную таксономию тактик и техник, которая идеально подходит для атрибутивного слоя метаграфа. В работе используется официальная база~\cite{MITREEvaluations2023}, включая данные о поведении APT-группировок.
 
-        \begin{comment}
-        \begin{tikzpicture}[
-            node distance=1.0cm and 1.2cm,
-            >=Stealth,
-            thick,
-            tactic/.style={rectangle, draw=blue!60, fill=blue!10, text width=4em, align=center, font=\small},
-            technique/.style={rectangle, draw=red!60, fill=red!10, text width=4.5em, align=center, font=\small}
-        ]
-        \node[tactic] (ia) {TA0001\\Initial Access};
-        \node[tactic, right=of ia] (ex) {TA0002\\Execution};
-        \node[tactic, right=of ex] (pe) {TA0003\\Persistence};
-        
-        \node[technique, below=1.2cm of ia] (t1566) {T1566\\Phishing};
-        \node[technique, below=1.2cm of ex] (t1059) {T1059\\Command\\Scripting};
-        \node[technique, below=1.2cm of pe] (t1053) {T1053\\Scheduled\\Task};
-        
-        \draw[->] (t1566) -- (ia);
-        \draw[->] (t1059) -- (ex);
-        \draw[->] (t1053) -- (pe);
-        \end{tikzpicture}
-    }
-    \end{comment}
-
-
 \begin{figure}[h]
-    \centerfoat{
-    \includegraphics{Dissertation/images/fig_2.6}
+    \centerfloat{
+    \includegraphics{Dissertation/images/fig_2.6.pdf}
     }   
     \caption{Интеграция метаграфа с MITRE ATT\&CK}
     \label{fig:mitre-integration}
@@ -339,15 +284,9 @@ MITRE ATT\&CK предоставляет структурированную та
 
 Это позволяет поддерживать актуальное состояние системы с задержкой менее 15 мс на событие~\cite{Latypov2020}.
 
-        \begin{comment}
-        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{telemetry_pipeline}}{}
-        \input{Dissertation/images/fig-telemetry-pipeline.tikz}
-        \end{comment}
-
-
 \begin{figure}[h]
     \centerfloat{
-        \includegraphics{Dissertation/images/fig_2.7}
+        \includegraphics{Dissertation/images/fig_2.7.pdf}
     }
     \caption{Архитектура динамического построения метаграфа}
     \label{fig:telemetry-pipeline}
@@ -369,14 +308,9 @@ e = (\{\texttt{cmd.exe}\}, \{\texttt{certutil.exe}, \texttt{schtasks.exe}\}).
     \item \textbf{LLM}: генерация эталонных метаграфов из отчётов~\cite{Unit422023}.
 \end{itemize}
 
-        \begin{comment}
-        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{ai_pipeline}}{}
-        \input{Dissertation/images/fig-ai-pipeline.tikz}
-        \end{comment}
-
 \begin{figure}[h]
     \centerfloat{
-        \includegraphics{Dissertation/images/fig_2.8}
+        \includegraphics{Dissertation/images/fig_2.8.pdf}
     }
     \caption{Pipeline: отчёт об угрозе → LLM → эталонный метаграф}
     \label{fig:ai-pipeline}
@@ -434,14 +368,9 @@ e = (\{\texttt{cmd.exe}\}, \{\texttt{certutil.exe}, \texttt{schtasks.exe}\}).
 
 Визуальное сравнение подходов представлено на рисунке~\ref{fig:comparison-models}. Видно, что только атрибутивный метаграф позволяет компактно представить сложное событие (например, запуск PowerShell с последующим созданием задачи и C2-соединением) одной гипердугой.
 
-        \begin{comment}
-        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{comparison_models}}{}
-        \input{Dissertation/images/fig-comparison-models.tikz}
-        \end{comment}
-
 \begin{figure}[h]
     \centerfloat{
-        \includegraphics{Dissertation/images/fig_2.9}
+        \includegraphics{Dissertation/images/fig_2.9.pdf}
     }
     \caption{Сравнение выразительной мощности моделей на примере фишинговой атаки}
     \label{fig:comparison-models}
@@ -449,14 +378,9 @@ e = (\{\texttt{cmd.exe}\}, \{\texttt{certutil.exe}, \texttt{schtasks.exe}\}).
 
 Российские подходы, несмотря на методологическую близость к задачам защиты критической инфраструктуры, уступают в формальной строгости и практической применимости. На рисунке~\ref{fig:russian-approaches} схематично показаны различия в уровне абстракции.
 
-\begin{comment}
-        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{russian_approaches}}{}
-        \input{Dissertation/images/fig-russian-approaches.tikz}
-        \end{comment}
-
 \begin{figure}[h]
     \centerfloat{
-        \includegraphics{Dissertation/images/fig_2.10}
+        \includegraphics{Dissertation/images/fig_2.10.pdf}
     }
     \caption{Уровни абстракции в российских моделях и предложенном подходе}
         \label{fig:russian-approaches}
@@ -485,15 +409,9 @@ e = (\{\texttt{cmd.exe}\}, \{\texttt{certutil.exe}, \texttt{schtasks.exe}\}).
 
 Визуализация метаграфов реализована через Neo4j и D3.js. Пример интерфейса аналитика показан на рисунке~\ref{fig:ui-metagraph}.
 
-        \begin{comment}
-        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{metagraph_ui}}{}
-        \input{Dissertation/images/fig-ui-metagraph.tikz}
-        \end{comment}
-
-
 \begin{figure}[h]
     \centerfloat{
-        \includegraphics{Dissertation/images/fig_2.11}
+        \includegraphics{Dissertation/images/fig_2.11.pdf}
     }
     \caption{Интерфейс визуализации метаграфа атаки}
     \label{fig:ui-metagraph}

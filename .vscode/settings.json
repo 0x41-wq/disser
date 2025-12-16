@@ -10,5 +10,44 @@
         "метаграфов",
         "Метаграфом",
         "метаграфы"
-    ]
+    ],
+      "latex-workshop.latex.rootFile": "%DIR%/dissertation.tex",
+      "latex-workshop.latex.tools": [
+        {
+          "name": "latexmk (WSL)",
+          "command": "wsl",
+          "args": [
+            "latexmk",
+            "-xelatex",
+            "-shell-escape",
+            "-synctex=1",
+            "-interaction=nonstopmode",
+            "-file-line-error",
+            "-cd",
+            "%DOC%"
+          ]
+        },
+        {
+          "name": "make dissertation (WSL)",
+          "command": "wsl",
+          "args": ["make", "dissertation"]
+        }
+      ],
+      "latex-workshop.latex.recipes": [
+        {
+          "name": "latexmk (xelatex, WSL)",
+          "tools": ["latexmk (WSL)"]
+        },
+        {
+          "name": "make dissertation (WSL)",
+          "tools": ["make dissertation (WSL)"]
+        }
+      ],
+      "latex-workshop.wordcounter.command": "wsl",
+      "latex-workshop.wordcounter.args": [
+        "texcount",
+        "-merge",
+        "-inc",
+        "dissertation.tex"
+      ]
 }
