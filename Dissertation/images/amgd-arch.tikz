@@ -1,0 +1,12 @@
+% Сохранить как dissertation/images/amgd-arch.tikz
+\begin{tikzpicture}[node distance=1.5cm]
+\node[draw, rectangle, fill=green!10] (input) {Телеметрия (EDR, логи)};
+\node[draw, rectangle, fill=blue!10, below of=input] (builder) {Построение динамического метаграфа};
+\node[draw, rectangle, fill=orange!10, below of=builder] (matcher) {Сопоставление с эталонами};
+\node[draw, rectangle, fill=red!10, below of=matcher] (alert) {Генерация алертов};
+\draw[->] (input) -- (builder);
+\draw[->] (builder) -- (matcher);
+\draw[->] (matcher) -- (alert);
+\node[left=1cm of builder] (db) {База эталонных\\метаграфов};
+\draw[->] (db) -- (matcher);
+\end{tikzpicture}

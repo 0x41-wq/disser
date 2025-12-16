@@ -1,0 +1,17 @@
+% Атака через LOLBin
+\begin{tikzpicture}[
+    node distance=1.2cm and 1.5cm,
+    >=Stealth,
+    thick,
+    vertex/.style={circle, draw=black, fill=gray!20, minimum size=0.8cm},
+    edge/.style={->, thick}
+]
+\node[vertex] (cmd) {\texttt{cmd.exe}};
+\node[vertex, right=of cmd] (cert) {\texttt{certutil.exe}};
+\node[vertex, below=of cert] (task) {\texttt{schtasks.exe}};
+\node[vertex, right=of cert] (c2) {\texttt{evil.com}};
+
+\draw[edge] (cmd) -- node[above] {\texttt{T1105}} (cert);
+\draw[edge] (cert) -- node[left] {\texttt{T1053.005}} (task);
+\draw[edge] (cert) -- node[above] {\texttt{T1071.001}} (c2);
+\end{tikzpicture}

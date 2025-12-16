@@ -1,0 +1,16 @@
+% Пайплайн телеметрии
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    block/.style={rectangle, draw, minimum height=1cm, minimum width=2.2cm, align=center},
+    arrow/.style={->, thick}
+]
+
+\node[block] (src) {EDR / Zeek / Logs};
+\node[block, right=of src] (parse) {Парсинг и нормализация};
+\node[block, right=of parse] (transform) {Преобразование в вершины/дуги};
+\node[block, right=of transform] (update) {Инкрементальное обновление метаграфа};
+
+\draw[arrow] (src) -- (parse);
+\draw[arrow] (parse) -- (transform);
+\draw[arrow] (transform) -- (update);
+\end{tikzpicture}

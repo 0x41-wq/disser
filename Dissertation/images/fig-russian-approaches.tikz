@@ -1,0 +1,17 @@
+% Уровни абстракции (уже был)
+\begin{tikzpicture}[
+    node distance=1.0cm,
+    level/.style={rectangle, draw=black, fill=blue!10, minimum width=4cm, minimum height=0.9cm, align=center, font=\small}
+]
+
+\node[level] (eremeev) {Eremeev (2003)\\Конечные автоматы\\(статика)};
+\node[level, below=of eremeev] (smirnov) {Smirnov (2022)\\Тактические цепочки\\(описательно)};
+\node[level, below=of smirnov] (izergin) {Izergin (2024)\\Графы процессов\\(аномалии)};
+\node[level, below=of izergin, fill=green!10, draw=green!50!black] (our) {Настоящая работа\\Атрибутивные метаграфы\\+ MITRE ATT\&CK + динамика};
+
+\draw[->, thick] (eremeev) -- (smirnov);
+\draw[->, thick] (smirnov) -- (izergin);
+\draw[->, thick, green!50!black] (izergin) -- (our);
+
+\node[left=1.8cm of eremeev, rotate=90, anchor=center, font=\bfseries] {Уровень абстракции};
+\end{tikzpicture}

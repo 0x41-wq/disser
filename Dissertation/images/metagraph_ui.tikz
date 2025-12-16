@@ -1,0 +1,65 @@
+% !TEX root = ../main.tex
+\begin{tikzpicture}[
+    font=\small,
+    >=Stealth,
+    thick,
+    vertex/.style={circle, draw=black, fill=white, minimum size=1.1cm, inner sep=2pt},
+    file/.style={rectangle, draw=black, fill=green!10, minimum width=1.2cm, minimum height=0.7cm, rounded corners=2pt},
+    net/.style={diamond, draw=black, fill=blue!10, minimum size=1cm},
+    user/.style={regular polygon, regular polygon sides=5, draw=black, fill=orange!10, minimum size=1cm},
+    edge/.style={->, thick},
+    ttp/.style={rectangle, draw=red!60, fill=red!5, rounded corners=2pt, font=\tiny, inner sep=2pt},
+    tacticbox/.style={rectangle, draw=blue!50, fill=blue!5, rounded corners=3pt, text width=3.2cm, align=center, font=\scriptsize},
+    legend/.style={font=\footnotesize}
+]
+
+% Вершины
+\node[vertex] (word) at (0,0) {\texttt{WINWORD.EXE}};
+\node[file] (doc) at (-2,0.8) {\texttt{invoice.docm}};
+\node[vertex] (ps) at (2.5,0) {\texttt{powershell.exe}};
+\node[file] (task) at (2.5,-2) {\texttt{Task}};
+\node[net] (c2) at (5,0) {\texttt{185.142.23.55}};
+\node[user] (usr) at (-1,-2) {\texttt{user1}};
+
+% Дуги
+\draw[edge] (doc) -- (word);
+\draw[edge] (word) -- (ps);
+\draw[edge] (ps) -- (task);
+\draw[edge] (ps) -- (c2);
+\draw[edge] (usr) -- (word);
+
+% TTP-метки на дугах
+\node[ttp] at (1.2,0.4) {T1566\\Phishing};
+\node[ttp] at (3.7,0.4) {T1071.001\\Application Layer Protocol};
+\node[ttp] at (2.9,-1) {T1053.005\\Scheduled Task};
+
+% Тактическая панель (справа)
+\node[tacticbox, right=2.8cm of ps] (ia) {TA0001\\Initial Access};
+\node[tacticbox, below=0.6cm of ia] (ex) {TA0002\\Execution};
+\node[tacticbox, below=0.6cm of ex] (pe) {TA0003\\Persistence};
+\node[tacticbox, below=0.6cm of pe] (c2t) {TA0011\\Command and Control};
+
+% Связи тактик с TTP (пунктир)
+\draw[dashed, gray] (ia.west) -- ++(-0.8,0) |- (1.2,0.4);
+\draw[dashed, gray] (ex.west) -- ++(-0.8,0) |- (ps);
+\draw[dashed, gray] (pe.west) -- ++(-0.8,0) |- (task);
+\draw[dashed, gray] (c2t.west) -- ++(-0.8,0) |- (c2);
+
+% Легенда — ИСПРАВЛЕНО: используем \tikz вместо \Square и т.п.
+\node[legend, below=1.2cm of usr] (leg1) {%
+    \tikz[baseline=-0.6ex]\draw[fill=white] (0,0) circle (3pt);~Процесс%
+};
+\node[legend, right=0.8cm of leg1] (leg2) {%
+    \tikz[baseline=-0.6ex]\draw[fill=green!10] (0,0) rectangle (0.4em,0.4em);~Файл%
+};
+\node[legend, right=0.8cm of leg2] (leg3) {%
+    \tikz[baseline=-0.6ex]\node[regular polygon, regular polygon sides=5, draw, fill=orange!10, minimum size=0.4em] {};~Пользователь%
+};
+\node[legend, right=0.8cm of leg3] (leg4) {%
+    \tikz[baseline=-0.6ex]\draw[fill=blue!10] (0,0) -- (0.3em,0.2em) -- (0,0.4em) -- (-0.3em,0.2em) -- cycle;~Сеть%
+};
+
+% Заголовок интерфейса
+\node[above=1.2cm of word, font=\bfseries] {Интерфейс визуализации атрибутивного метаграфа атаки};
+
+\end{tikzpicture}

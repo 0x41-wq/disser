@@ -1,0 +1,20 @@
+% MITRE integration (копия из текста)
+\begin{tikzpicture}[
+    node distance=1.0cm and 1.2cm,
+    >=Stealth,
+    thick,
+    tactic/.style={rectangle, draw=blue!60, fill=blue!10, text width=4em, align=center, font=\small},
+    technique/.style={rectangle, draw=red!60, fill=red!10, text width=4.5em, align=center, font=\small}
+]
+\node[tactic] (ia) {TA0001\\Initial Access};
+\node[tactic, right=of ia] (ex) {TA0002\\Execution};
+\node[tactic, right=of ex] (pe) {TA0003\\Persistence};
+
+\node[technique, below=1.2cm of ia] (t1566) {T1566\\Phishing};
+\node[technique, below=1.2cm of ex] (t1059) {T1059\\Command\\Scripting};
+\node[technique, below=1.2cm of pe] (t1053) {T1053\\Scheduled\\Task};
+
+\draw[->] (t1566) -- (ia);
+\draw[->] (t1059) -- (ex);
+\draw[->] (t1053) -- (pe);
+\end{tikzpicture}

@@ -1,0 +1,27 @@
+% Интерфейс визуализации
+\begin{tikzpicture}[
+    font=\small,
+    vertex/.style={circle, draw=black, fill=gray!20, minimum size=0.7cm},
+    edge/.style={->, thick, blue}
+]
+
+% Имитация UI
+\draw[thick] (0,0) rectangle (6,4);
+\node at (3,3.7) [anchor=center, font=\bfseries] {Анализ атаки: APT28};
+
+\node[vertex] (p1) at (1,2) {winword};
+\node[vertex] (p2) at (2.5,2.5) {powershell};
+\node[vertex] (p3) at (2.5,1.5) {reg};
+\node[vertex] (p4) at (4.5,2) {c2.apt28.net};
+
+\draw[edge] (p1) -- (p2);
+\draw[edge] (p2) -- (p3);
+\draw[edge] (p2) -- (p4);
+
+\node[align=left, anchor=west] at (0.2,0.5) {
+    \textbf{Фильтры:}\\
+    Тактика: Execution\\
+    Время: 10:23–10:25\\
+    Confidence > 0.9
+};
+\end{tikzpicture}

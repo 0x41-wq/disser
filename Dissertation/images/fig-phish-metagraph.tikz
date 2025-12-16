@@ -1,0 +1,16 @@
+\begin{tikzpicture}[
+    node distance=1.2cm and 1.5cm,
+    >=Stealth,
+    thick,
+    vertex/.style={circle, draw=black, fill=gray!20, minimum size=0.8cm},
+    edge/.style={->, thick}
+]
+\node[vertex] (doc) {\texttt{invoice.docm}};
+\node[vertex, right=of doc] (ps) {\texttt{powershell.exe}};
+\node[vertex, below=of ps] (task) {\texttt{Task}};
+\node[vertex, right=of ps] (c2) {\texttt{c2.malicious.com}};
+
+\draw[edge] (doc) -- node[above] {\texttt{T1566}} (ps);
+\draw[edge] (ps) -- node[left] {\texttt{T1053.005}} (task);
+\draw[edge] (ps) -- node[above] {\texttt{T1071.001}} (c2);
+\end{tikzpicture}

@@ -1,0 +1,40 @@
+% Сравнение моделей (уже был, но для полноты)
+\begin{tikzpicture}[
+    node distance=1.0cm and 1.2cm,
+    thick,
+    font=\scriptsize,
+    vertex/.style={circle, draw=black, fill=gray!20, minimum size=0.6cm},
+    edge/.style={->, thick}
+]
+
+% Graph
+\node[vertex] (g1) at (0,0) {doc};
+\node[vertex, right=of g1] (g2) {ps};
+\node[vertex, below=of g2] (g3) {task};
+\node[vertex, right=of g2] (g4) {c2};
+\draw[edge] (g1) -- (g2);
+\draw[edge] (g2) -- (g3);
+\draw[edge] (g2) -- (g4);
+\node[above=0.4cm of g1, font=\bfseries\footnotesize] {Граф};
+
+% Hypergraph
+\node[vertex] (h1) at (4,0) {doc};
+\node[vertex, right=of h1] (h2) {ps};
+\node[vertex, below=of h2] (h3) {task};
+\node[vertex, right=of h2] (h4) {c2};
+\draw[red, thick, rounded corners] (h1.north) -- ++(0,0.3) -| (h2.north);
+\draw[red, thick, rounded corners] (h2.south) -- ++(0,-0.3) -| (h3.south);
+\draw[red, thick, rounded corners] (h2.north) -- ++(0,0.3) -| (h4.north);
+\node[above=0.4cm of h1, xshift=1.2cm, font=\bfseries\footnotesize] {Гиперграф};
+
+% Metagraph
+\node[vertex] (m1) at (8,0) {doc};
+\node[vertex, right=of m1] (m2) {ps};
+\node[vertex, below=of m2] (m3) {task};
+\node[vertex, right=of m2] (m4) {c2};
+\draw[edge, blue] (m1) to[out=30,in=150] node[above, black] {T1566} (m2);
+\draw[edge, blue] (m2) to[out=-120,in=120] node[left, black] {T1053} (m3);
+\draw[edge, blue] (m2) to[out=30,in=150] node[above, black] {T1071} (m4);
+\node[above=0.4cm of m1, xshift=1.2cm, font=\bfseries\footnotesize] {Метаграф};
+
+\end{tikzpicture}

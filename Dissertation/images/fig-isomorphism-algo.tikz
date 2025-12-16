@@ -1,0 +1,27 @@
+% Блок-схема алгоритма изоморфизма
+\begin{tikzpicture}[
+    node distance=0.8cm,
+    block/.style={rectangle, draw, minimum width=3cm, minimum height=0.8cm, align=center},
+    arrow/.style={->, >=Stealth, thick}
+]
+
+\node[block] (start) {Начало: $G_{\mathrm{ref}}, G_{\mathrm{obs}}$};
+\node[block, below=of start] (filter) {Фильтрация по времени и тактике};
+\node[block, below=of filter] (init) {Инициализация кандидатов $\phi_V, \phi_E$};
+\node[block, below=of init] (check) {Проверка условий изоморфизма};
+\node[block, below=of check] (sim) {Вычисление $\mathrm{sim}(t_1, t_2)$};
+\node[block, below=of sim] (decide) {$\mathrm{sim} \geq \theta$?};
+\node[block, below left=1cm and 1cm of decide] (no) {Отклонить кандидата};
+\node[block, below right=1cm and 1cm of decide] (yes) {Принять соответствие};
+\node[block, below=2cm of decide] (end) {Конец};
+
+\draw[arrow] (start) -- (filter);
+\draw[arrow] (filter) -- (init);
+\draw[arrow] (init) -- (check);
+\draw[arrow] (check) -- (sim);
+\draw[arrow] (sim) -- (decide);
+\draw[arrow] (decide) -| node[pos=0.2, above] {Нет} (no);
+\draw[arrow] (decide) -| node[pos=0.2, above] {Да} (yes);
+\draw[arrow] (no) |- (end);
+\draw[arrow] (yes) |- (end);
+\end{tikzpicture}
