@@ -1,0 +1,48 @@
+% fig_siem_integration.tex — Интеграция с SIEM/SOAR
+\documentclass[tikz, border=3mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning, arrows.meta, backgrounds, fit}
+
+\begin{document}
+\begin{tikzpicture}[
+    core/.style={rectangle, draw, thick, rounded corners, fill=blue!10, font=\small\sffamily, align=center, text width=3.2cm},
+    module/.style={rectangle, draw, thick, rounded corners, font=\small\sffamily, align=center, text width=2.8cm},
+    foreign/.style={module, fill=purple!10},
+    russian/.style={module, fill=red!10},
+    infra/.style={module, fill=green!10},
+    arrow/.style={-{Stealth[length=4pt,width=6pt]}, thick}
+]
+
+% Центральная система
+\node[core] (amgd) {Система AMGD\\(атрибутивные\\метаграфы)};
+
+% Вокруг — модули (8 направлений)
+\node[foreign, above=2.2cm of amgd] (mitre) {MITRE ATT\&CK\\(таксономия угроз)};
+\node[russian, above right=2.2cm and 1.2cm of amgd] (splunk) {Splunk Enterprise\\Security};
+\node[foreign, right=1.8cm of amgd] (elastic) {Elastic Security};
+\node[russian, below right=1.2cm and 1.2cm of amgd] (ptmaxpatrol) {MaxPatrol SIEM\\(Positive Technologies)};
+\node[russian, below=1.8cm of amgd] (soc) {SOC-центр\\(расследование\\инцидентов)};
+\node[russian, below left=1.2cm and 1.2cm of amgd] (krb) {Security Capsule SIEM (ООО «Инновационные Технологии в Бизнесе»)};
+\node[russian, left=1.8cm of amgd] (edr) {EDR-агенты\\(Ангел-Х,\\Astra Linux EDR)};
+\node[infra, above left=1.8cm and 1.2cm of amgd] (fsteck) {ФСТЭК\\ГОСТ Р 56939–2024\\(регуляторные\\требования)};
+
+% Стрелки (двусторонние)
+\draw[arrow] (edr) -- (amgd);
+\draw[arrow] (amgd) -- (ptmaxpatrol);
+\draw[arrow] (amgd) -- (elastic);
+\draw[arrow] (amgd) -- (splunk);
+\draw[arrow] (amgd) -- (mitre);
+\draw[arrow] (amgd) -- (fsteck);
+\draw[arrow] (krb) -- (amgd);
+\draw[arrow] (amgd) -- (soc);
+
+% Фон для центральной системы
+\begin{scope}[on background layer]
+    \node[draw, dashed, thick, inner sep=12pt, fit=(amgd), 
+          label={[font=\bfseries\sffamily, above=6pt]Система обнаружения на основе\\атрибутивных метаграфов}] {};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

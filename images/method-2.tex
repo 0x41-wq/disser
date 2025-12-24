@@ -1,0 +1,61 @@
+% method-2.tex — Часть 2: Подтверждение и реакция
+\documentclass[tikz, border=2mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setmainfont{PT Serif}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, shapes}
+
+\begin{document}
+\begin{tikzpicture}[
+    node distance=0.9cm and 1.3cm,
+    process/.style={rectangle, draw=black, fill=blue!10, minimum width=2.2cm, minimum height=0.6cm, align=center, font=\scriptsize},
+    decision/.style={diamond, draw=black, fill=orange!20, aspect=1.4, align=center, inner sep=0.8pt, font=\scriptsize},
+    arrow/.style={->, >=Stealth, thick}
+]
+
+% Вход
+\node[decision] (D3) {$W > \theta$?};
+
+% Основной путь
+\node[decision, below=of D3] (D4) {Подтверждено\\аналитиком?};
+\node[process, below=of D4] (P10) {10. Реагирование};
+\node[process, below=of P10] (P11) {11. Логирование\\инцидента};
+
+% Классификация
+\node[decision, below=of P11] (D5) {Атака\\целевая?};
+
+% Завершение (центр)
+\node[process, below=of D5] (P16) {16. Завершение};
+
+% Левая ветвь: APT
+\node[process, left=1.8cm of D5] (P12) {12. Анализ\\APT-профиля};
+\node[process, below=of P12] (P13) {13. Обновление\\базы APT};
+
+% Правая ветвь: обучение
+\node[process, right=1.8cm of D5] (P14) {14. Генерация\\правила};
+\node[process, below=of P14] (P15) {15. Обновление\\метаграфа};
+
+% === Стрелки основного потока ===
+\draw[arrow] (D3) -- node[left, font=\tiny] {да} (D4);
+\draw[arrow] (D4) -- node[left, font=\tiny] {да} (P10);
+\draw[arrow] (P10) -- (P11);
+\draw[arrow] (P11) -- (D5);
+\draw[arrow] (D5) -- node[left, font=\tiny] {да} (P16);
+
+% === Ветвь: не подтверждено → завершение (с обходом) ===
+\draw[arrow] (D4.east) -- ++(0.6,0) 
+    -- ++(0,-5.3) % небольшой спуск — "засечка"
+    -- ++(0.3,0)  % горизонтальный обход
+    |- node[right, pos=0.3, font=\tiny] {нет} (P16.east);
+
+% === Ветвь: целевая атака (да → APT) ===
+\draw[arrow] (D5.west) -- node[above, font=\tiny] {да} (P12);
+\draw[arrow] (P12) -- (P13);
+
+% === Ветвь: массовая атака (нет → обучение) ===
+\draw[arrow] (D5.east) -- node[above, font=\tiny, xshift=4pt] {нет} (P14);
+\draw[arrow] (P14) -- (P15);
+
+\end{tikzpicture}
+\end{document}

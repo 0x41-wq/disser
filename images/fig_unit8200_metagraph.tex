@@ -1,0 +1,44 @@
+% fig_unit8200_metagraph.tex — Эталонный метаграф Unit 8200
+\documentclass[tikz, border=3mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning, arrows.meta, backgrounds, fit, calc}
+\begin{document}
+
+\begin{tikzpicture}[
+    node distance=1.8cm and 2.0cm,
+    vertex/.style={circle, draw=blue!70, fill=blue!10, thick, minimum size=16pt, font=\small},
+    tactic/.style={rectangle, draw=red!70, fill=red!5, rounded corners, font=\small, align=center, inner sep=3pt},
+    edge/.style={->, >=stealth, thick},
+    attrline/.style={dashed, gray, thick}
+]
+
+% Узлы (Unit 8200: spearphishing → payload → C2 → lateral movement)
+\node[vertex] (u1) {$u_1$}; % пользователь
+\node[vertex, right=of u1] (p1) {$p_1$}; % outlook.exe
+\node[vertex, below=of p1] (f1) {$f_1$}; % invoice.pdf
+\node[vertex, right=of p1] (p2) {$p_2$}; % wscript.exe
+\node[vertex, below=of p2] (n1) {$n_1$}; % C2
+\node[vertex, right=of p2] (p3) {$p_3$}; % powershell.exe
+
+% Рёбра с семантикой
+\draw[edge] (u1) -- node[above] {открыл} (p1);
+\draw[edge] (p1) -- node[right] {загрузил} (f1);
+\draw[edge] (f1) -- node[above] {запустил} (p2);
+\draw[edge] (p2) -- node[right] {подключился к} (n1);
+\draw[edge] (n1) -- node[above] {получил команду} (p3);
+
+% Тактики MITRE ATT&CK (Unit 8200)
+\node[tactic, above=0.7cm of p1] (t1) {T1566.001\\Spearphishing\\Attachment};
+\node[tactic, right=0.7cm of f1] (t2) {T1204.002\\User Execution\\Malicious File};
+\node[tactic, below=0.7cm of n1] (t3) {T1071.001\\Web Protocols\\(C2)};
+\node[tactic, above=0.7cm of p3] (t4) {T1059.001\\PowerShell};
+
+% Связи с тактиками
+\draw[attrline] (p1) -- (t1);
+\draw[attrline] (f1) -- (t2);
+\draw[attrline] (n1) -- (t3);
+\draw[attrline] (p3) -- (t4);
+\end{tikzpicture}
+\end{document}

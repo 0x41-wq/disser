@@ -18,9 +18,7 @@
 # these rules might exclude image files for figures etc.
 /*.ps
 /*.eps
-/*/images/.pdf
 !**/images/
-!**/images/*.pdf
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
@@ -285,3 +283,7 @@ PSCyr/*
 # Изображения и статьи в pdf
 *.pdf
 *.docx
+!**images/*.pdf
+!Dissertation/images/*.pdf
+!Dissertation/articles/images/*.pdf
+!Dissertation/articles/*.pdf

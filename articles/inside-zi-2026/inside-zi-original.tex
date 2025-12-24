@@ -1,0 +1,468 @@
+\documentclass[12pt,a4paper]{extarticle}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage{url}
+\usepackage{float}
+\usepackage{amsmath,amssymb}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{enumitem}
+\usepackage{geometry}
+\geometry{left=25mm,right=15mm,top=20mm,bottom=20mm}
+\setcounter{secnumdepth}{0}
+\righthyphenmin=2
+
+% Типографские настройки: запрет висячих предлогов и улучшение переносов
+\emergencystretch=1.2em
+\tolerance=1400
+\hyphenpenalty=400
+\exhyphenpenalty=400
+\binoppenalty=1000   % запрет разрыва перед бинарными операторами
+\relpenalty=1000     % запрет разрыва перед отношениями
+
+% Подписи с точкой
+\captionsetup{labelsep=period}
+
+\author{И. Т. Латыпов\textsuperscript{1}, М. А. Еремеев\textsuperscript{1}}
+\date{}
+
+\begin{document}
+
+\title{Методика выявления компьютерных атак на основе атрибу\-тив\-ных метаграфов}
+\maketitle
+
+\begin{center}
+\textsuperscript{1} Российский технологический университет РТУ МИРЭА 
+\end{center}
+
+\begin{abstract}
+В статье предложена методика выявления компьютерных атак в информационных системах на основе аппарата атрибу\-тив\-ных метаграфов. Методика развивает много\-уров\-не\-вую модель атаки, впервые описанную в работе~[1], и включает формализацию целей, тактик и методов злоумышленника в виде вершин и дуг метаграфа с атрибутами. Представлен алгоритм сопоставления наблюдаемых событий с эталонными паттернами атак, основанный на частичном изоморфизме атрибу\-тив\-ных метаграфов. Приведены результаты имитационного эксперимента в среде, моделирующей поведение атакующего в соответствии с тактиками MITRE~ATT\&CK. Методика демонстрирует высокую точность (94,3\,\%) и полноту (89,7\,\%) при низком уровне ложных срабатываний (3,1\,\%). Подход может быть интегрирован в системы мониторинга безопасности для повышения устойчивости к сложным и малозаметным атакам.
+
+\vspace{0.3em}
+\noindent\textbf{Ключевые слова}: атрибу\-тив\-ный метаграф, выявление атак, много\-уров\-не\-вая модель, MITRE~ATT\&CK, изоморфизм графов, информационная безопасность, ФСТЭК.
+\end{abstract}
+
+\selectlanguage{english}
+\begin{abstract}
+This paper presents a methodology for detecting cyber attacks in information systems using attributive metagraphs. The approach extends the multilevel attack model introduced in [1] by formalizing attacker goals, tactics, and techniques as attributed vertices and edges. A pattern-matching algorithm based on partial isomorphism of attributive metagraphs is proposed to correlate observed events with known attack signatures. Simulation results in a MITRE ATT\&CK-aligned environment demonstrate high precision (94.3\,\%) and recall (89.7\,\%) with a low false positive rate (3.1\,\%). The methodology is suitable for integration into security monitoring systems to enhance resilience against sophisticated and stealthy threats.
+
+\vspace{0.3em}
+\noindent\textbf{Keywords}: attributive metagraph, attack detection, multilevel model, MITRE ATT\&CK, graph isomorphism, information security, FSTEC.
+\end{abstract}
+\selectlanguage{russian}
+
+\section{Введение}
+
+Современные информационные системы всё чаще подвергаются целенаправленным атакам, использующим легитимные инструменты и обходящим традиционные средства защиты. В этих условиях возрастает роль \textbf{моделей, способных отражать логику атаки}, а не только её внешние признаки.
+
+Традиционные системы обнаружения вторжений (IDS/IPS) в основном полагаются на сигнатурный анализ или статистические аномалии. Однако такие подходы неэффективны при столкновении с \textbf{адаптивными атаками}, использующими Living-off-the-Land (LotL) техники, где злоумышленник применяет легитимные системные утилиты (например, PowerShell, WMI, PsExec) для выполнения вредоносных действий. В таких сценариях отсутствуют чёткие сигнатуры, а поведение может не выходить за рамки статистической нормы.
+
+В работе~[1] предложена \textbf{много\-уров\-не\-вая модель компьютерной атаки}, основанная на атрибу\-тив\-ных метаграфах, позволяющая формализовать взаимосвязи между целями злоумышленника, тактиками и методами реализации. Эта модель предоставляет теоретическую основу для построения семантически насыщенных систем анализа угроз. Однако в указанной работе не была детализирована \textbf{практическая методика выявления атак} на основе этой модели.
+
+Настоящая статья устраняет этот пробел и предлагает \textbf{комплексную методику}, пригодную для внедрения в системы мониторинга безопасности, соответствующие требованиям ФСТЭК России и ГОСТ Р~56939–2024. Основное внимание уделено не только теоретическому обоснованию, но и практической реализации, оценке эффективности и возможностям интеграции в существующие ИБ-инфраструктуры.
+
+\section{Теоретические основы}
+
+\subsection{Метаграфы как инструмент моделирования сложных систем}
+
+Метаграфы были впервые предложены как обобщение направленных графов для моделирования систем с гиперсвязями. В отличие от классического графа, где дуга соединяет две вершины, в метаграфе дуга может соединять \textbf{множества вершин}, что позволяет естественным образом описывать отношения «многие ко многим». Это особенно важно в контексте информационной безопасности, где одно действие (например, запуск скрипта) может одновременно затрагивать несколько объектов: процесс, файл, сетевой сокет, учётную запись.
+
+Формально метаграф задаётся как  
+\[
+G = (V, E),
+\]  
+где \(V\) — конечное множество вершин, \(E \subseteq 2^V \times 2^V\) — множество дуг. Каждая дуга \(e = (S, T) \in E\) интерпретируется как переход от множества источников \(S \subseteq V\) к множеству целей \(T \subseteq V\).
+
+\subsection{Атрибутивные расширения}
+
+Для применения в ИБ метаграф необходимо расширить атрибутами, отражающими семантические свойства компонентов системы. Вводятся функции атрибуции:
+\[
+A_V: V \to \mathcal{A}_V, \quad A_E: E \to \mathcal{A}_E,
+\]  
+где \(\mathcal{A}_V\) и \(\mathcal{A}_E\) — домены атрибутов.
+
+Примеры атрибутов:
+- Для вершины «пользователь»: роль (администратор, гость), уровень доверия, принадлежность к группе.
+- Для вершины «процесс»: исполняемый файл, хеш, родительский процесс.
+- Для дуги «доступ к файлу»: тип доступа (чтение/запись), протокол, временная метка, тактика MITRE~ATT\&CK.
+
+Такое расширение позволяет строить \textbf{контекстно-зависимые модели}, в которых не только структура, но и семантика играют ключевую роль в анализе.
+
+\subsection{Связь с существующими фреймворками}
+
+Предлагаемая модель органично интегрируется с:
+- \textbf{MITRE~ATT\&CK} — тактики и техники становятся атрибутами дуг;
+- \textbf{STIX~2.1} — объекты STIX (indicator, attack-pattern, malware) могут быть отображены в вершины метаграфа;
+- \textbf{Cyber Kill Chain} — этапы цепочки атаки соответствуют уровням модели.
+
+Это обеспечивает совместимость с существующей экосистемой кибербезопасности и упрощает внедрение.
+
+\section{Многоуровневая модель атаки}
+
+На основе~[1] выделяются три уровня абстракции, отражающие иерархию целей и средств злоумышленника.
+
+\subsection{Стратегический уровень}
+
+На этом уровне формулируются \textbf{бизнес-цели} атаки:
+- Кража персональных данных (в соответствии с 152-ФЗ);
+- Нарушение целостности финансовых транзакций;
+- Вывод критической инфраструктуры из строя.
+
+Каждая цель представляется как вершина с атрибутами \texttt{goal\_type}, \texttt{impact\_level}, \texttt{regulatory\_requirement}.
+
+\subsection{Тактический уровень}
+
+Тактики определяют \textbf{категории поведения} атакующего. Используется таксономия MITRE~ATT\&CK, включающая 14 тактик, от Initial Access до Impact. Каждая тактика — вершина с атрибутами \texttt{tactic\_id}, \texttt{description}, \texttt{phase}.
+
+\subsection{Методический уровень}
+
+На этом уровне описываются \textbf{конкретные техники}:
+- T1566.001 — Spearphishing Attachment;
+- T1059.001 — PowerShell;
+- T1071.001 — Web Protocols.
+
+Вершины снабжаются атрибутами \texttt{technique\_id}, \texttt{cve}, \texttt{tool}, \texttt{detection\_rule}.
+
+\subsection{Межуровневые связи и их семантика}
+
+Связи между уровнями не являются произвольными. Они отражают причинно-следственные и логические зависимости:
+- Дуга \texttt{realizes(g, t)} означает, что достижение цели \(g\) требует применения тактики \(t\);
+- Дуга \texttt{implements(t, m)} указывает, что тактика \(t\) может быть реализована через метод \(m\);
+- Дуга \texttt{requires(m1, m2)} фиксирует зависимость: метод \(m1\) невозможен без предварительного выполнения \(m2\).
+
+Эти связи формируют \textbf{иерархический атрибутивный метаграф}, который служит основой для построения эталонных паттернов атак.
+
+На рис.~1 представлена трёхуровневая структура атаки, воссозданная по оригинальной публикации~[1]. Цель атаки (например, «Кража данных») реализуется через тактики MITRE~ATT\&CK (Initial Access, Execution, Exfiltration), каждая из которых, в свою очередь, реализуется конкретными методами (Phishing, PowerShell, DNS Tunneling).
+
+\begin{figure}[H]
+\centering
+\resizebox{16cm}{!}{
+\begin{tikzpicture}[
+    node distance=1.0cm and 2.0cm,
+    goal/.style={rectangle, draw=green!60!black, fill=green!10, rounded corners, minimum width=2.0cm, minimum height=1cm},
+    tactic/.style={rectangle, draw=blue!60!black, fill=blue!10, rounded corners, minimum width=2.0cm, minimum height=1cm},
+    method/.style={rectangle, draw=orange!70!black, fill=orange!10, rounded corners, minimum width=2.0cm, minimum height=1cm},
+    edge/.style={->, >=stealth, thick}
+]
+
+% Уровень целей
+\node[goal] (G1) {Цель: Кража данных};
+
+% Уровень тактик
+\node[tactic, below left=of G1] (T1) {Initial Access};
+\node[tactic, below=of G1] (T2) {Execution};
+\node[tactic, below right=of G1] (T3) {Exfiltration};
+
+% Уровень методов
+\node[method, below left=of T1] (M1) {Phishing};
+\node[method, below=of T2] (M2) {PowerShell};
+\node[method, below right=of T3] (M3) {DNS Tunneling};
+
+% Связи
+\draw[edge] (G1) -- node[left, pos=0.6] {\tiny realizes} (T1);
+\draw[edge] (G1) -- node[right, pos=0.6] {\tiny realizes} (T2);
+\draw[edge] (G1) -- node[right, pos=0.6] {\tiny realizes} (T3);
+
+\draw[edge] (T1) -- node[left, pos=0.6] {\tiny implements} (M1);
+\draw[edge] (T2) -- node[right, pos=0.6] {\tiny implements} (M2);
+\draw[edge] (T3) -- node[right, pos=0.6] {\tiny implements} (M3);
+
+\end{tikzpicture}
+}
+\caption{Трёхуровневая структура атаки (воссоздано по~[1], Fig.~1)}
+\label{fig:3level}
+\end{figure}
+
+Рис.~2 иллюстрирует матрицу соответствия тактик и методов, где каждая техника однозначно привязана к тактике. Горизонтальные связи между тактиками отражают их последовательность в рамках расширенной модели Cyber Kill Chain. Эта матрица служит основой для построения эталонных паттернов атак и позволяет систематизировать знания об угрозах.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+    tactic/.style={rectangle, draw=blue!60!black, fill=blue!10, minimum width=2.8cm, minimum height=1cm},
+    method/.style={rectangle, draw=orange!70!black, fill=orange!10, minimum width=2.8cm, minimum height=1cm},
+    edge/.style={->, thick}
+]
+
+% Тактики
+\node[tactic] (TA1) {Initial Access};
+\node[tactic, right=2.5cm of TA1] (TA2) {Execution};
+\node[tactic, right=2.5cm of TA2] (TA3) {Exfiltration};
+
+% Методы под ними
+\node[method, below=1.8cm of TA1] (T1) {T1566: Phishing};
+\node[method, below=1.8cm of TA2] (T2) {T1059: PowerShell};
+\node[method, below=1.8cm of TA3] (T3) {T1071.004: DNS Tunneling};
+
+% Связи
+\draw[edge] (TA1) -- (T1);
+\draw[edge] (TA2) -- (T2);
+\draw[edge] (TA3) -- (T3);
+
+% Связи Kill Chain
+\draw[edge] (TA1) -- (TA2);
+\draw[edge] (TA2) -- (TA3);
+
+\end{tikzpicture}
+\caption{Матрица тактик и методов (воссоздано по~[1], Fig.~2)}
+\label{fig:tactics-methods}
+\end{figure}
+
+\section{Практическая реализация модели}
+
+Для практического применения модели необходимо перейти от абстрактных уровней к конкретным событиям, наблюдаемым в информационной системе. На рис.~3 показан пример атрибутивного метаграфа, построенного на основе реального сценария атаки. В данном случае атакующий использует фишинговое письмо для доставки вредоносного скрипта, который эксплуатирует уязвимость на веб-сервере, получает доступ к хосту, крадёт учётные данные из базы данных и экзфильтрирует их через HTTP-трафик.
+
+Важно отметить, что каждая дуга снабжена атрибутами, соответствующими тактикам (TA) и техникам (T) из фреймворка MITRE~ATT\&CK. Такой подход позволяет не только визуализировать атаку, но и автоматически сопоставлять её с известными паттернами. Сноска в нижней части рисунка поясняет соответствие между этапами сценария и тактико-техническими элементами.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    vertex/.style={rectangle, draw, minimum width=2.0cm, minimum height=0.8cm, align=center, font=\scriptsize},
+    user/.style={vertex, fill=gray!10},
+    server/.style={vertex, fill=yellow!20},
+    db/.style={vertex, fill=cyan!20},
+    c2/.style={vertex, fill=red!10},
+    edge/.style={->, thick},
+    tactic/.style={font=\tiny, fill=blue!10, inner sep=1pt},
+    technique/.style={font=\tiny, fill=orange!10, inner sep=1pt}
+]
+
+% Вершины
+\node[user] (U) {Пользователь\\(guest)};
+\node[server, right=2.2cm of U] (W) {Веб-сервер\\(nginx, CVE-2023-XXXX)};
+\node[server, below=1.6cm of W] (P) {Хост\\(Windows 10)};
+\node[db, right=2.2cm of W] (DB) {База данных\\(PostgreSQL)};
+\node[c2, right=2.2cm of P] (C2) {C2-сервер\\(evil.com)};
+
+% Дуги с атрибутами
+\draw[edge] (U) -- node[above, tactic] {TA0001} node[below, technique] {T1566.001} (W);
+\draw[edge] (W) -- node[left, tactic] {TA0002} node[right, technique] {T1190} (P);
+\draw[edge] (P) -- node[above, tactic] {TA0002} node[below, technique] {T1059.001} (C2);
+\draw[edge] (P) -- node[above, tactic] {TA0006} node[below, technique] {T1212} (DB);
+\draw[edge] (DB) -- node[right, tactic] {TA0010} node[left, technique] {T1071.001} (C2);
+
+% Сноска внизу
+\node[font=\scriptsize, align=center, below=1.2cm of $(P)!0.5!(C2)$] (note) {%
+    Тактики (TA) и техники (T) соответствуют фреймворку MITRE~ATT\&CK.\\
+    Сценарий: фишинг → эксплуатация уязвимости → выполнение PowerShell →\\
+    кража учётных данных → экзфильтрация через HTTP.
+};
+
+\end{tikzpicture}
+\caption{Пример атрибутивного метаграфа атаки с привязкой к тактикам и техникам MITRE~ATT\&CK}
+\label{fig:attack-graph}
+\end{figure}
+
+\section{Методика выявления атак}
+
+Предложенная методика реализована в виде алгоритма, включающего четыре ключевых этапа. Логика работы алгоритма визуализирована на рис.~4 и рис.~5, которые представляют собой единый процесс, разбитый на две части для улучшения читаемости.
+
+\textbf{Алгоритм выявления компьютерных атак на основе атрибутивных метаграфов}
+\begin{enumerate}[leftmargin=*, label=\arabic*.]
+    \item \textbf{Построение эталонного метаграфа угроз} на основе онтологии MITRE~ATT\&CK, CVE и внутренних данных.
+    \item \textbf{Сбор и нормализация событий} из разнородных источников (EDR, IDS, логи) в единый формат с атрибутами тактик и техник.
+    \item \textbf{Сопоставление} нормализованных событий с эталонными паттернами путём поиска частичного изоморфизма атрибутивных метаграфов.
+    \item \textbf{Оценка достоверности} гипотезы атаки и принятие решения о реагировании с возможностью адаптации модели.
+\end{enumerate}
+
+На рис.~4 (часть~1) показаны этапы формирования гипотезы атаки: от загрузки онтологии до расчёта веса гипотезы \(W(H_i)\). Ключевым элементом является блок сопоставления, реализующий частичный изоморфизм. Особое внимание уделено обработке неизвестных событий: если событие не соответствует известной тактике, система извлекает его атрибуты и формирует метаграф наблюдений для последующего анализа.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.0cm and 1.4cm,
+    start/.style={ellipse, draw=black, fill=green!20, minimum width=1.6cm, minimum height=0.6cm, font=\scriptsize},
+    process/.style={rectangle, draw=black, fill=blue!10, minimum width=2.3cm, minimum height=0.65cm, align=center, font=\scriptsize},
+    decision/.style={diamond, draw=black, fill=orange!20, aspect=1.5, align=center, inner sep=1pt, font=\scriptsize},
+    arrow/.style={->, >=Stealth, thick}
+]
+
+% Узлы
+\node[start] (Start) {Начало};
+\node[process, below=of Start] (P1) {1. Загрузка онтологии};
+\node[process, below=of P1] (P2) {2. Построение эталонных метаграфов};
+\node[process, below=of P2] (P3) {3. Подключение источников};
+\node[process, below=of P3] (P4) {4. Нормализация событий};
+
+\node[decision, below=of P4] (D1) {Событие\\известно?};
+\node[process, right=2.1cm of D1] (P5) {5. Извлечение\\атрибутов};
+\node[process, below=of P5] (P6) {6. Формирование\\$G_{\text{obs}}$};
+
+\node[decision, below=of D1] (D2) {Найден\\изоморфизм?};
+\node[process, below=of D2] (P7) {7. Генерация\\гипотезы $H_i$};
+\node[process, below=of P7] (P8) {8. Расчёт веса\\$W(H_i)$};
+\node[decision, below=of P8] (D3) {$W > \theta$?};
+
+% Архив — сдвинем чуть вниз, чтобы было место для обхода
+\node[process, right=2.4cm of D3, yshift=-0.8cm] (P9) {9. Архив\\ложного\\срабатывания};
+
+% Стрелки
+\draw[arrow] (Start) -- (P1);
+\draw[arrow] (P1) -- (P2);
+\draw[arrow] (P2) -- (P3);
+\draw[arrow] (P3) -- (P4);
+\draw[arrow] (P4) -- (D1);
+
+% D1 → D2 и P5
+\draw[arrow] (D1) -- node[left, font=\tiny] {да} (D2);
+\draw[arrow] (D1.east) -- ++(0.7,0) |- node[above, pos=0.25, font=\tiny] {нет} (P5);
+\draw[arrow] (P5) -- (P6);
+\draw[arrow] (P6) -| (D2.east);
+
+% Основной путь
+\draw[arrow] (D2) -- node[left, font=\tiny] {да} (P7);
+\draw[arrow] (P7) -- (P8);
+\draw[arrow] (P8) -- (D3);
+
+% === КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: обход D3 ===
+% Путь: D2 → влево → вниз ниже P9 → вправо → в P9
+\coordinate[left=1.6cm of D2] (left_of_D2);
+\coordinate[below=0.5cm of P9] (below_P9);
+\draw[arrow] (D2.west) -- (left_of_D2) |- (below_P9) -- node[right, font=\tiny, pos=0.4] {нет} (P9.south);
+
+% От D3 → P9 (короткий путь)
+\draw[arrow] (D3.east) -- ++(0.6,0) |- node[right, font=\tiny, pos=0.25] {нет} (P9);
+
+% Переход к части 2
+\draw[arrow] (D3) -- ++(0,-0.8) node[below, font=\footnotesize] {(переход к части 2)};
+\end{tikzpicture}
+\caption{Этапы формирования гипотезы атаки (часть~1)}
+\label{fig:method-part1}
+\end{figure}
+
+На рис.~5 (часть~2) представлены этапы верификации и адаптации: подтверждение гипотезы аналитиком, классификация атаки (целевая/массовая) и обновление базы знаний системы (обратная связь). Такая архитектура обеспечивает устойчивость к новым угрозам и позволяет системе непрерывно обучаться на основе реальных инцидентов.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=0.9cm and 1.3cm,
+    process/.style={rectangle, draw=black, fill=blue!10, minimum width=2.2cm, minimum height=0.6cm, align=center, font=\scriptsize},
+    decision/.style={diamond, draw=black, fill=orange!20, aspect=1.4, align=center, inner sep=0.8pt, font=\scriptsize},
+    arrow/.style={->, >=Stealth, thick}
+]
+
+% Вход
+\node[decision] (D3) {$W > \theta$?};
+
+% Основной путь
+\node[decision, below=of D3] (D4) {Подтверждено\\аналитиком?};
+\node[process, below=of D4] (P10) {10. Реагирование};
+\node[process, below=of P10] (P11) {11. Логирование\\инцидента};
+
+% Классификация
+\node[decision, below=of P11] (D5) {Атака\\целевая?};
+
+% Завершение (центр)
+\node[process, below=of D5] (P16) {16. Завершение};
+
+% Левая ветвь: APT
+\node[process, left=1.8cm of D5] (P12) {12. Анализ\\APT-профиля};
+\node[process, below=of P12] (P13) {13. Обновление\\базы APT};
+
+% Правая ветвь: обучение
+\node[process, right=1.8cm of D5] (P14) {14. Генерация\\правила};
+\node[process, below=of P14] (P15) {15. Обновление\\метаграфа};
+
+% === Стрелки основного потока ===
+\draw[arrow] (D3) -- node[left, font=\tiny] {да} (D4);
+\draw[arrow] (D4) -- node[left, font=\tiny] {да} (P10);
+\draw[arrow] (P10) -- (P11);
+\draw[arrow] (P11) -- (D5);
+\draw[arrow] (D5) -- node[left, font=\tiny] {да} (P16);
+
+% === Ветвь: не подтверждено → завершение (с обходом) ===
+\draw[arrow] (D4.east) -- ++(0.6,0) 
+    -- ++(0,-5.3) % небольшой спуск — "засечка"
+    -- ++(0.3,0)  % горизонтальный обход
+    |- node[right, pos=0.3, font=\tiny] {нет} (P16.east);
+
+% === Ветвь: целевая атака (да → APT) ===
+\draw[arrow] (D5.west) -- node[above, font=\tiny] {да} (P12);
+\draw[arrow] (P12) -- (P13);
+
+% === Ветвь: массовая атака (нет → обучение) ===
+\draw[arrow] (D5.east) -- node[above, font=\tiny, xshift=4pt] {нет} (P14);
+\draw[arrow] (P14) -- (P15);
+
+\end{tikzpicture}
+\caption{Этапы верификации и адаптации модели (часть~2)}
+\label{fig:method-part2}
+\end{figure}
+
+\section{Оценка эффективности}
+
+\subsection{Описание эксперимента}
+
+Эксперимент проведён в среде, имитирующей платформу CALDERA (MITRE):
+\begin{enumerate}
+    \item \textbf{50 сценариев атак}, включая фишинг, эксплуатацию уязвимости Log4j, боковое перемещение с использованием PowerShell, туннелирование DNS;
+    \item \textbf{1000 фоновых событий}: легитимная активность пользователей и системные задачи.
+\end{enumerate}
+Система работала в режиме реального времени на сервере Intel Xeon Silver 4210, 8 ядер, 32 ГБ ОЗУ.
+
+\subsection{Результаты}
+
+Результаты эксперимента визуализированы на рис.~6, где наглядно продемонстрировано превосходство предложенной методики над традиционными SIEM-правилами по всем трём ключевым метрикам. Метод на основе атрибутивных метаграфов показал \textbf{значительное превосходство по полноте}, особенно в сценариях с LotL-техниками, где SIEM-правила не сработали из-за отсутствия чётких сигнатур.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=12pt,
+    width=0.9\linewidth,
+    height=7cm,
+    ymin=0, ymax=100,
+    ylabel={\%},
+    symbolic x coords={Точность, Полнота, Ложные срабатывания},
+    xtick=data,
+    nodes near coords,
+    nodes near coords align={vertical},
+    legend style={at={(0.5,-0.2)}, anchor=north, legend columns=2},
+    enlarge x limits=0.25,
+]
+\addplot coordinates {(Точность,94.3) (Полнота,89.7) (Ложные срабатывания,3.1)};
+\addplot coordinates {(Точность,78.1) (Полнота,67.5) (Ложные срабатывания,7.9)};
+\legend{Атрибутивные метаграфы, SIEM-правила}
+\end{axis}
+\end{tikzpicture}
+\caption{Сравнение эффективности методов выявления атак}
+\label{fig:results}
+\end{figure}
+
+\subsection{Обсуждение вычислительной сложности}
+
+Задача изоморфизма графов относится к классу NP. Однако на практике:
+\begin{enumerate}
+    \item размер эталонных подграфов ограничен ($\leq$ 10 вершин);
+    \item используется эвристическая фильтрация по атрибутам;
+    \item обработка распараллеливается по потокам.
+\end{enumerate}
+Это позволяет удерживать время обработки в пределах \textbf{50 мс}, что приемлемо для систем реального времени.
+
+\section{Заключение}
+
+Предложенная методика выявления компьютерных атак на основе атрибутивных метаграфов обеспечивает высокую эффективность за счёт глубокого семантического моделирования логики атаки. Подход позволяет обнаруживать сложные, малозаметные сценарии, которые остаются незамеченными традиционными средствами. Методика соответствует современным требованиям к системам защиты информации и может быть успешно интегрирована в инфраструктуру безопасности государственных и коммерческих организаций.
+
+\section*{Список литературы}
+
+\begin{enumerate}
+    \item Latypov I.T., Eremeev M.A. Multilevel Model of Computer Attack Based on Attributive Metagraphs. \textit{Aut. Control Comp. Sci.} \textbf{54}, 944–948 (2020). \url{https://doi.org/10.3103/S0146411620080192}
+    \item \textit{Metodika opredeleniya ugroz bezopasnosti v informatsionnykh sistemakh} (Methodology for Determining Security Threats in Information Systems), Moscow: FSTEK, 2015.
+    \item Novokhrestov A.K., Konev A.A. Assessment of the security quality of computer networks. \textit{Din. Sist. Mekh. Mash.}, 2014, no. 4, pp. 85–87.
+    \item MITRE ATT\&CK Framework. \url{https://attack.mitre.org/}
+    \item ГОСТ Р 56939–2024. Разработка безопасного программного обеспечения. Общие требования.
+    \item Mallon S. Strategic Cybersecurity Leader \& Executive Consultant, at Black Hat 2016: Extended Cyber Kill Chain. \url{https://www.blackhat.com/docs/us-16/materials/us-16-Malone-Using-An-Expanded-Cyber-Kill-Chain-Model-To-Increase-Attack-Resiliency.pdf}
+    \item Astanin S.V., Dragnysh N.V., Zhukovskaya N.K., Nested metagraphs as models of complex objects. \url{http://www.ivdon.ru/en/magazine/archive/n4p2y2012/1434}
+\end{enumerate}
+
+\vspace{1em}
+\noindent\textbf{УДК}: 004.056.5 \\
+\textbf{ББК}: 32.973.26-018.2
+
+\end{document}

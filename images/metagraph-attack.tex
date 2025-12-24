@@ -1,0 +1,44 @@
+% metagraph-attack.tex
+\documentclass[tikz, border=2mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setmainfont{PT Serif}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning}
+\begin{document}
+
+\begin{tikzpicture}[
+    node distance=1.8cm and 2.2cm,
+    vertex/.style={circle, draw=blue!70, fill=blue!10, thick, minimum size=14pt, font=\scriptsize},
+    tactic/.style={rectangle, draw=red!70, fill=red!5, rounded corners, font=\tiny, align=center, inner sep=2pt},
+    edge/.style={->, >=stealth, thick},
+    label/.style={font=\scriptsize, sloped, midway} % удалено 'above'
+]
+
+\node[vertex] (v1) {$p_1$};
+\node[vertex, right=of v1] (v2) {$f_1$};
+\node[vertex, below=of v1] (v3) {$n_1$};
+\node[vertex, right=of v3] (v4) {$p_2$};
+
+% Горизонтальные и наклонные подписи — оставить sloped, above
+\draw[edge] (v1) -- node[label, above] {породил} (v2);
+\draw[edge] (v3) -- node[label, above] {скачал} (v4);
+
+% Вертикальное ребро — убрать 'sloped', разместить явно слева/справа
+\draw[edge] (v1) -- node[left, font=\scriptsize] {обратился} (v3);
+
+% Тактики
+\node[tactic, above=0.6cm of v1] (t1) {T1059\\Командная\\строка};
+\node[tactic, above=0.6cm of v2] (t2) {T1071.001\\Прикладной\\протокол};
+\node[tactic, below=0.6cm of v3] (t3) {T1105\\Удалённая\\загрузка};
+\node[tactic, below=0.6cm of v4] (t4) {T1053.005\\Планировщик\\задач};
+
+% Связи с тактиками
+\draw[dashed, gray] (v1) -- (t1);
+\draw[dashed, gray] (v2) -- (t2);
+\draw[dashed, gray] (v3) -- (t3);
+\draw[dashed, gray] (v4) -- (t4);
+
+\end{tikzpicture}
+
+\end{document}

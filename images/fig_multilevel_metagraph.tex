@@ -1,0 +1,79 @@
+% fig_multilevel_metagraph.tex — Вертикальные колонки без пересечений
+\documentclass[tikz, border=3mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning, arrows.meta, backgrounds, fit}
+\begin{document}
+\begin{tikzpicture}[
+    levelbox/.style={rectangle, draw=black, thick, rounded corners, fill=#1, inner sep=6pt, font=\small\sffamily, minimum height=2.0cm},
+    node/.style={rectangle, draw=black, thick, fill=white, font=\scriptsize\sffamily, inner sep=3pt, minimum width=2.2cm, minimum height=0.2cm,align=center},
+    link/.style={-{Stealth[length=4pt,width=6pt]}, thick, black!70},
+    label/.style={font=\scriptsize\sffamily}
+]
+
+% === Основные параметры ===
+\def\colsep{5.5cm}   % расстояние между колонками
+\def\rowsep{1.5cm}   % расстояние между узлами в колонке
+
+% =============== КОЛОНКА 1: Целостность ===============
+% Стратегический уровень
+\node[node, fill=blue!20] (prop1) at (0, 0) {Нарушение\\целостности};
+\node[node, fill=blue!30, below=\rowsep of prop1] (goal1) {Изменение\\финансовых\\транзакций};
+\node[node, fill=orange!20, below=\rowsep of goal1] (t1) {T1102\\Web\\Service};
+\node[node, fill=green!20, below=\rowsep of t1] (m1a) {powershell.exe};
+\node[node, fill=green!20, below=\rowsep of m1a] (m1b) {wscript.exe};
+\node[node, fill=green!20, below=\rowsep of m1b] (m1c) {SQL\_inject-PoC.py};
+
+% Связи
+\draw[link] (prop1) -- (goal1);
+\draw[link] (goal1) -- node[label, right] {реализует} (t1);
+\draw[link] (t1) -- (m1a);
+\draw[link] (m1a) -- (m1b);
+\draw[link] (m1b) -- (m1c);
+
+% =============== КОЛОНКА 2: Конфиденциальность ===============
+\node[node, fill=blue!20] (prop2) at (\colsep, 0) {Нарушение\\конфиденциальности};
+\node[node, fill=blue!30, below=\rowsep of prop2] (goal2) {Хищение\\персональных\\данных};
+\node[node, fill=orange!20, below=\rowsep of goal2] (t2) {T1566\\Phishing};
+\node[node, fill=green!20, below=\rowsep of t2] (m2a) {Outlook.exe};
+\node[node, fill=green!20, below=\rowsep of m2a] (m2b) {acrobat.exe};
+\node[node, fill=green!20, below=\rowsep of m2b] (m2c) {malware.exe};
+
+\draw[link] (prop2) -- (goal2);
+\draw[link] (goal2) -- (t2);
+\draw[link] (t2) -- (m2a);
+\draw[link] (m2a) -- (m2b);
+\draw[link] (m2b) -- (m2c);
+
+% =============== КОЛОНКА 3: Доступность ===============
+\node[node, fill=blue!20] (prop3) at (2*\colsep, 0) {Нарушение\\доступности};
+\node[node, fill=blue!30, below=\rowsep of prop3] (goal3) {DDoS-атака\\на сервис};
+\node[node, fill=orange!20, below=\rowsep of goal3] (t3) {T1499\\Endpoint\\DoS};
+\node[node, fill=green!20, below=\rowsep of t3] (m3a) {LOIC};
+\node[node, fill=green!20, below=\rowsep of m3a] (m3b) {hping3};
+\node[node, fill=green!20, below=\rowsep of m3b] (m3c) {slowloris.py};
+
+\draw[link] (prop3) -- (goal3);
+\draw[link] (goal3) -- (t3);
+\draw[link] (t3) -- (m3a);
+\draw[link] (m3a) -- (m3b);
+\draw[link] (m3b) -- (m3c);
+
+% === Фоны уровней с подписями внутри ===
+\begin{scope}[on background layer]
+    % Стратегический
+    \node[levelbox=blue!10, fit=(prop1) (prop3), inner ysep=8pt] (bg1) {};
+    \node[font=\bfseries\sffamily, above=2pt of bg1.north, anchor=south] {Стратегический уровень};
+    
+    % Тактический
+    \node[levelbox=orange!10, fit=(t1) (t3), inner ysep=8pt] (bg2) {};
+    \node[font=\bfseries\sffamily, above=2pt of bg2.north, anchor=south] {Тактический уровень (MITRE ATT\&CK)};
+    
+    % Методический
+    \node[levelbox=green!10, fit=(m1c) (m3c), inner ysep=8pt] (bg3) {};
+    \node[font=\bfseries\sffamily, above=2pt of bg3.north, anchor=south] {Методический уровень};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

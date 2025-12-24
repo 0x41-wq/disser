@@ -1,0 +1,31 @@
+% tab_model_comparison.tex
+\documentclass[tikz, border=2mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setmainfont{PT Serif}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, shapes}
+
+\begin{document}
+\usepackage{tabularx}
+
+\begin{table}[ht]
+\centering
+\caption{Сравнение подходов к моделированию компьютерных атак}
+\label{tab:model_comparison}
+\begin{tabularx}{\linewidth}{@{}>{\hsize=0.25\hsize}X
+                          >{\hsize=0.25\hsize}X
+                          >{\hsize=0.25\hsize}X
+                          >{\hsize=0.25\hsize}X@{}}
+\toprule
+\textbf{Критерий} & \textbf{Деревья атак} & \textbf{Графы атак} & \textbf{Атрибутивные метаграфы} \\
+\midrule
+Поддержка множественных сущностей & Нет & Частично & Да \\
+Семантическая насыщенность & Низкая & Средняя & Высокая \\
+Динамическое обновление & Нет & Сложно & Инкрементально \\
+Интеграция с MITRE ATT\&CK & Нет & Через маппинг & Нативно \\
+Устойчивость к обфускации & Низкая & Средняя & Высокая \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\end{document}

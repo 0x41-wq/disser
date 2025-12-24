@@ -1,0 +1,31 @@
+% metagraph-attack.tex
+\documentclass[tikz, border=2mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setmainfont{PT Serif}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning}
+\begin{document}
+
+\begin{tikzpicture}[
+    node distance=1.5cm and 2cm,
+    block/.style={rectangle, draw, thick, text width=4.5cm, align=center, font=\small},
+    greenblock/.style={block, fill=green!10},
+    blueblock/.style={block, fill=blue!10},
+    orangeblock/.style={block, fill=orange!10},
+    redblock/.style={block, fill=red!10},
+    database/.style={block, fill=gray!10, text width=3cm},
+    arrow/.style={->, >=stealth, thick}
+]
+\node[greenblock] (input) {Телеметрия (EDR, логи)};
+\node[blueblock, below=of input] (builder) {Построение динамического метаграфа};
+\node[orangeblock, below=of builder] (matcher) {Сопоставление с эталонами};
+\node[redblock, below=of matcher] (alert) {Генерация алертов};
+\draw[arrow] (input) -- (builder);
+\draw[arrow] (builder) -- (matcher);
+\draw[arrow] (matcher) -- (alert);
+\node[database, left=of builder] (db) {База эталонных\\метаграфов};
+\draw[arrow] (db) -- (matcher);
+\end{tikzpicture}
+
+\end{document}

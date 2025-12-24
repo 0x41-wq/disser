@@ -1,0 +1,67 @@
+% method-1.tex — Часть 1: Формирование гипотезы атаки
+\documentclass[tikz, border=3mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setmainfont{PT Serif}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, shapes}
+
+\begin{document}
+\begin{tikzpicture}[
+    node distance=1.0cm and 1.4cm,
+    start/.style={ellipse, draw=black, fill=green!20, minimum width=1.6cm, minimum height=0.6cm, font=\scriptsize},
+    process/.style={rectangle, draw=black, fill=blue!10, minimum width=2.3cm, minimum height=0.65cm, align=center, font=\scriptsize},
+    decision/.style={diamond, draw=black, fill=orange!20, aspect=1.5, align=center, inner sep=1pt, font=\scriptsize},
+    arrow/.style={->, >=Stealth, thick}
+]
+
+% Узлы
+\node[start] (Start) {Начало};
+\node[process, below=of Start] (P1) {1. Загрузка онтологии};
+\node[process, below=of P1] (P2) {2. Построение эталонных метаграфов};
+\node[process, below=of P2] (P3) {3. Подключение источников};
+\node[process, below=of P3] (P4) {4. Нормализация событий};
+
+\node[decision, below=of P4] (D1) {Событие\\известно?};
+\node[process, right=2.1cm of D1] (P5) {5. Извлечение\\атрибутов};
+\node[process, below=of P5] (P6) {6. Формирование\\$G_{\mathrm{obs}}$};
+
+\node[decision, below=of D1] (D2) {Найден\\изоморфизм?};
+\node[process, below=of D2] (P7) {7. Генерация\\гипотезы $H_i$};
+\node[process, below=of P7] (P8) {8. Расчёт веса\\$W(H_i)$};
+\node[decision, below=of P8] (D3) {$W > \theta$?};
+
+% Архив — сдвинем чуть вниз, чтобы было место для обхода
+\node[process, right=2.4cm of D3, yshift=-0.8cm] (P9) {9. Архив\\ложного\\срабатывания};
+
+% Стрелки
+\draw[arrow] (Start) -- (P1);
+\draw[arrow] (P1) -- (P2);
+\draw[arrow] (P2) -- (P3);
+\draw[arrow] (P3) -- (P4);
+\draw[arrow] (P4) -- (D1);
+
+% D1 → D2 и P5
+\draw[arrow] (D1) -- node[left, font=\tiny] {да} (D2);
+\draw[arrow] (D1.east) -- ++(0.7,0) |- node[above, pos=0.25, font=\tiny] {нет} (P5);
+\draw[arrow] (P5) -- (P6);
+\draw[arrow] (P6) -| (D2.east);
+
+% Основной путь
+\draw[arrow] (D2) -- node[left, font=\tiny] {да} (P7);
+\draw[arrow] (P7) -- (P8);
+\draw[arrow] (P8) -- (D3);
+
+% === КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: обход D3 ===
+% Путь: D2 → влево → вниз ниже P9 → вправо → в P9
+\coordinate[left=1.6cm of D2] (left_of_D2);
+\coordinate[below=0.5cm of P9] (below_P9);
+\draw[arrow] (D2.west) -- (left_of_D2) |- (below_P9) -- node[right, font=\tiny, pos=0.4] {нет} (P9.south);
+
+% От D3 → P9 (короткий путь)
+\draw[arrow] (D3.east) -- ++(0.6,0) |- node[right, font=\tiny, pos=0.25] {нет} (P9);
+
+% Переход к части 2
+\draw[arrow] (D3) -- ++(0,-0.8) node[below, font=\footnotesize] {(переход к части 2)};
+\end{tikzpicture}
+\end{document}

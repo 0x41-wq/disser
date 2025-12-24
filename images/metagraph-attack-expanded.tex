@@ -1,0 +1,57 @@
+% metagraph-attack-expanded.tex — Расширенный метаграф атаки с 6 узлами и 5 тактиками
+\documentclass[tikz, border=4mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setmainfont{PT Serif}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning, shapes}
+
+\begin{document}
+
+\begin{tikzpicture}[
+    node distance=2.5cm and 3.0cm,
+    vertex/.style={circle, draw=blue!70, fill=blue!10, thick, minimum size=18pt, font=\small},
+    tactic/.style={rectangle, draw=red!70, fill=red!5, rounded corners, font=\small, align=center, inner sep=4pt},
+    edge/.style={->, >=stealth, thick},
+    label/.style={font=\small, sloped, above},
+    attrline/.style={dashed, gray, thick}
+]
+
+% === Узлы ===
+\node[vertex] (v1) {$p_1$}; % процесс (cmd.exe)
+\node[vertex, right=of v1] (v2) {$f_1$}; % файл (payload.exe)
+\node[vertex, below=of v1] (v3) {$n_1$}; % сетевое соединение (C2)
+\node[vertex, right=of v3] (v4) {$p_2$}; % процесс (powershell.exe)
+
+% Добавляем два новых узла
+\node[vertex, left=of v1] (v5) {$u_1$}; % пользователь (администратор)
+\node[vertex, below=of v4] (v6) {$h_1$}; % хост (внутренняя сеть)
+
+% === Рёбра ===
+\draw[edge] (v5) -- node[label] {запустил} (v1); % пользователь запустил процесс
+\draw[edge] (v1) -- node[label] {породил} (v2); % процесс породил файл
+\draw[edge] (v2) -- node[label] {скачал} (v3); % файл скачал данные через сеть
+\draw[edge] (v3) -- node[label] {подключился к} (v4); % сеть подключилась к процессу
+\draw[edge] (v4) -- node[left, font=\small] {выполнил} (v6); % процесс выполнил действие на хосте
+
+% === Тактики MITRE ATT&CK ===
+\node[tactic, above=0.8cm of v1] (t1) {T1059\\Командная строка};
+\node[tactic, above=0.8cm of v2] (t2) {T1071.001\\Прикладной протокол};
+\node[tactic, below=0.8cm of v3] (t3) {T1105\\Удалённая загрузка};
+\node[tactic, below=0.8cm of v4] (t4) {T1053.005\\Планировщик задач};
+\node[tactic, left=0.8cm of v5] (t5) {T1087\\Обнаружение пользователей};
+
+% === Связи с тактиками (пунктирные) ===
+\draw[attrline] (v1) -- (t1);
+\draw[attrline] (v2) -- (t2);
+\draw[attrline] (v3) -- (t3);
+\draw[attrline] (v4) -- (t4);
+\draw[attrline] (v5) -- (t5);
+
+% === Дополнительная тактика для v6 (T1021 - Lateral Movement) ===
+\node[tactic, below=0.8cm of v6] (t6) {T1021\\Lateral Movement};
+\draw[attrline] (v6) -- (t6);
+
+\end{tikzpicture}
+
+\end{document}

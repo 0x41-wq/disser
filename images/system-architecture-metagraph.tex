@@ -1,0 +1,64 @@
+% system-architecture-metagraph.tex
+\documentclass[tikz, border=3mm]{standalone}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\setmainfont{PT Serif}
+\setsansfont{PT Sans}
+\usetikzlibrary{positioning, arrows.meta, backgrounds, fit, shapes.geometric}
+
+\begin{document}
+
+\begin{tikzpicture}[
+    node distance=1.3cm and 2.2cm,
+    block/.style={rectangle, draw, thick, rounded corners, align=center, font=\small\sffamily},
+    datasource/.style={block, fill=green!10, text width=3.4cm},
+    core/.style={block, fill=blue!10, text width=4.0cm},
+    knowledge/.style={block, fill=orange!10, text width=3.6cm},
+    output/.style={block, fill=red!10, text width=3.4cm},
+    siemsoar/.style={block, fill=purple!10, text width=3.4cm},
+    database/.style={cylinder, shape border rotate=90, draw, thick, aspect=0.35, fill=gray!10, minimum height=1.2cm, minimum width=1.0cm, align=center, font=\small\sffamily},
+    arrow/.style={-{Stealth[length=4pt,width=6pt]}, thick},
+    label/.style={font=\scriptsize\sffamily, align=center}
+]
+
+% === Источники данных ===
+\node[datasource] (telemetry) {Источники телеметрии:\\EDR, Sysmon,\\Zeek, журналы ОС};
+
+% === Предобработка ===
+\node[block, fill=yellow!10, text width=3.4cm, right=of telemetry] (normalizer) {Нормализация\\и обогащение\\(CEF / ECS)};
+
+% === Ядро анализа ===
+\node[core, below=of normalizer] (graphengine) {Построение\\динамического\\атрибутивного метаграфа};
+\node[core, below=of graphengine] (matchengine) {Сопоставление с\\эталонными паттернами\\(частичный изоморфизм)};
+
+% === База знаний ===
+\node[database, left=of matchengine] (kb) {База эталонных\\метаграфов\\(MITRE ATT\&CK,\\внутренние угрозы)};
+
+% === Оценка и реакция ===
+\node[core, below=of matchengine] (scoring) {Оценка достоверности\\и приоритизация\\гипотез};
+
+% === SIEM/SOAR ===
+\node[siemsoar, right=of scoring] (siem) {SIEM / SOAR:\\оповещения,\\автоматизация\\реагирования};
+
+% === Интерфейс аналитика ===
+\node[output, below=of scoring] (investigation) {Интерфейс\\расследования:\\визуализация kill chain,\\контекст атаки};
+
+% === Связи ===
+\draw[arrow] (telemetry) -- node[label, above] {Сырые события\\(журналы, процессы,\\сетевой трафик)} (normalizer);
+\draw[arrow] (normalizer) -- node[label, right] {Нормализованные\\события} (graphengine);
+\draw[arrow] (graphengine) -- node[label, right] {Метаграф\\наблюдений} (matchengine);
+\draw[arrow] (kb) -- node[label, above] {Эталоны тактик\\и техник\\(MITRE ATT\&CK)} (matchengine);
+\draw[arrow] (matchengine) -- node[label, right] {Гипотезы\\атак} (scoring);
+\draw[arrow] (scoring) -- node[label, above] {Подтверждённые\\инциденты} (siem);
+\draw[arrow] (scoring) -- node[label, right] {Контекст\\инцидента} (investigation);
+
+% === Группировка ===
+\begin{scope}[on background layer]
+    \node[draw, dashed, thick, inner ysep=10pt, inner xsep=12pt,
+          fit=(graphengine) (matchengine) (scoring),
+          label={[font=\bfseries\sffamily, above=8pt]Ядро системы обнаружения}] (corebox) {};
+\end{scope}
+
+\end{tikzpicture}
+
+\end{document}
