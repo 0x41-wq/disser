@@ -48,6 +48,12 @@ IMGCOMPILE ?= # 1=on;0=off
 NOTESON ?= # 0=off;1=on, separate slide;2=on, same slide
 LATEXFLAGS ?= -halt-on-error -file-line-error
 LATEXMKFLAGS ?= -silent
+PANDOC ?= pandoc
+PANDOCFROM ?= latex
+PANDOCTO ?= docx
+PANDOCFLAGS ?= --from=$(PANDOCFROM) --to=$(PANDOCTO) --wrap=auto --table-of-contents --number-sections --reference-doc=reference.docx --extract-media=./images-docx
+PANDOCEXTRA ?= # add extra pandoc flags for complex TeX conversion
+DOCX ?= $(SOURCE).$(PANDOCTO)
 BIBERFLAGS ?= # --fixinits
 REGEXDIRS ?= . Dissertation Synopsis Presentation # distclean dirs
 TIMERON ?= # show CPU usage
@@ -70,6 +76,9 @@ export IMGCOMPILE
 export NOTESON
 export LATEXFLAGS
 export BIBERFLAGS
+export PANDOC
+export PANDOCFLAGS
+export DOCX
 export REGEXDIRS
 export TIMERON
 export TIKZFILE
@@ -99,6 +108,20 @@ presentation: TARGET=presentation
 presentation: SOURCE=presentation
 presentation:
 	$(compile)
+
+##! конвертация в DOCX через pandoc; usage: make pandoc [dissertation|synopsis]
+PANDOC_GOAL := $(filter dissertation synopsis,$(MAKECMDGOALS))
+ifeq ($(PANDOC_GOAL),)
+PANDOC_SRC := $(SOURCE)
+else
+PANDOC_SRC := $(PANDOC_GOAL)
+# remove the extra goal so make won't try to build it
+MAKECMDGOALS := $(filter-out $(PANDOC_GOAL),$(MAKECMDGOALS))
+endif
+
+pandoc:
+	@echo "Converting $(PANDOC_SRC) to DOCX using pandocmd.sh..."
+	bash pandocmd.sh $(PANDOC_SRC)
 
 ##! компиляция черновика диссертации
 dissertation-draft: DRAFTON=1
@@ -203,5 +226,5 @@ include examples.mk
 
 .PHONY: all dissertation synopsis presentation dissertation-draft \
 synopsis-draft pdflatex draft synopsis-booklet presentation-booklet\
-tikz release clean-target distclean-target clean distclean \
+pandoc tikz release clean-target distclean-target clean distclean \
 articles $(ARTICLES) clean-articles distclean-articles
